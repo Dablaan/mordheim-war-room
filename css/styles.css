@@ -1,0 +1,726 @@
+/* ==========================================================================
+   Kar-Drakor: War Room — Estilos Oficiales (Fantasía Oscura / Wargaming)
+   ========================================================================== */
+
+:root {
+    --bg-dark: #0d0f12;
+    --bg-card: #161920;
+    --bg-card-hover: #1f232c;
+    --border-gold: #8c734b;
+    --gold-bright: #d4af37;
+    --gold-muted: #9b814a;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-gold: #f3d999;
+    
+    /* Facciones */
+    --vampire-red: #c92a2a;
+    --vampire-bg: rgba(201, 42, 42, 0.15);
+    --rat-green: #2b8a3e;
+    --rat-bg: rgba(43, 138, 62, 0.15);
+    --dwarf-amber: #d97706;
+    --dwarf-bg: rgba(217, 119, 6, 0.15);
+    --neutral-gray: #475569;
+
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Lora', serif;
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    
+    --shadow-epic: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.7);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(201, 42, 42, 0.05) 0%, transparent 50%);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Cabecera y Navegación
+   ========================================================================== */
+.warroom-header {
+    background: linear-gradient(180deg, #181a20 0%, #101216 100%);
+    border-bottom: 2px solid var(--border-gold);
+    box-shadow: var(--shadow-epic);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    font-size: 1.8rem;
+    color: var(--gold-bright);
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
+}
+
+.brand-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-ui);
+    letter-spacing: 0.5px;
+}
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    padding: 6px 14px;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-badge:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--gold-bright);
+}
+
+.user-badge i {
+    font-size: 1.1rem;
+}
+
+.user-badge-name {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* Barra de Navegación */
+.nav-bar {
+    display: flex;
+    overflow-x: auto;
+    background: rgba(13, 15, 18, 0.95);
+    border-top: 1px solid rgba(140, 115, 75, 0.3);
+    max-width: 1400px;
+    margin: 0 auto;
+    scrollbar-width: none;
+}
+
+.nav-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-btn {
+    flex: 1;
+    min-width: 120px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 12px 16px;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-btn:hover {
+    color: var(--gold-bright);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.nav-btn.active {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-bright);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+/* ==========================================================================
+   Contenedor Principal
+   ========================================================================== */
+.main-content {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Marcador de Campaña Superior
+   ========================================================================== */
+.scoreboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.score-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.score-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+}
+
+.score-card.faccion-david::before { background: var(--vampire-red); }
+.score-card.faccion-sergio::before { background: var(--rat-green); }
+.score-card.faccion-javi::before { background: var(--dwarf-amber); }
+
+.score-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    border: 2px solid var(--border-gold);
+}
+
+.score-info {
+    flex: 1;
+}
+
+.score-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-gold);
+}
+
+.score-banda {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.score-stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    font-family: var(--font-ui);
+}
+
+.stat-pill {
+    background: rgba(0,0,0,0.4);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-pill strong {
+    color: var(--gold-bright);
+}
+
+/* ==========================================================================
+   Mesa Táctica y Mapa Interactivo
+   ========================================================================== */
+.map-view-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .map-view-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.map-interactive-box {
+    position: relative;
+    background: #090a0d;
+    border: 2px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-epic);
+    aspect-ratio: 16 / 9;
+    min-height: 400px;
+}
+
+.map-bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.65;
+    filter: brightness(0.85) contrast(1.1);
+}
+
+.map-overlay-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.map-overlay-svg line {
+    stroke: rgba(212, 175, 55, 0.4);
+    stroke-width: 2.5;
+    stroke-dasharray: 6, 6;
+}
+
+.district-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0,0,0,0.8), 0 0 10px rgba(212, 175, 55, 0.3);
+    transition: all 0.25s ease;
+    z-index: 10;
+}
+
+.district-node:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+    z-index: 20;
+}
+
+.district-node.control-david {
+    border-color: #ff6b6b;
+    background: #4c0000;
+    color: #ffc9c9;
+}
+
+.district-node.control-sergio {
+    border-color: #69db7c;
+    background: #0b3d14;
+    color: #b2f2bb;
+}
+
+.district-node.control-javi {
+    border-color: #fcc419;
+    background: #4a2800;
+    color: #ffe066;
+}
+
+.district-node.control-neutral {
+    border-color: #94a3b8;
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+.district-label {
+    position: absolute;
+    top: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(13, 15, 18, 0.9);
+    border: 1px solid var(--border-gold);
+    color: var(--text-gold);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* Panel de Información del Distrito Seleccionado */
+.district-detail-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-epic);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.district-detail-header {
+    border-bottom: 1px solid rgba(140, 115, 75, 0.4);
+    padding-bottom: 12px;
+}
+
+.district-detail-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--gold-bright);
+}
+
+.district-detail-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.detail-section-title {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: var(--text-gold);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.advantage-box {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 3px solid var(--gold-bright);
+    padding: 10px 14px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   Misión y Niebla de Guerra
+   ========================================================================== */
+.mission-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 992px) {
+    .mission-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.secret-order-card {
+    background: linear-gradient(135deg, #1a1622 0%, #0d0f12 100%);
+    border: 2px solid #8b5cf6;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.secret-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid #8b5cf6;
+    color: #c4b5fd;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   Formulario de Parte de Batalla
+   ========================================================================== */
+.form-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-epic);
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: var(--text-gold);
+    margin-bottom: 8px;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: #0d0f12;
+    border: 1px solid var(--border-gold);
+    color: var(--text-main);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.dice-roller-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0,0,0,0.3);
+    padding: 12px 18px;
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border-gold);
+}
+
+.dice-btn {
+    background: linear-gradient(135deg, #d4af37, #9b814a);
+    color: #121316;
+    border: none;
+    padding: 10px 18px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.dice-btn:hover {
+    filter: brightness(1.15);
+    transform: scale(1.02);
+}
+
+.dice-result {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+}
+
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #c92a2a, #7f1d1d);
+    color: white;
+    border: 1px solid #ff8787;
+    padding: 14px 20px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(201, 42, 42, 0.4);
+    transition: all 0.2s;
+}
+
+.submit-btn:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 6px 20px rgba(201, 42, 42, 0.6);
+}
+
+/* ==========================================================================
+   Hemeroteca de El Heraldo
+   ========================================================================== */
+.gazette-card {
+    background: #fbf7ee;
+    color: #1e1e1e;
+    border: 2px solid #5a4632;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.gazette-header {
+    background: #2e261f;
+    color: #f7e6cd;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px double #c5a059;
+}
+
+.gazette-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+}
+
+.gazette-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .gazette-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+.gazette-img {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    border: 1px solid #c5a059;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* ==========================================================================
+   Oráculo de Reglas (Chat con Gemini IA)
+   ========================================================================== */
+.oracle-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-epic);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.oracle-chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.oracle-msg {
+    display: flex;
+    gap: 12px;
+    max-width: 80%;
+}
+
+.oracle-msg.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.oracle-bubble {
+    background: #1e232c;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.oracle-msg.user .oracle-bubble {
+    background: #2b1f16;
+    border-color: var(--gold-bright);
+}
+
+.oracle-input-bar {
+    display: flex;
+    padding: 16px;
+    border-top: 1px solid rgba(140, 115, 75, 0.3);
+    gap: 12px;
+    background: #0d0f12;
+}
+
+/* ==========================================================================
+   Modales & Selectores
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-box {
+    background: var(--bg-card);
+    border: 2px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: var(--shadow-epic);
+    text-align: center;
+}
