@@ -1567,10 +1567,14 @@
               <div style="display: flex; gap: 0.4rem; margin-bottom: 0.4rem;">
                 <input type="password" id="geminiApiKeyInput" class="form-control" placeholder="Pega tu clave AIzaSy..." style="flex: 1;"/>
                 <button class="btn-action" onclick="app.saveGeminiKey()">
-                  <i class="fa-solid fa-floppy-disk"></i> Guardar Clave
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar
+                </button>
+                <button class="btn-action" onclick="app.testGeminiConnection()" style="background: #2a221a; color: #ffd700; border-color: #ffd700;" title="Verificar que la clave funciona y recibe respuesta real de Google">
+                  <i class="fa-solid fa-vial-circle-check"></i> Probar Conexión
                 </button>
               </div>
-              <span id="geminiKeyStatus" style="font-size: 0.75rem; font-weight: 800;"></span>
+              <div id="geminiKeyStatus" style="font-size: 0.75rem; font-weight: 800; margin-bottom: 0.3rem;"></div>
+              <div id="geminiTestOutput" style="display: none; background: #ede1c7; border: 1.5px dashed var(--line-sepia); padding: 0.6rem 0.8rem; font-size: 0.8rem; margin-top: 0.4rem;"></div>
             </div>
 
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -2211,6 +2215,16 @@
       }
 
       async loadCloudState() {
+        // Cargar primero de localStorage como respaldo inmediato
+        const localGemini = localStorage.getItem(GEMINI_CONFIG_KEY);
+        if (localGemini) {
+          this.geminiApiKey = localGemini;
+          const input = document.getElementById("geminiApiKeyInput");
+          if (input) input.value = this.geminiApiKey;
+          const status = document.getElementById("geminiKeyStatus");
+          if (status) status.innerHTML = "✅ Clave disponible en memoria local";
+        }
+
         if (supabase) {
           try {
             const { data, error } = await supabase
@@ -2230,16 +2244,114 @@
             const geminiRes = await supabase.from('kv_store').select('value').eq('key', GEMINI_CONFIG_KEY).maybeSingle();
             if (geminiRes.data && geminiRes.data.value && geminiRes.data.value.apiKey) {
               this.geminiApiKey = geminiRes.data.value.apiKey;
+              localStorage.setItem(GEMINI_CONFIG_KEY, this.geminiApiKey);
               const input = document.getElementById("geminiApiKeyInput");
               if (input) input.value = this.geminiApiKey;
               const status = document.getElementById("geminiKeyStatus");
-              if (status) status.textContent = "✅ IA Conectada";
+              if (status) status.innerHTML = "✅ Clave sincronizada con la Nube (Supabase 24/7)";
             }
           } catch (e) {
             console.warn("Supabase fetch error:", e);
             document.getElementById("syncDot").className = "sync-dot offline";
             document.getElementById("syncText").textContent = "Modo Local / Desconectado";
           }
+        }
+      }
+
+      // MOTOR DE COMUNICACIÓN CON GOOGLE GEMINI (CON MULTI-MODEL CASCADING)
+      async callGemini(contentsPayload) {
+        if (!this.geminiApiKey) {
+          throw new Error("No hay ninguna clave de API configurada. Introduce tu clave en el Panel GM.");
+        }
+
+        // Modelos canónicos soportados en la API pública de Google (en orden de prioridad y cuota)
+        const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+        let lastError = null;
+
+        for (const model of models) {
+          try {
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`;
+            const resp = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ contents: contentsPayload })
+            });
+
+            if (resp.ok) {
+              const data = await resp.json();
+              if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                return {
+                  text: data.candidates[0].content.parts[0].text,
+                  model: model
+                };
+              }
+            } else {
+              const errBody = await resp.json().catch(() => ({}));
+              const msg = errBody.error && errBody.error.message ? errBody.error.message : `HTTP ${resp.status} ${resp.statusText}`;
+              lastError = new Error(`[${model}] ${msg}`);
+              console.warn(`Intento con ${model} falló:`, lastError.message);
+            }
+          } catch(err) {
+            lastError = err;
+            console.warn(`Error de red con ${model}:`, err.message);
+          }
+        }
+
+        throw lastError || new Error("No se pudo obtener respuesta de ningún modelo de Gemini.");
+      }
+
+      async testGeminiConnection() {
+        const input = document.getElementById("geminiApiKeyInput");
+        const key = input ? input.value.trim() : this.geminiApiKey;
+        const out = document.getElementById("geminiTestOutput");
+        const status = document.getElementById("geminiKeyStatus");
+
+        if (!key) {
+          alert("Introduce o pega primero tu clave de API de Gemini.");
+          return;
+        }
+
+        this.geminiApiKey = key;
+        localStorage.setItem(GEMINI_CONFIG_KEY, key);
+        if (out) {
+          out.style.display = "block";
+          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Enviando ping de prueba a los servidores de Google Gemini...</em>`;
+        }
+
+        try {
+          const testPayload = [
+            { role: "user", parts: [{ text: "¡Saludos! Confirma en una sola frase breve y con estilo de cronista que la conexión con Mordheim War Room funciona perfectamente." }] }
+          ];
+          const result = await this.callGemini(testPayload);
+          if (out) {
+            out.innerHTML = `
+              <div style="color: #1b4d24; font-weight: 800; margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN EXITOSA CON GOOGLE GEMINI (${result.model})!
+              </div>
+              <div style="font-style: italic; color: var(--ink-dark); line-height: 1.4;">
+                «${result.text}»
+              </div>
+              <div style="font-size: 0.72rem; color: #1b4d24; margin-top: 0.3rem; font-weight: 700;">
+                ✓ Los chats del Oráculo y de Contacto con el Heraldo responderán ahora con IA real en vivo.
+              </div>
+            `;
+          }
+          if (status) status.innerHTML = `✅ Conectada y Verificada (${result.model})`;
+        } catch(err) {
+          if (out) {
+            out.innerHTML = `
+              <div style="color: #7a1515; font-weight: 800; margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Error al conectar con Google Gemini:
+              </div>
+              <div style="font-family: monospace; font-size: 0.76rem; color: #7a1515; background: #fae8e8; padding: 0.4rem; border: 1px solid #7a1515; margin-bottom: 0.4rem;">
+                ${err.message}
+              </div>
+              <div style="font-size: 0.72rem; color: var(--ink-muted); line-height: 1.35;">
+                Comprueba que tu clave comience por <code>AIzaSy...</code> y que en Google AI Studio / Google Cloud Console tengas habilitada la API <em>Generative Language API</em> sin restricciones de IP que la bloqueen.
+              </div>
+            `;
+          }
+          if (status) status.innerHTML = "⚠️ Fallo en la verificación de API";
         }
       }
 
@@ -2753,20 +2865,11 @@ INSTRUCCIONES DE RESPUESTA:
               ...this.oracleHistory.slice(-8)
             ];
 
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ contents: contentsPayload })
-            });
-
-            if (resp.ok) {
-              const data = await resp.json();
-              const reply = data.candidates[0].content.parts[0].text;
-              this.oracleHistory.push({ role: "model", parts: [{ text: reply }] });
-              botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${reply.replace(/\n/g, '<br>')}`;
-              feed.scrollTop = feed.scrollHeight;
-              return;
-            }
+            const result = await this.callGemini(contentsPayload);
+            this.oracleHistory.push({ role: "model", parts: [{ text: result.text }] });
+            botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${result.text.replace(/\n/g, '<br>')}`;
+            feed.scrollTop = feed.scrollHeight;
+            return;
           } catch(e) {
             console.warn("Gemini API call failed, using local rules KB:", e);
           }
@@ -2962,20 +3065,11 @@ No salgas jamás del personaje ni uses fórmulas genéricas de IA. Responde de f
               ...this.roleplayHistory.slice(-8)
             ];
 
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ contents: contentsPayload })
-            });
-
-            if (resp.ok) {
-              const data = await resp.json();
-              const reply = data.candidates[0].content.parts[0].text;
-              this.roleplayHistory.push({ role: "model", parts: [{ text: reply }] });
-              npcBubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${reply.replace(/\n/g, '<br>')}`;
-              feed.scrollTop = feed.scrollHeight;
-              return;
-            }
+            const result = await this.callGemini(contentsPayload);
+            this.roleplayHistory.push({ role: "model", parts: [{ text: result.text }] });
+            npcBubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${result.text.replace(/\n/g, '<br>')}`;
+            feed.scrollTop = feed.scrollHeight;
+            return;
           } catch(e) {
             console.warn("Roleplay AI call error:", e);
           }
