@@ -1014,22 +1014,26 @@
             </div>
 
             <!-- Especificaciones -->
-            <div class="spec-grid">
-              <div class="spec-cell">
-                <div class="spec-cell-lbl">Reglamento</div>
-                <div class="spec-cell-val" id="missionRulebook">AoF: Skirmish v3.6.0</div>
+            <div class="spec-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+              <div class="spec-cell" style="grid-column: span 2; border-left: 4px solid var(--faction-david);">
+                <div class="spec-cell-lbl">Facciones Enfrentadas</div>
+                <div class="spec-cell-val" id="missionFactions" style="font-size: 0.88rem; color: var(--faction-david);">Casa Sangre Carmesí vs Clan Scutrix</div>
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Puntos de Banda</div>
-                <div class="spec-cell-val" id="missionPoints">300 pts (+botín)</div>
+                <div class="spec-cell-val" id="missionPoints">600 pts</div>
+              </div>
+              <div class="spec-cell">
+                <div class="spec-cell-lbl">Mesa de Asedio</div>
+                <div class="spec-cell-val" id="missionTableSize">90 x 90 cm</div>
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Límite de Rondas</div>
                 <div class="spec-cell-val" id="missionTurns">4 Rondas</div>
               </div>
               <div class="spec-cell">
-                <div class="spec-cell-lbl">Mesa de Asedio</div>
-                <div class="spec-cell-val" id="missionTableSize">90x90 (David) / 120x120 (Sergio &amp; Javi)</div>
+                <div class="spec-cell-lbl">Reglamento</div>
+                <div class="spec-cell-val" id="missionRulebook">AoF: Skirmish v3.6.0</div>
               </div>
             </div>
 
@@ -1053,9 +1057,6 @@
               <a href="./assets/Hoja_Mision_Ronda_01.pdf" target="_blank" class="btn-action">
                 <i class="fa-solid fa-file-pdf"></i> Descargar Orden de Batalla en PDF
               </a>
-              <a href="./assets/Mapa_Mesa_90x90_Escaramuza.png" target="_blank" class="btn-action">
-                <i class="fa-solid fa-map"></i> Plano de Despliegue de Mesa
-              </a>
             </div>
           </div>
 
@@ -1068,19 +1069,6 @@
               <div id="fogOfWarSecretBox">
                 <!-- Inyectado por JS según el usuario autenticado -->
               </div>
-            </div>
-
-            <!-- Tabla de Tamaño de Mesa Acordado -->
-            <div style="margin-top: 1rem; border: 2px solid var(--ink-black); background: #faf4e6; padding: 0.8rem; font-size: 0.82rem;">
-              <div style="font-family: var(--font-title); font-weight: 800; color: var(--ink-black); margin-bottom: 0.4rem;">
-                <i class="fa-solid fa-ruler-combined"></i> Normativa de Mesas de Juego
-              </div>
-              <p style="margin-bottom: 0.4rem;">
-                <strong>Casa de David:</strong> 90 x 90 cm (Pasadizos estrechos, criptas y combate cerrado).
-              </p>
-              <p>
-                <strong>Casa de Sergio / Javi (Loky):</strong> 120 x 120 cm (Grandes plazas, avenidas derruidas y maniobra exterior).
-              </p>
             </div>
           </div>
         </div>
@@ -1582,12 +1570,13 @@
       1: {
         id: 1,
         title: "Ronda 01: El Despertar del Colmillo de Hierro",
+        factions: "Casa Sangre Carmesí (David) vs Clan Scutrix (Sergio)",
         badge: "COMPLETADA",
         badgeStyle: "background: #dfcb9f; color: #3a2e22; border: 1.5px solid #3a2e22;",
         rulebook: "AoF: Skirmish v3.6.0",
-        points: "300 pts",
+        points: "600 pts",
         turns: "4 Rondas",
-        tableSize: "90x90 cm (David) / 120x120 cm (Sergio & Javi)",
+        tableSize: "90 x 90 cm",
         lore: "Tras el impacto del cometa sobre las cúpulas de Mordheim, las avanzadas de la Casa Sangre Carmesí y del Clan Scutrix se lanzaron a disputar el paso de La Roca de Sigmar y los muelles fluviales. El choque concluyó con la victoria de las ratas y la cobarde fuga de Loky.",
         objectives: [
           "Controlar La Roca de Sigmar al final de la Ronda 4 (+2 VP)",
@@ -1598,12 +1587,13 @@
       2: {
         id: 2,
         title: "Ronda 02: La Caza de la Piedra Bruja en las Ruinas",
+        factions: "Clan Scutrix (Sergio) vs Hijos del Yunque (Javi) / Casa Carmesí (David)",
         badge: "RONDA EN CURSO",
         badgeStyle: "background: var(--faction-sergio-bg); color: var(--faction-sergio); border: 1.5px solid var(--faction-sergio);",
         rulebook: "AoF: Skirmish v3.6.0",
-        points: "300 pts (+botín acumulado)",
+        points: "600 pts",
         turns: "4 Rondas",
-        tableSize: "90x90 cm (David) / 120x120 cm (Sergio & Javi)",
+        tableSize: "90 x 90 cm",
         lore: "Los ecos de la fuga de Loky aún resuenan en las tabernas de los arrabales. Tres filones de Piedra Bruja fosforescente han quedado al descubierto entre los escombros de la Plaza del Mercado y el Gran Puente del Río Stir. Las tres bandas se lanzan en una carrera desesperada para saquear los monolitos antes de que la niebla ponzoñosa los asfixie.",
         objectives: [
           "Recuperar esquirlas de Piedra Bruja (Marcadores de Objetivo: 3 repartidos) (+1 VP cada una)",
@@ -2093,6 +2083,7 @@
         badge.textContent = m.badge;
         badge.style = m.badgeStyle;
 
+        document.getElementById("missionFactions").textContent = m.factions;
         document.getElementById("missionRulebook").textContent = m.rulebook;
         document.getElementById("missionPoints").textContent = m.points;
         document.getElementById("missionTurns").textContent = m.turns;
