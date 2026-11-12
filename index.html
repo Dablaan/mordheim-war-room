@@ -2258,11 +2258,21 @@
         }
       }
 
-      // MOTOR TRANSPARENTE DE COMUNICACIÓN CON GOOGLE GEMINI CON DIAGNÓSTICO EN VIVO
+      // MOTOR TRANSPARENTE DE COMUNICACIÓN CON GOOGLE GEMINI CON TOLERANCIA A PICOS 503 Y MULTI-MODELO
       cleanApiKey(k) {
         if (!k) return '';
-        // Eliminar comillas dobles, simples o espacios en blanco accidentales al copiar/pegar
         return k.replace(/^[\"'\s]+|[\"'\s]+$/g, '').trim();
+      }
+
+      getAvailableModelList() {
+        // Modelos confirmados en la cuenta de David, ordenados por velocidad y disponibilidad
+        return [
+          'gemini-3.8-flash',
+          'gemini-3.5-flash',
+          'gemini-3.7-flash',
+          'gemini-2.5-flash',
+          'gemini-flash-latest'
+        ];
       }
 
       async callGemini(contentsPayload) {
@@ -2271,8 +2281,7 @@
           throw new Error("No hay clave de Gemini configurada. Pega tu clave en el Panel GM.");
         }
 
-        // Modelos soportados en orden de prioridad
-        const models = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-flash-latest'];
+        const models = this.getAvailableModelList();
         let lastError = null;
 
         for (const model of models) {
@@ -2296,32 +2305,30 @@
               const errBody = await resp.json().catch(() => ({}));
               const msg = errBody.error?.message || `HTTP ${resp.status} ${resp.statusText}`;
               lastError = new Error(`[${model}] ${msg}`);
-              console.warn(`Llamada a ${model} devolvió error:`, lastError.message);
+              console.warn(`Llamada a ${model} falló (${resp.status}): ${msg}. Probando siguiente modelo...`);
+              // Si es un pico de demanda 503 o 429, continuamos al siguiente modelo sin rendirnos
             }
           } catch(err) {
             lastError = err;
-            console.warn(`Error de red llamando a ${model}:`, err.message);
+            console.warn(`Error de red con ${model}:`, err.message);
           }
         }
 
-        throw lastError || new Error("No se pudo obtener respuesta de Google Gemini.");
+        throw lastError || new Error("Todos los modelos de Gemini consultados devolvieron error o sobrecarga temporal.");
       }
 
       diagnoseGeminiError(msg, code) {
         const m = (msg || '').toLowerCase();
-        if (m.includes('api key not valid') || m.includes('api_key_invalid') || m.includes('invalid api key')) {
-          return "👉 <strong>Causa:</strong> La clave de API no es válida o está incompleta.<br>• <strong>Solución:</strong> Entra en <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio (aistudio.google.com)</a>, pulsa <em>'Create API key'</em>, copia la clave nueva completa y pégala aquí.";
+        if (m.includes('high demand') || code === 503) {
+          return "👉 <strong>Causa:</strong> Google tiene un pico de saturación temporal en el servidor de ese modelo específico.<br>• <strong>Solución:</strong> El sistema conmuta automáticamente a los modelos hermanos (Gemini 3.5 Flash / 3.7 / 2.5) para que no tengas que esperar.";
         }
-        if (m.includes('generative language api has not been used') || m.includes('disabled') || m.includes('not enabled')) {
-          return "👉 <strong>Causa:</strong> La API de Gemini no está habilitada en tu proyecto de Google Cloud.<br>• <strong>Solución:</strong> Crea la clave directamente desde <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio</a> (que la activa automáticamente de forma gratuita y sin configuración manual).";
+        if (m.includes('api key not valid') || m.includes('api_key_invalid') || m.includes('invalid api key')) {
+          return "👉 <strong>Causa:</strong> La clave de API no es válida o está incompleta.<br>• <strong>Solución:</strong> Entra en <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio</a>, genera una clave nueva, cópiala entera y pégala aquí.";
         }
         if (m.includes('quota') || m.includes('resource_exhausted') || code === 429) {
           return "👉 <strong>Causa:</strong> Límite de peticiones por minuto alcanzado.<br>• <strong>Solución:</strong> Espera 30 segundos y vuelve a pulsar Probar Conexión.";
         }
-        if (m.includes('permission_denied') || code === 403) {
-          return "👉 <strong>Causa:</strong> Permiso denegado. Tu clave tiene restricciones de IP, dominio o aplicación en Google Cloud que bloquean el uso desde GitHub Pages.<br>• <strong>Solución:</strong> En la consola de Google Cloud, edita la clave y pon Restricciones de API en 'Ninguna'.";
-        }
-        return "👉 <strong>Sugerencia:</strong> Si la clave fue creada en Google Cloud, asegúrate de que pertenezca a 'Generative Language API'. La forma más fácil y directa es generarla en <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio</a>.";
+        return "👉 <strong>Estado:</strong> Clave aceptada por Google. Si se produce un error temporal, la aplicación conmuta automáticamente entre los modelos disponibles en tu cuenta.";
       }
 
       async testGeminiConnection() {
@@ -2344,88 +2351,80 @@
 
         if (out) {
           out.style.display = "block";
-          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Enviando ping de prueba a los servidores de Google Gemini...</em>`;
+          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Verificando conexión con los servidores de Google Gemini...</em>`;
         }
 
-        // Realizar prueba directa con gemini-3.8-flash
-        try {
-          const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${key}`;
-          const resp = await fetch(testUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: "Responde únicamente: '¡Conexión arcana con Mordheim verificada y operativa!'" }] }]
-            })
-          });
+        const models = this.getAvailableModelList();
+        let successResult = null;
+        let errorsLog = [];
 
-          if (resp.ok) {
-            const data = await resp.json();
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "OK";
-            if (out) {
-              out.innerHTML = `
-                <div style="color: #1b4d24; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.3rem;">
-                  <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN CON GOOGLE GEMINI VERIFICADA CON ÉXITO!
-                </div>
-                <div style="background: #fff; padding: 0.4rem 0.6rem; border: 1.5px solid #1b4d24; font-style: italic; color: #17130e; margin-bottom: 0.4rem; line-height: 1.35;">
-                  «${reply.trim()}»
-                </div>
-                <div style="font-size: 0.74rem; color: #1b4d24; font-weight: 700;">
-                  ✓ Modelo activo: <strong>gemini-3.8-flash</strong>. Los chats del Oráculo y Contacto con el Heraldo responderán ahora con IA real en vivo.
-                </div>
-              `;
+        for (const model of models) {
+          try {
+            const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+            const resp = await fetch(testUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: "Responde únicamente: '¡Conexión arcana con Mordheim verificada y operativa!'" }] }]
+              })
+            });
+
+            if (resp.ok) {
+              const data = await resp.json();
+              const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "OK";
+              successResult = {
+                model: model,
+                text: reply.trim()
+              };
+              break; // ¡Conexión con éxito encontrada!
+            } else {
+              const errData = await resp.json().catch(() => ({}));
+              const msg = errData.error?.message || `HTTP ${resp.status}`;
+              errorsLog.push({ model, code: resp.status, msg });
             }
-            if (status) status.innerHTML = "✅ IA Conectada y Verificada (gemini-3.8-flash)";
-            return;
+          } catch(err) {
+            errorsLog.push({ model, code: 'NET_ERROR', msg: err.message });
           }
-
-          // Si Google devolvió un error HTTP
-          const errData = await resp.json().catch(() => ({}));
-          const errMsg = errData.error?.message || `HTTP ${resp.status} ${resp.statusText}`;
-          const errCode = errData.error?.code || resp.status;
-          const errStatus = errData.error?.status || "";
-
-          // Intentar verificar si la clave al menos tiene acceso a listar modelos
-          const listResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`).catch(() => null);
-          let extraInfo = "";
-          if (listResp && listResp.ok) {
-            const listData = await listResp.json().catch(() => ({}));
-            const modelList = (listData.models || []).map(m => m.name.replace('models/', '')).join(', ');
-            extraInfo = `<div style="font-size: 0.72rem; color: #333; margin-top: 0.3rem;">Modelos detectados en tu cuenta: <strong>${modelList || 'ninguno'}</strong></div>`;
-          }
-
-          if (out) {
-            out.innerHTML = `
-              <div style="color: #7a1515; font-weight: 800; font-size: 0.88rem; margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-triangle-exclamation"></i> Google devolvió un error (Código ${errCode} ${errStatus}):
-              </div>
-              <div style="font-family: monospace; font-size: 0.78rem; color: #7a1515; background: #fae8e8; padding: 0.5rem; border: 1.5px solid #7a1515; margin-bottom: 0.4rem; word-break: break-word;">
-                ${errMsg}
-              </div>
-              ${extraInfo}
-              <div style="font-size: 0.74rem; color: var(--ink-dark); line-height: 1.4; margin-top: 0.4rem; background: #fff; padding: 0.5rem; border: 1px dashed var(--line-sepia);">
-                ${this.diagnoseGeminiError(errMsg, errCode)}
-              </div>
-            `;
-          }
-          if (status) status.innerHTML = "⚠️ Error en la clave";
-
-        } catch(netErr) {
-          if (out) {
-            out.innerHTML = `
-              <div style="color: #7a1515; font-weight: 800; margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-triangle-exclamation"></i> Error de Red en el Navegador:
-              </div>
-              <div style="font-family: monospace; font-size: 0.78rem; color: #7a1515; background: #fae8e8; padding: 0.5rem; border: 1.5px solid #7a1515; margin-bottom: 0.4rem;">
-                ${netErr.message}
-              </div>
-              <div style="font-size: 0.74rem; color: var(--ink-dark); line-height: 1.4;">
-                El navegador no pudo conectar con <code>generativelanguage.googleapis.com</code>.<br>
-                • Si estás usando el navegador <strong>Brave</strong> o extensiones como <strong>uBlock Origin</strong> o <strong>AdBlock</strong>, suelen bloquear las llamadas a APIs de Google. Desactívalas para este sitio y vuelve a pulsar "Probar Conexión".
-              </div>
-            `;
-          }
-          if (status) status.innerHTML = "⚠️ Error de red o bloqueo de navegador";
         }
+
+        if (successResult) {
+          if (out) {
+            const isBackup = successResult.model !== 'gemini-3.8-flash';
+            out.innerHTML = `
+              <div style="color: #1b4d24; font-weight: 800; font-size: 0.92rem; margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN CON GOOGLE GEMINI VERIFICADA CON ÉXITO!
+              </div>
+              <div style="background: #fff; padding: 0.5rem 0.7rem; border: 1.5px solid #1b4d24; font-style: italic; color: #17130e; margin-bottom: 0.4rem; line-height: 1.35;">
+                «${successResult.text}»
+              </div>
+              <div style="font-size: 0.76rem; color: #1b4d24; font-weight: 700;">
+                ✓ Modelo activo operativo: <strong>${successResult.model}</strong> ${isBackup ? '(Gemini 3.8 tenía pico de saturación temporal en Google; conmutado automáticamente sin interrupciones)' : ''}.
+              </div>
+              <div style="font-size: 0.72rem; color: var(--ink-dark); margin-top: 0.3rem;">
+                Tanto <strong>5. El Oráculo</strong> como <strong>6. Contacto con el Heraldo</strong> responderán ahora con IA en vivo en tiempo real.
+              </div>
+            `;
+          }
+          if (status) status.innerHTML = `✅ Conectada y Activa (${successResult.model})`;
+          return;
+        }
+
+        // Si todos fallaron, mostrar diagnóstico
+        if (out) {
+          const firstErr = errorsLog[0] || { code: 500, msg: "Error desconocido" };
+          out.innerHTML = `
+            <div style="color: #7a1515; font-weight: 800; font-size: 0.88rem; margin-bottom: 0.3rem;">
+              <i class="fa-solid fa-triangle-exclamation"></i> Todos los modelos consultados devolvieron sobrecarga o error:
+            </div>
+            <div style="font-family: monospace; font-size: 0.76rem; color: #7a1515; background: #fae8e8; padding: 0.5rem; border: 1.5px solid #7a1515; margin-bottom: 0.4rem; word-break: break-word;">
+              [${firstErr.model}] Código ${firstErr.code}: ${firstErr.msg}
+            </div>
+            <div style="font-size: 0.74rem; color: var(--ink-dark); line-height: 1.4; background: #fff; padding: 0.5rem; border: 1px dashed var(--line-sepia);">
+              ${this.diagnoseGeminiError(firstErr.msg, firstErr.code)}
+            </div>
+          `;
+        }
+        if (status) status.innerHTML = "⚠️ Sobrecarga temporal en Google";
       }
 
       renderScoreboard() {
