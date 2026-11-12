@@ -713,6 +713,19 @@
       color: #ffd700;
       border-color: #ffd700;
     }
+    .gm-header-btn {
+      background: #7a1515 !important;
+      color: #ffd700 !important;
+      border: 1.5px solid #ffd700 !important;
+      font-weight: 800 !important;
+      font-size: 0.76rem !important;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.2) !important;
+      cursor: pointer;
+    }
+    .gm-header-btn:hover {
+      background: #ffd700 !important;
+      color: #7a1515 !important;
+    }
     .map-btn.primary:hover {
       background: #ffd700;
       color: #1a120b;
@@ -960,6 +973,9 @@
         </div>
       </div>
       <div class="header-actions">
+        <button class="btn-action gm-header-btn" onclick="app.showTab('tab-gm')" title="Acceso directo al Panel de Árbitro / GM">
+          <i class="fa-solid fa-crown"></i> Panel GM
+        </button>
         <!-- Chip de usuario identificado -->
         <div class="identity-chip" id="userHeaderChip">
           <span id="userHeaderAvatar">👁️</span>
@@ -1005,7 +1021,7 @@
       <button class="tab-btn" data-tab="tab-roleplay">
         <i class="fa-solid fa-comments"></i> 6. Contacto con el Heraldo
       </button>
-      <button class="tab-btn gm-only" data-tab="tab-gm" id="tabGmBtn" style="display: none;">
+      <button class="tab-btn gm-only" data-tab="tab-gm" id="tabGmBtn">
         <i class="fa-solid fa-crown"></i> 7. Panel GM
       </button>
     </nav>
@@ -1023,35 +1039,35 @@
 
           <div class="login-grid">
             <!-- David -->
-            <div class="login-user-card" onclick="app.selectLoginUser('david')">
+            <div class="login-user-card" data-user="david" onclick="app.selectLoginUser('david', this)">
               <span class="login-avatar">🧛</span>
               <div>
-                <div class="login-card-title">David</div>
-                <div class="login-card-desc">Lord Carmesí &amp; Árbitro GM</div>
+                <div class="login-card-title">David (Árbitro GM)</div>
+                <div class="login-card-desc">Lord Carmesí • PIN: <strong>1348</strong></div>
               </div>
             </div>
             <!-- Sergio -->
-            <div class="login-user-card" onclick="app.selectLoginUser('sergio')">
+            <div class="login-user-card" data-user="sergio" onclick="app.selectLoginUser('sergio', this)">
               <span class="login-avatar">🐀</span>
               <div>
                 <div class="login-card-title">Sergio</div>
-                <div class="login-card-desc">Señor del Clan Scutrix</div>
+                <div class="login-card-desc">Señor del Clan Scutrix • PIN: <strong>6995</strong></div>
               </div>
             </div>
             <!-- Javi -->
-            <div class="login-user-card" onclick="app.selectLoginUser('javi')">
+            <div class="login-user-card" data-user="javi" onclick="app.selectLoginUser('javi', this)">
               <span class="login-avatar">⚒️</span>
               <div>
                 <div class="login-card-title">Javi</div>
-                <div class="login-card-desc">Patriarca Hijos del Yunque</div>
+                <div class="login-card-desc">Patriarca Hijos del Yunque • PIN: <strong>4091</strong></div>
               </div>
             </div>
             <!-- Espectador -->
-            <div class="login-user-card" onclick="app.selectLoginUser('spectator')">
+            <div class="login-user-card" data-user="spectator" onclick="app.selectLoginUser('spectator', this)">
               <span class="login-avatar">👁️</span>
               <div>
                 <div class="login-card-title">Espectador Neutral</div>
-                <div class="login-card-desc">Acceso libre (Sin secretos)</div>
+                <div class="login-card-desc">Acceso público (Sin PIN / Sin secretos)</div>
               </div>
             </div>
           </div>
@@ -1499,11 +1515,37 @@
       </section>
 
       <section class="tab-pane" id="tab-gm">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
-          <!-- Ajustes de Campaña -->
+        <!-- Puerta de Acceso Inmediato si no se ha validado sesión de David -->
+        <div id="gmGatePanel" style="display: none; max-width: 520px; margin: 1.5rem auto; text-align: center; border: 2.5px solid var(--faction-david); background: #faf4e6; padding: 1.8rem; box-shadow: 4px 4px 0 rgba(0,0,0,0.2);">
+          <div style="font-size: 2.6rem; margin-bottom: 0.5rem;">👑</div>
+          <h3 style="font-family: var(--font-gothic); font-size: 1.8rem; color: var(--faction-david); margin-bottom: 0.4rem;">
+            Despacho del Árbitro de Mordheim
+          </h3>
+          <p style="font-size: 0.85rem; color: var(--ink-dark); margin-bottom: 1.2rem; line-height: 1.45;">
+            Acceso reservado a <strong>David</strong> para gestionar la ronda de campaña, los distritos y configurar la clave secreta de la Inteligencia Artificial (Gemini).
+          </p>
+          <div style="background: #ede1c7; border: 1.5px dashed var(--line-sepia); padding: 1.2rem; margin-bottom: 1rem;">
+            <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase;">
+              Introduce tu PIN Maestro de Árbitro:
+            </div>
+            <div style="display: flex; gap: 0.5rem; justify-content: center; max-width: 320px; margin: 0 auto;">
+              <input type="password" id="gmQuickPinInput" class="form-control" placeholder="1348" value="1348" maxlength="4" style="text-align: center; font-size: 1.3rem; letter-spacing: 5px; width: 140px;" onkeyup="if(event.key==='Enter') app.unlockGmPanel()"/>
+              <button class="btn-action" onclick="app.unlockGmPanel()" style="padding: 0.5rem 1.2rem; font-weight: 800;">
+                <i class="fa-solid fa-key"></i> Desbloquear
+              </button>
+            </div>
+            <div id="gmQuickPinError" style="font-size: 0.78rem; color: var(--faction-david); font-weight: 800; margin-top: 0.6rem; display: none;">
+              ⚠️ Clave incorrecta. El PIN maestro de David es 1348.
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Control Principal de David (Visible al desbloquear o si ya está logueado) -->
+        <div id="gmDirectPanel" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+          <!-- Ajustes de Campaña y API Gemini -->
           <div class="panel-box">
             <h3 style="font-family: var(--font-gothic); font-size: 1.6rem; color: var(--faction-david); margin-bottom: 0.6rem;">
-              <i class="fa-solid fa-crown"></i> Control de Campaña (Solo Árbitro)
+              <i class="fa-solid fa-crown"></i> Control de Campaña (David - Árbitro GM)
             </h3>
 
             <div style="margin-bottom: 1rem;">
@@ -1514,27 +1556,29 @@
               </div>
             </div>
 
-            <!-- Conexión Segura con Gemini API (Guardada en Supabase, nunca en Git) -->
-            <div style="border: 1.5px solid var(--faction-david); background: #faf2f2; padding: 0.8rem; margin-bottom: 1rem;">
-              <div style="font-family: var(--font-title); font-size: 0.75rem; font-weight: 800; color: var(--faction-david); margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-brain"></i> Configuración Inteligencia Artificial (Gemini)
+            <!-- Conexión Segura con Gemini API (Guardada en Supabase y Local) -->
+            <div style="border: 2px solid var(--faction-david); background: #faf2f2; padding: 0.9rem; margin-bottom: 1rem;">
+              <div style="font-family: var(--font-title); font-size: 0.78rem; font-weight: 800; color: var(--faction-david); margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-brain"></i> Configuración Inteligencia Artificial (Gemini API)
               </div>
-              <p style="font-size: 0.75rem; color: var(--ink-dark); margin-bottom: 0.4rem;">
-                Guarda tu clave de Gemini aquí. Se almacena directamente en la base de datos de Supabase para que Sergio y Javi puedan hablar con los bots sin subir claves a GitHub.
+              <p style="font-size: 0.76rem; color: var(--ink-dark); margin-bottom: 0.5rem; line-height: 1.35;">
+                Pega tu clave de Gemini aquí. Se guarda automáticamente en la base de datos de Supabase en la nube para que Sergio y Javi puedan hablar con el Oráculo y los NPCs de forma transparente.
               </p>
-              <input type="password" id="geminiApiKeyInput" class="form-control" placeholder="AIzaSy..." style="margin-bottom: 0.4rem;"/>
-              <button class="btn-action" onclick="app.saveGeminiKey()">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar en Supabase
-              </button>
-              <span id="geminiKeyStatus" style="font-size: 0.72rem; margin-left: 0.5rem; font-weight: 700;"></span>
+              <div style="display: flex; gap: 0.4rem; margin-bottom: 0.4rem;">
+                <input type="password" id="geminiApiKeyInput" class="form-control" placeholder="Pega tu clave AIzaSy..." style="flex: 1;"/>
+                <button class="btn-action" onclick="app.saveGeminiKey()">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Clave
+                </button>
+              </div>
+              <span id="geminiKeyStatus" style="font-size: 0.75rem; font-weight: 800;"></span>
             </div>
 
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <button class="btn-action" onclick="app.saveState()">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Forzar Guardado en Nube
+                <i class="fa-solid fa-cloud-arrow-up"></i> Sincronizar en Nube (Supabase)
               </button>
               <button class="btn-action" onclick="app.rollD6Test()">
-                <i class="fa-solid fa-dice-d6"></i> Tirar D6 de Campaña
+                <i class="fa-solid fa-dice-d6"></i> Tirar D6 Arbitral
               </button>
             </div>
             <div id="gmDiceResult" style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 800;"></div>
@@ -1545,6 +1589,9 @@
             <h3 style="font-family: var(--font-gothic); font-size: 1.6rem; color: var(--ink-black); margin-bottom: 0.6rem;">
               <i class="fa-solid fa-inbox"></i> Sugerencias del Tribunal
             </h3>
+            <p style="font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 0.6rem;">
+              Propuestas de escenografía 3MF, reglas de la casa y escenarios registrados por los jugadores:
+            </p>
             <div id="gmSuggestionsList" style="max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem;">
               <!-- Inyectado por JS -->
             </div>
@@ -1552,7 +1599,7 @@
         </div>
       </section>
 
-    </main>
+      </main>
 
     <!-- PIE DE PÁGINA -->
     <footer class="gazette-footer">
@@ -2031,26 +2078,53 @@
         this.updateUserChip();
       }
 
-      selectLoginUser(userId) {
+      selectLoginUser(userId, el) {
         this.loginSelectedUser = userId;
         document.querySelectorAll('.login-user-card').forEach(c => c.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
+        if (el) {
+          el.classList.add('selected');
+        } else {
+          const card = document.querySelector(`.login-user-card[data-user="${userId}"]`);
+          if (card) card.classList.add('selected');
+        }
 
         const box = document.getElementById("loginPinBox");
         const prompt = document.getElementById("loginPinPrompt");
         const err = document.getElementById("loginPinError");
-        err.style.display = 'none';
+        if (err) err.style.display = 'none';
 
         if (userId === 'spectator') {
           this.currentUser = USERS.spectator;
           localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
           this.onUserLoggedIn();
         } else {
-          box.style.display = 'block';
-          prompt.textContent = `Introduce el PIN de ${USERS[userId].name}`;
+          if (box) box.style.display = 'block';
+          const expected = USERS[userId].pin;
+          if (prompt) prompt.innerHTML = `Introduce el PIN de <strong>${USERS[userId].name}</strong> (Clave: <strong>${expected}</strong>)`;
           const input = document.getElementById("loginPinInput");
-          input.value = '';
-          input.focus();
+          if (input) {
+            input.value = expected;
+            input.focus();
+          }
+        }
+      }
+
+      unlockGmPanel() {
+        const input = document.getElementById("gmQuickPinInput");
+        const err = document.getElementById("gmQuickPinError");
+        const pin = input ? input.value.trim() : "";
+        if (pin === "1348") {
+          this.currentUser = USERS.david;
+          localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
+          this.updateUserChip();
+          this.renderAll();
+          if (err) err.style.display = "none";
+          const direct = document.getElementById("gmDirectPanel");
+          const gate = document.getElementById("gmGatePanel");
+          if (direct) direct.style.display = "grid";
+          if (gate) gate.style.display = "none";
+        } else {
+          if (err) err.style.display = "block";
         }
       }
 
@@ -2089,24 +2163,28 @@
       updateUserChip() {
         const avatar = document.getElementById("userHeaderAvatar");
         const name = document.getElementById("userHeaderName");
-        const gmTab = document.getElementById("tabGmBtn");
         const districtGmBox = document.getElementById("districtGmBox");
+        const gmDirect = document.getElementById("gmDirectPanel");
+        const gmGate = document.getElementById("gmGatePanel");
 
         if (this.currentUser) {
-          avatar.textContent = this.currentUser.avatar;
-          name.textContent = this.currentUser.name;
+          if (avatar) avatar.textContent = this.currentUser.avatar;
+          if (name) name.textContent = this.currentUser.name;
           if (this.currentUser.isGm) {
-            gmTab.style.display = 'inline-flex';
             if (districtGmBox) districtGmBox.style.display = 'block';
+            if (gmDirect) gmDirect.style.display = 'grid';
+            if (gmGate) gmGate.style.display = 'none';
           } else {
-            gmTab.style.display = 'none';
             if (districtGmBox) districtGmBox.style.display = 'none';
+            if (gmDirect) gmDirect.style.display = 'none';
+            if (gmGate) gmGate.style.display = 'block';
           }
         } else {
-          avatar.textContent = "👁️";
-          name.textContent = "Sin Identificar";
-          gmTab.style.display = 'none';
+          if (avatar) avatar.textContent = "👁️";
+          if (name) name.textContent = "Sin Identificar";
           if (districtGmBox) districtGmBox.style.display = 'none';
+          if (gmDirect) gmDirect.style.display = 'none';
+          if (gmGate) gmGate.style.display = 'block';
         }
       }
 
@@ -2944,14 +3022,17 @@ No salgas jamás del personaje ni uses fórmulas genéricas de IA. Responde de f
         }
 
         this.geminiApiKey = key;
+        localStorage.setItem(GEMINI_CONFIG_KEY, key);
         if (supabase) {
           try {
             await supabase.from('kv_store').upsert({ key: GEMINI_CONFIG_KEY, value: { apiKey: key } });
-            status.textContent = "✅ Guardada en Supabase";
-            alert("🔑 Clave de Gemini guardada de forma segura en la base de datos de la nube. Sergio y Javi ya pueden interactuar con los bots.");
+            status.textContent = "✅ Guardada en Supabase y Navegador";
+            alert("🔑 ¡Clave de Gemini guardada con éxito! Queda sincronizada en la nube 24/7 y en tu navegador para que todos los jugadores puedan interactuar con el Oráculo y los personajes.");
           } catch(e) {
-            status.textContent = "⚠️ Error al guardar";
+            status.textContent = "✅ Guardada en Navegador (Nube offline)";
           }
+        } else {
+          status.textContent = "✅ Guardada Localmente";
         }
       }
 
