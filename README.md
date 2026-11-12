@@ -1,53 +1,38 @@
-# ⚔️ Kar-Drakor: War Room (Portal Web de Campaña)
+# ⚔️ KAR-DRAKOR: WAR ROOM (Portal Web de Campaña)
 ## Cuartel General 100% Online para Age of Fantasy: Skirmish (v3.6.0)
 
-Este proyecto es la **Web App / PWA independiente** de la campaña narrativa *"Las Cenizas de Kar-Drakor"*. Resuelve definitivamente los cuellos de botella de Telegram:
-1. **Cero pérdida de información**: Los 9 distritos, marcador de VP, fichas, hemeroteca de periódicos y misiones tienen su lugar fijo y permanente.
-2. **Cero dependencia del PC encendido**: El portal corre en la nube (Vercel / GitHub Pages) conectado a la base de datos PostgreSQL de **Supabase Cloud**, funcionando 24/7 de forma autónoma.
-3. **Niebla de guerra total**: Cada comandante ve exclusivamente sus órdenes secretas de la ronda al identificarse.
-4. **Oráculo de Reglas con IA**: Árbitro de reglas integrado con Google Gemini API para responder dudas de AoFS v3.6.0 al instante.
+[![GitHub Pages Deployment](https://img.shields.io/badge/Status-Live%2024%2F7-brightgreen)](https://dablaan.github.io/kar-drakor-war-room/)
+[![System](https://img.shields.io/badge/System-OnePageRules%20v3.6.0-blue)](https://onepagerules.com/)
+
+Portal web oficial y salón de guerra interactivo para la campaña narrativa **"Las Cenizas de Kar-Drakor"**. Diseñado con una cuidada estética de gaceta histórica renacentista, grabados en madera y estilo *Town Cryer* de Mordheim.
+
+👉 **Acceso Online Permanente:** [https://dablaan.github.io/kar-drakor-war-room/](https://dablaan.github.io/kar-drakor-war-room/)
 
 ---
 
-## 🚀 Cómo Probarlo en Local
+## 📚 Documentación de Administración y Diseño
 
-Puedes abrirlo de tres formas muy sencillas:
+Para cualquier persona, desarrollador o Game Master que desee entender la arquitectura, modificar el diseño o administrar la campaña:
 
-### Opción 1: Con Python (Servidor local ultrarrápido)
-Abre una terminal PowerShell en esta carpeta y ejecuta:
-```powershell
-python -m http.server 8080
-```
-Y abre en tu navegador: `http://localhost:8080`
+📖 **Lee el [MANUAL_ADMINISTRADOR_Y_DISENO.md](MANUAL_ADMINISTRADOR_Y_DISENO.md)**
 
-### Opción 2: Con la extensión Live Server de VS Code / Antigravity
-Haz clic derecho en `index.html` y pulsa **"Open with Live Server"**.
-
----
-
-## ☁️ Cómo Desplegarlo 100% Online en la Nube (Gratis y Permanente)
-
-### Opción A: Despliegue en GitHub Pages (Recomendada y en 2 minutos)
-1. Crea un nuevo repositorio en tu cuenta de GitHub (`Dablaan/kar-drakor-war-room`).
-2. En esta carpeta ejecuta:
-   ```powershell
-   git init
-   git add .
-   git commit -m "feat: Lanzamiento de Kar-Drakor War Room"
-   git branch -M main
-   git remote add origin https://github.com/Dablaan/kar-drakor-war-room.git
-   git push -u origin main
-   ```
-3. En GitHub ve a **Settings > Pages** y activa `Deploy from branch: main / (root)`.
-4. ¡Listo! Tendrás tu enlace permanente accesible desde cualquier móvil: `https://dablaan.github.io/kar-drakor-war-room/`
-
-### Opción B: Despliegue en Vercel
-1. Ve a [vercel.com](https://vercel.com).
-2. Conecta tu repositorio de GitHub `Dablaan/kar-drakor-war-room`.
-3. Haz clic en **Deploy**. Tendrás dominio gratuito con HTTPS y CDN mundial instantáneo.
+En él encontrarás:
+* **Ficha técnica completa y credenciales** (Supabase, GitHub, PIN de Game Master).
+* **Guía estética**: Tipografías de imprenta antigua (`UnifrakturMaguntia`, `Pirata One`, `Cinzel`), variables CSS de paleta histórica y filtros de grabado en madera.
+* **Guía del Administrador**: Cómo identificarse con PIN, asignar soberanía de los 9 distritos con 1 clic y avanzar rondas.
+* **Guía de Expansión**: Cómo publicar nuevas ediciones de *El Heraldo*, añadir reglas al Oráculo Arbitral y crear nuevas misiones.
+* **Flujo de Publicación**: Cómo desplegar cambios a la nube en 30 segundos con `git push`.
 
 ---
 
-## 🔐 Credenciales y Configuración Central
-Las claves y conexiones a Supabase y Gemini API están centralizadas en `js/config.js` y documentadas en tu bóveda de Obsidian en:
-`20 Áreas/Gestión Digital/Registro_Central_APIs_y_Tokens.md`
+## 🏰 Características Principales
+1. **Cartografía Táctica de 9 Baluartes**: Grafo interactivo con ventajas de combate y soberanía en tiempo real.
+2. **Niebla de Guerra Estricta**: Cada comandante ve exclusivamente su Orden Secreta de ronda.
+3. **Registro de Partes & Simulador 1D6 de Bajas**: Chequeo inmediato de supervivencia para miniaturas caídas (muerto, recuperado o veterano).
+4. **Hemeroteca de "El Heraldo"**: Gaceta con maquetación de imprenta renacentista y descarga de PDFs oficiales.
+5. **Oráculo de Reglas AoFS v3.6.0**: Respuestas inmediatas a dudas tácticas de combate, moral y cobertura.
+6. **Persistencia Cloud en Tiempo Real**: Conectado a base de datos Supabase con fallback local automático.
+
+---
+
+*Campaña narrativa de Age of Fantasy: Skirmish — Códice Kar-Drakor.*
