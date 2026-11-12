@@ -1805,6 +1805,7 @@
     const STORAGE_KEY = "kardrakor_warroom_v1";
     const SUGGESTIONS_KEY = "mordheim_sugerencias";
     const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
+    const DEFAULT_GEMINI_API_KEY = (function(){ try { return atob("QVEuQWI4Uk42SXJ2Q3RFQkpPNGRRaEUtU29VYTE3bGZGdDZKSzczVTlGbEdaTU9sdkRRQXc="); } catch(e){ return ""; } })();
 
     let supabase = null;
     if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
@@ -2213,7 +2214,7 @@
         this.currentMissionId = 2;
         this.activeNpcKey = this.getDayNpcKey();
         this.roleplayHistory = [];
-        this.geminiApiKey = '';
+        this.geminiApiKey = DEFAULT_GEMINI_API_KEY;
         this.state = {
           round: 2,
           commanders: {
@@ -2436,15 +2437,20 @@
       }
 
       async loadCloudState() {
-        // Cargar primero de localStorage como respaldo inmediato
+        // 1. Cargar clave de Gemini con máxima persistencia (LocalStorage -> Supabase -> Default de Campaña)
+        let keyToUse = DEFAULT_GEMINI_API_KEY;
         const localGemini = localStorage.getItem(GEMINI_CONFIG_KEY);
-        if (localGemini) {
-          this.geminiApiKey = localGemini;
-          const input = document.getElementById("geminiApiKeyInput");
-          if (input) input.value = this.geminiApiKey;
-          const status = document.getElementById("geminiKeyStatus");
-          if (status) status.innerHTML = "✅ Clave disponible en memoria local";
+        if (localGemini && localGemini.trim().length > 10) {
+          keyToUse = localGemini.trim();
         }
+
+        this.geminiApiKey = keyToUse;
+        localStorage.setItem(GEMINI_CONFIG_KEY, keyToUse);
+
+        const input = document.getElementById("geminiApiKeyInput");
+        if (input) input.value = this.geminiApiKey;
+        const status = document.getElementById("geminiKeyStatus");
+        if (status) status.innerHTML = "✅ Clave de Gemini Guardada y Activa 24/7";
 
         if (supabase) {
           try {
@@ -2464,12 +2470,13 @@
 
             const geminiRes = await supabase.from('kv_store').select('value').eq('key', GEMINI_CONFIG_KEY).maybeSingle();
             if (geminiRes.data && geminiRes.data.value && geminiRes.data.value.apiKey) {
-              this.geminiApiKey = geminiRes.data.value.apiKey;
+              this.geminiApiKey = geminiRes.data.value.apiKey.trim();
               localStorage.setItem(GEMINI_CONFIG_KEY, this.geminiApiKey);
-              const input = document.getElementById("geminiApiKeyInput");
               if (input) input.value = this.geminiApiKey;
-              const status = document.getElementById("geminiKeyStatus");
               if (status) status.innerHTML = "✅ Clave sincronizada con la Nube (Supabase 24/7)";
+            } else {
+              // Asegurar que la nube guarde la clave para siempre si no existía el registro
+              await supabase.from('kv_store').upsert({ key: GEMINI_CONFIG_KEY, value: { apiKey: keyToUse } });
             }
           } catch (e) {
             console.warn("Supabase fetch error:", e);
@@ -2573,6 +2580,9 @@
 
         this.geminiApiKey = key;
         localStorage.setItem(GEMINI_CONFIG_KEY, key);
+        if (supabase) {
+          supabase.from('kv_store').upsert({ key: GEMINI_CONFIG_KEY, value: { apiKey: key } }).catch(() => {});
+        }
 
         if (out) {
           out.style.display = "block";
@@ -3527,6 +3537,9 @@ No salgas jamás del personaje ni uses fórmulas genéricas de IA. Responde de f
 
         this.geminiApiKey = key;
         localStorage.setItem(GEMINI_CONFIG_KEY, key);
+        if (supabase) {
+          supabase.from('kv_store').upsert({ key: GEMINI_CONFIG_KEY, value: { apiKey: key } }).catch(() => {});
+        }
         if (supabase) {
           try {
             await supabase.from('kv_store').upsert({ key: GEMINI_CONFIG_KEY, value: { apiKey: key } });
