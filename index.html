@@ -1062,7 +1062,7 @@
     <div class="gazette-folio-strip">
       <span><i class="fa-solid fa-landmark"></i> ARCHIVOS DEL TRIBUNAL DE GUERRA</span>
       <span>AÑO DE LAS SOMBRAS 1599 • IMPRENTA DE LA CIUDAD CONDENADA</span>
-      <span id="headerRoundTag">RONDA 02 EN CURSO</span>
+      <span id="headerRoundTag">RONDA 01 EN CURSO</span>
     </div>
 
     <!-- MARCADOR DE CAMPAÑA (TRES FACCIONES) -->
@@ -1185,11 +1185,8 @@
       <section class="tab-pane" id="tab-mission">
         <!-- Selector de Misiones -->
         <div class="mission-nav-bar">
-          <button class="btn-action" id="btnMission1" onclick="app.showMission(1)">
-            <i class="fa-solid fa-flag-checkered"></i> Ronda 01: El Despertar del Colmillo
-          </button>
-          <button class="btn-action active" id="btnMission2" onclick="app.showMission(2)">
-            <i class="fa-solid fa-meteor"></i> Ronda 02: La Caza de la Piedra Bruja (Activa)
+          <button class="btn-action active" id="btnMission1" onclick="app.showMission(1)">
+            <i class="fa-solid fa-flag-checkered"></i> Ronda 01: La Sangre en El Cruce del Degollador (Activa)
           </button>
         </div>
 
@@ -1802,7 +1799,7 @@
     // 1. CONFIGURACIÓN SUPABASE & MEMORIA
     const SUPABASE_URL = "https://gwryzkejvymurjnyfwpu.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw";
-    const STORAGE_KEY = "kardrakor_warroom_v1";
+    const STORAGE_KEY = "kardrakor_warroom_v2";
     const SUGGESTIONS_KEY = "mordheim_sugerencias";
     const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
     const DEFAULT_GEMINI_API_KEY = (function(){ try { return atob("QVEuQWI4Uk42SXJ2Q3RFQkpPNGRRaEUtU29VYTE3bGZGdDZKSzczVTlGbEdaTU9sdkRRQXc="); } catch(e){ return ""; } })();
@@ -1984,36 +1981,20 @@
     const MISSIONS_DATA = {
       1: {
         id: 1,
-        title: "Ronda 01: El Despertar del Colmillo de Hierro",
+        title: "Ronda 01: La Sangre en El Cruce del Degollador",
         factions: "Casa Sangre Carmesí (David) vs Clan Scutrix (Sergio)",
-        badge: "COMPLETADA",
-        badgeStyle: "background: #dfcb9f; color: #3a2e22; border: 1.5px solid #3a2e22;",
-        rulebook: "AoF: Skirmish v3.6.0",
+        badge: "CONVOCATORIA ACTIVA (ENCUENTRO 01)",
+        badgeStyle: "background: #fbf2f2; color: #7a1515; border: 1.5px solid #7a1515;",
+        rulebook: "Age of Fantasy: Skirmish v3.6.0 (OPR)",
         points: "600 pts",
         turns: "4 Rondas",
-        tableSize: "90 x 90 cm",
-        lore: "Tras el impacto del cometa sobre las cúpulas de Mordheim, las avanzadas de la Casa Sangre Carmesí y del Clan Scutrix se lanzaron a disputar el paso de La Roca de Sigmar y los muelles fluviales. El choque concluyó con la victoria de las ratas y la cobarde fuga de Loky.",
+        tableSize: "90 x 90 cm (Casa de David)",
+        lore: "Primer encuentro oficial de campaña en el Distrito II: El Cruce del Degollador (Mesa de 90x90 cm en Casa de David). La encrucijada de adoquín resquebrajado, que desciende hacia los colectores del río Stir, ha sido elegida por los vampiros de la Casa Sangre Carmesí y la horda de ratmen del Clan Scutrix como el punto de colisión inicial. Callejuelas angostas, criptas encharcadas y muros ruinosos configuran un teatro de combate cerrado asfixiante.",
         objectives: [
-          "Controlar La Roca de Sigmar al final de la Ronda 4 (+2 VP)",
-          "Eliminar al Campeón o Héroe enemigo (+1 VP)",
-          "Asegurar al menos 1 cofre de Piedra Bruja (+1 VP)"
-        ]
-      },
-      2: {
-        id: 2,
-        title: "Ronda 02: La Caza de la Piedra Bruja en las Ruinas",
-        factions: "Clan Scutrix (Sergio) vs Hijos del Yunque (Javi) / Casa Carmesí (David)",
-        badge: "RONDA EN CURSO",
-        badgeStyle: "background: var(--faction-sergio-bg); color: var(--faction-sergio); border: 1.5px solid var(--faction-sergio);",
-        rulebook: "AoF: Skirmish v3.6.0",
-        points: "600 pts",
-        turns: "4 Rondas",
-        tableSize: "90 x 90 cm",
-        lore: "Los ecos de la fuga de Loky aún resuenan en las tabernas de los arrabales. Tres filones de Piedra Bruja fosforescente han quedado al descubierto entre los escombros de la Plaza del Mercado y el Gran Puente del Río Stir. Las tres bandas se lanzan en una carrera desesperada para saquear los monolitos antes de que la niebla ponzoñosa los asfixie.",
-        objectives: [
-          "Recuperar esquirlas de Piedra Bruja (Marcadores de Objetivo: 3 repartidos) (+1 VP cada una)",
-          "Expulsar a las bandas rivales del cuadrante central (+2 VP)",
-          "Hacer que el líder enemigo chequee moral al 50% (+1 VP)"
+          "Misión Oficial: Asegurar el Terreno (Seize Ground - Pág. 22 / Pág. 51 AoFS v3.6.0): 4 Marcadores de Objetivo colocados en el centro de los 4 cuadrantes urbanos (+1 VP por cada objetivo bajo control al final de la Ronda 4).",
+          "Despliegue Asalto por el Flanco (Pág. 51): Despliegue en cuadrantes diagonales opuestos a 9 pulgadas del centro de entrada (David en Cuadrante Noroeste / Criptas de Morr; Sergio en Cuadrante Sureste / Colectores de la Falla).",
+          "Escenografía 3MF Justificada: La Casona Señorial ('Ruin house 3') y el Bastión Cuadrado ('building4') bloquean el centro de mesa impidiendo líneas de tiro rasantes directas; la Torre de Tres Plantas ('Ruin_house_2') domina el flanco sureste como nido de tiradores de chispa; la Catedral de Ulvheim y la Nave de Templo ('ruineV3N3B') vertebran el baluarte noroeste (+1 Def Cobertura); esquinas en L y cajas/barriles protegen las avenidas intermedias.",
+          "Victoria de Campaña: Quien controle más marcadores al finalizar la 4ª ronda captura el Distrito II (+2 VP y +60 pts de botín para la tesorería de su banda)."
         ]
       }
     };
@@ -2211,36 +2192,18 @@
       constructor() {
         this.currentUser = null;
         this.selectedDistrictId = 1;
-        this.currentMissionId = 2;
+        this.currentMissionId = 1;
         this.activeNpcKey = this.getDayNpcKey();
         this.roleplayHistory = [];
         this.geminiApiKey = DEFAULT_GEMINI_API_KEY;
         this.state = {
-          round: 2,
+          round: 1,
           commanders: {
-            david: { vp: 1, gold: 300 },
-            sergio: { vp: 3, gold: 330 },
-            javi: { vp: 0, gold: 300 }
+            david: { vp: 0, gold: 300 },
+            sergio: { vp: 0, gold: 300 }
           },
           districts: JSON.parse(JSON.stringify(DISTRICTS)),
-          aars: [
-            {
-              id: "aar_1",
-              author: "Sergio (Clan Scutrix)",
-              opponent: "David (Sangre Carmesí)",
-              result: "Victoria Decisiva (+2 VP)",
-              text: "¡Victoria chillona para el Clan Scutrix! El gas de disformidad envolvió a los esqueletos y Queek lideró la carga sobre el Bastión Central antes de que los no-muertos reaccionaran.",
-              time: "Ronda 01 • Encrucijada"
-            },
-            {
-              id: "aar_2",
-              author: "David (Sangre Carmesí)",
-              opponent: "Sergio (Clan Scutrix)",
-              result: "Derrota Táctica (+1 VP)",
-              text: "La horda de roedores se abalanzó con frenesí ciego. Logramos decapitar al campeón Queek con nuestras garras antes de replegarnos con dignidad hacia las Catacumbas Reales.",
-              time: "Ronda 01 • Criptas"
-            }
-          ],
+          aars: [],
           suggestions: []
         };
         this.loginSelectedUser = null;
@@ -2258,7 +2221,7 @@
         this.setupNavigation();
         this.initMapControls();
         this.showGazette(2);
-        this.showMission(2);
+        this.showMission(1);
         this.renderRoleplayGreeting();
         await this.loadCloudState();
         this.syncDistrictDefinitions();
@@ -2343,7 +2306,6 @@
         let isMatch = false;
         if (this.loginSelectedUser === 'david' && val === '1348') isMatch = true;
         else if (this.loginSelectedUser === 'sergio' && val === '6995') isMatch = true;
-        else if (this.loginSelectedUser === 'javi' && (val === '4091' || val === '7788')) isMatch = true;
 
         if (isMatch) {
           if (err) err.style.display = 'none';
@@ -2368,7 +2330,7 @@
         this.updateUserChip();
         this.renderAll();
         this.showGazette(2);
-        this.showMission(2);
+        this.showMission(1);
         this.renderRoleplayGreeting();
         this.loadPlayerRoster();
         this.showTab('tab-gazette');
