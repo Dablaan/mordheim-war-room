@@ -638,35 +638,205 @@
     }
     @media (max-width: 950px) { .map-grid-layout { grid-template-columns: 1fr; } }
 
+    /* Barra de Herramientas y Leyenda del Mapa */
+    .map-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      background: #f4ecdc;
+      border: 2px solid var(--ink-black);
+      border-bottom: none;
+      padding: 0.5rem 0.8rem;
+    }
+    .map-legend-pills {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-title);
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.5rem;
+      background: #ede1c7;
+      border: 1.5px solid var(--line-sepia);
+    }
+    .legend-pill.david { border-color: var(--faction-david); color: var(--faction-david); }
+    .legend-pill.sergio { border-color: var(--faction-sergio); color: var(--faction-sergio); }
+    .legend-pill.javi { border-color: var(--faction-javi); color: var(--faction-javi); }
+    .legend-pill.neutral { border-color: #8e806f; color: #5a4d3e; }
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .legend-pill.david .legend-dot { background: var(--faction-david); box-shadow: 0 0 4px var(--faction-david); }
+    .legend-pill.sergio .legend-dot { background: var(--faction-sergio); box-shadow: 0 0 4px var(--faction-sergio); }
+    .legend-pill.javi .legend-dot { background: var(--faction-javi); box-shadow: 0 0 4px var(--faction-javi); }
+    .legend-pill.neutral .legend-dot { background: #8e806f; }
+
+    .map-zoom-buttons {
+      display: inline-flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+    .map-btn {
+      background: #fff;
+      border: 1.5px solid var(--ink-black);
+      color: var(--ink-black);
+      font-family: var(--font-title);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+    }
+    .map-btn:hover {
+      background: var(--ink-black);
+      color: #fff;
+    }
+    .map-btn.primary {
+      background: #2b2016;
+      color: #ffd700;
+      border-color: #ffd700;
+    }
+    .map-btn.primary:hover {
+      background: #ffd700;
+      color: #1a120b;
+    }
+
     .tactical-map-viewport {
       position: relative;
       border: 3px double var(--ink-black);
-      background: #ede1c7;
+      background: #17130e;
       box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
       overflow: hidden;
+      user-select: none;
+    }
+    .tactical-map-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-origin: center center;
+      transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+      will-change: transform;
     }
     .tactical-map-img {
       width: 100%;
       height: auto;
       display: block;
       filter: contrast(1.08) brightness(0.98);
+      pointer-events: none;
     }
     .tactical-map-overlay {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      overflow: visible;
     }
+
+    /* Pines Tácticos e Interactividad sin Temblores */
     .map-pin {
       cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease;
+      user-select: none;
     }
-    .map-pin:hover {
-      transform: scale(1.18);
-      filter: drop-shadow(0 0 6px rgba(0,0,0,0.6));
+    /* AVISO: NUNCA usar transform: scale en .map-pin:hover para evitar conflicto con translate() de SVG y bucles de temblor */
+    .map-pin circle.pin-core {
+      transition: r 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.18s ease;
+    }
+    .map-pin circle.pin-ring {
+      transition: r 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), stroke-width 0.18s ease;
+    }
+    .map-pin:hover circle.pin-core {
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
+    }
+    .map-pin:hover circle.pin-ring {
+      stroke: #ffd700 !important;
+      stroke-width: 3.5 !important;
+    }
+    .map-pin .pin-tag-bg {
+      transition: fill 0.18s ease, stroke 0.18s ease, filter 0.18s ease;
+    }
+    .map-pin:hover .pin-tag-bg {
+      fill: rgba(12, 9, 6, 0.96) !important;
+      stroke: #ffd700 !important;
+      stroke-width: 2 !important;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.85));
+    }
+    .map-pin:hover .pin-tag-text {
+      fill: #ffd700 !important;
     }
     .map-pin.active .pin-ring {
       stroke: #ffffff;
-      stroke-width: 2.5;
+      stroke-width: 3.5;
       filter: drop-shadow(0 0 8px #ffd700);
+    }
+
+    /* Topónimos Geográficos de Mordheim */
+    .map-landmark-tag text {
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Modo Pantalla Completa HD */
+    .tactical-map-viewport.fullscreen-mode {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 999999 !important;
+      background: rgba(12, 9, 6, 0.98) !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 3.5rem 1.5rem 1.5rem 1.5rem !important;
+      box-sizing: border-box !important;
+    }
+    .tactical-map-viewport.fullscreen-mode .tactical-map-stage {
+      max-width: 95vw;
+      max-height: 86vh;
+      width: auto;
+      height: auto;
+    }
+    .tactical-map-viewport.fullscreen-mode .tactical-map-img {
+      max-height: 86vh;
+      width: auto;
+      object-fit: contain;
+    }
+    .map-fs-close-bar {
+      position: absolute;
+      top: 0.8rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 20, 15, 0.95);
+      border: 1.5px solid #d4af37;
+      padding: 0.5rem 1.2rem;
+      color: #ffd700;
+      font-family: var(--font-title);
+      font-size: 0.85rem;
+      font-weight: 800;
+      z-index: 10000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     }
 
     /* PESTAÑA 5: EL ORÁCULO & BUZÓN */
@@ -1079,13 +1249,40 @@
       <!-- ======================================================== -->
       <section class="tab-pane" id="tab-map">
         <div class="map-grid-layout">
-          <!-- Visor del Mapa de Mordheim -->
-          <div class="tactical-map-viewport">
-            <img src="./assets/mapa_mordheim.jpg" alt="Mapa Canónico de Mordheim" class="tactical-map-img" />
-            <!-- Capa interactiva SVG ajustada a 1077x794 -->
-            <svg class="tactical-map-overlay" viewBox="0 0 1077 794" id="mordheimSvgMap">
-              <!-- Nodos interactivos generados por JS -->
-            </svg>
+          <!-- Visor del Mapa de Mordheim con Controles de Zoom y Pantalla Completa HD -->
+          <div>
+            <!-- Barra Superior de Controles y Leyenda de Facciones -->
+            <div class="map-controls-bar">
+              <div class="map-legend-pills">
+                <span class="legend-pill david"><span class="legend-dot"></span> David (Sangre Carmesí)</span>
+                <span class="legend-pill sergio"><span class="legend-dot"></span> Sergio (Clan Scutrix)</span>
+                <span class="legend-pill javi"><span class="legend-dot"></span> Javi (Hijos del Yunque)</span>
+                <span class="legend-pill neutral"><span class="legend-dot"></span> Neutral</span>
+              </div>
+              <div class="map-zoom-buttons">
+                <button type="button" class="map-btn" id="mapZoomIn" title="Acercar plano"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <button type="button" class="map-btn" id="mapZoomOut" title="Alejar plano"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                <button type="button" class="map-btn" id="mapZoomReset" title="Restablecer tamaño original"><i class="fa-solid fa-arrows-rotate"></i></button>
+                <button type="button" class="map-btn primary" id="mapFullscreenBtn" title="Ver en Pantalla Completa HD"><i class="fa-solid fa-expand"></i> Pantalla Completa HD</button>
+              </div>
+            </div>
+
+            <!-- Viewport Interactivo con Soporte Pan & Zoom -->
+            <div class="tactical-map-viewport" id="tacticalMapViewport">
+              <div class="tactical-map-stage" id="tacticalMapStage">
+                <img src="./assets/mapa_mordheim.jpg" alt="Mapa Canónico de Mordheim" class="tactical-map-img" />
+                <!-- Capa interactiva SVG ajustada a 1077x794 -->
+                <svg class="tactical-map-overlay" viewBox="0 0 1077 794" id="mordheimSvgMap">
+                  <!-- Nodos interactivos y topónimos generados por JS -->
+                </svg>
+              </div>
+
+              <!-- Barra flotante de salida para Modo Pantalla Completa HD -->
+              <div class="map-fs-close-bar" id="mapFsCloseBar" style="display: none;">
+                <span><i class="fa-solid fa-map-location-dot"></i> Cartografía Táctica de Mordheim (Modo HD 1077 × 794)</span>
+                <button type="button" class="map-btn" onclick="app.toggleMapFullscreen()"><i class="fa-solid fa-xmark"></i> Cerrar Vista HD (Esc)</button>
+              </div>
+            </div>
           </div>
 
           <!-- Ficha de Distrito Seleccionado -->
@@ -1479,7 +1676,8 @@
         owner: "sergio",
         perk: "Vigilancia Sacra: Permite desplegar 1 unidad con Scout a 12 pulgadas del despliegue base.",
         lore: "Monasterio insular en mitad del cauce del río Stir. Soportó la onda expansiva del cometa gracias a la devoción de sus defensoras.",
-        x: 190, y: 395,
+        x: 435, y: 645,
+        tagOffsetX: 0, tagOffsetY: 34,
         icon: "fa-fort-awesome"
       },
       {
@@ -1488,8 +1686,9 @@
         name: "El Cruce del Degollador",
         owner: "neutral",
         perk: "Rutas de Contrabando: Ingreso de +15 coronas de oro adicionales tras cada escaramuza.",
-        lore: "Encrucijada exterior donde mercaderes sin escrúpulos compran esquirlas de piedra bruja.",
-        x: 535, y: 125,
+        lore: "Encrucijada exterior al norte donde mercaderes sin escrúpulos compran esquirlas de piedra bruja junto a la Puerta del Río.",
+        x: 520, y: 130,
+        tagOffsetX: 0, tagOffsetY: 32,
         icon: "fa-coins"
       },
       {
@@ -1498,8 +1697,9 @@
         name: "La Forja de los Gremios",
         owner: "neutral",
         perk: "Maestría del Acero: Descuento permanente de 5 pts en cualquier mejora de arma.",
-        lore: "Antiguos talleres de los artesanos y enanos imperiales. Aún quedan yunques intactos.",
-        x: 760, y: 255,
+        lore: "Antiguos talleres de los artesanos y enanos imperiales en el Barrio de los Mercaderes. Aún quedan yunques intactos.",
+        x: 730, y: 290,
+        tagOffsetX: 0, tagOffsetY: 32,
         icon: "fa-hammer"
       },
       {
@@ -1508,8 +1708,9 @@
         name: "Las Criptas de Sylvania",
         owner: "david",
         perk: "Aura de Pavor: Una vez por partida, puedes forzar a una unidad enemiga a repetir un chequeo de moral superado.",
-        lore: "Mausoleos profanados por la Casa Sangre Carmesí donde la niebla ponzoñosa jamás se disipa.",
-        x: 325, y: 620,
+        lore: "Mausoleos del Templo de Morr profanados por la Casa Sangre Carmesí donde la niebla ponzoñosa jamás se disipa.",
+        x: 285, y: 740,
+        tagOffsetX: 0, tagOffsetY: -32,
         icon: "fa-skull"
       },
       {
@@ -1518,8 +1719,9 @@
         name: "El Pozo (The Pit)",
         owner: "neutral",
         perk: "Dominio de la Piedra Bruja: Concede +2 VP de campaña por ronda que se mantenga bajo control.",
-        lore: "El abismo titánico donde el bólido de disformidad pulverizó el centro geográfico de Mordheim.",
-        x: 540, y: 445,
+        lore: "El abismo titánico donde el bólido de disformidad pulverizó el centro geográfico de Mordheim, irradiando energía pura.",
+        x: 685, y: 595,
+        tagOffsetX: 0, tagOffsetY: -34,
         icon: "fa-meteor",
         isCentral: true
       },
@@ -1529,8 +1731,9 @@
         name: "El Gran Puente del Río Stir",
         owner: "neutral",
         perk: "Paso Estratégico: Elige automáticamente quién despliega 1º o 2º en sus batallas.",
-        lore: "El viaducto de arcos de piedra que conecta el norte aristocrático con el sur obrero.",
-        x: 500, y: 285,
+        lore: "El viaducto de arcos de piedra que conecta el norte aristocrático con el sur obrero sobre las aguas del Stir.",
+        x: 450, y: 360,
+        tagOffsetX: 0, tagOffsetY: -32,
         icon: "fa-archway"
       },
       {
@@ -1539,8 +1742,9 @@
         name: "La Torre del Alquimista",
         owner: "neutral",
         perk: "Elixires de Disformidad: +1 a tiradas de recuperación de heridas y supervivencia post-batalla.",
-        lore: "Spira retorcida donde los sabios arcanos experimentaban antes de la catástrofe.",
-        x: 275, y: 215,
+        lore: "Spira retorcida en el Barrio Noble donde los sabios arcanos experimentaban antes de la catástrofe.",
+        x: 285, y: 230,
+        tagOffsetX: 0, tagOffsetY: 32,
         icon: "fa-flask-vial"
       },
       {
@@ -1549,8 +1753,9 @@
         name: "El Foso de los Escombros",
         owner: "neutral",
         perk: "Carroñeo de Ruinas: Tira 1D6 tras cada batalla: con 4+ encuentras equipo gratis valorado en 15 pts.",
-        lore: "Laberinto de vigas caídas y sótanos reventados en el Distrito Bajo.",
-        x: 825, y: 555,
+        lore: "Laberinto de vigas caídas y sótanos reventados junto a la Torre del Reloj en el Barrio Bajo.",
+        x: 780, y: 700,
+        tagOffsetX: 0, tagOffsetY: -32,
         icon: "fa-box-open"
       },
       {
@@ -1559,8 +1764,9 @@
         name: "El Laberinto de las Cloacas",
         owner: "neutral",
         perk: "Infiltración Murina: Permite a 1 unidad desplegar mediante la regla Ambush.",
-        lore: "Dédalo subterráneo de aguas pútridas por donde los Hombres Rata emergen sin ser vistos.",
-        x: 395, y: 395,
+        lore: "Dédalo subterráneo de aguas pútridas y aliviaderos fluviales por donde los Hombres Rata emergen sin ser vistos.",
+        x: 360, y: 480,
+        tagOffsetX: 0, tagOffsetY: 32,
         icon: "fa-spider"
       }
     ];
@@ -1812,12 +2018,20 @@
           suggestions: []
         };
         this.loginSelectedUser = null;
+        this.mapZoom = 1;
+        this.mapPanX = 0;
+        this.mapPanY = 0;
+        this.isPanning = false;
+        this.panStartX = 0;
+        this.panStartY = 0;
         this.init();
       }
 
       async init() {
         this.setupNavigation();
+        this.initMapControls();
         await this.loadCloudState();
+        this.syncDistrictDefinitions();
         this.checkSavedSession();
       }
 
@@ -1996,6 +2210,96 @@
         this.renderGmSuggestions();
       }
 
+      // CONTROLES DE ZOOM, PAN Y PANTALLA COMPLETA HD DEL MAPA
+      initMapControls() {
+        const zoomInBtn = document.getElementById("mapZoomIn");
+        const zoomOutBtn = document.getElementById("mapZoomOut");
+        const zoomResetBtn = document.getElementById("mapZoomReset");
+        const fsBtn = document.getElementById("mapFullscreenBtn");
+        const viewport = document.getElementById("tacticalMapViewport");
+        const stage = document.getElementById("tacticalMapStage");
+
+        if (zoomInBtn) zoomInBtn.onclick = () => this.zoomMap(0.3);
+        if (zoomOutBtn) zoomOutBtn.onclick = () => this.zoomMap(-0.3);
+        if (zoomResetBtn) zoomResetBtn.onclick = () => this.resetMapZoom();
+        if (fsBtn) fsBtn.onclick = () => this.toggleMapFullscreen();
+
+        // Drag / Pan cuando zoom > 1
+        if (viewport && stage) {
+          viewport.addEventListener('mousedown', (e) => {
+            if (this.mapZoom <= 1) return;
+            if (e.target.closest('.map-pin')) return;
+            this.isPanning = true;
+            this.panStartX = e.clientX - this.mapPanX * this.mapZoom;
+            this.panStartY = e.clientY - this.mapPanY * this.mapZoom;
+            viewport.style.cursor = 'grabbing';
+          });
+
+          window.addEventListener('mousemove', (e) => {
+            if (!this.isPanning) return;
+            this.mapPanX = (e.clientX - this.panStartX) / this.mapZoom;
+            this.mapPanY = (e.clientY - this.panStartY) / this.mapZoom;
+            this.applyMapTransform();
+          });
+
+          window.addEventListener('mouseup', () => {
+            if (this.isPanning) {
+              this.isPanning = false;
+              if (viewport) viewport.style.cursor = this.mapZoom > 1 ? 'grab' : 'default';
+            }
+          });
+        }
+
+        // Tecla Escape para salir de Fullscreen
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            const vp = document.getElementById("tacticalMapViewport");
+            if (vp && vp.classList.contains("fullscreen-mode")) {
+              this.toggleMapFullscreen();
+            }
+          }
+        });
+      }
+
+      zoomMap(delta) {
+        this.mapZoom = Math.max(1, Math.min(2.6, +(this.mapZoom + delta).toFixed(1)));
+        if (this.mapZoom === 1) {
+          this.mapPanX = 0;
+          this.mapPanY = 0;
+        }
+        const vp = document.getElementById("tacticalMapViewport");
+        if (vp) vp.style.cursor = this.mapZoom > 1 ? 'grab' : 'default';
+        this.applyMapTransform();
+      }
+
+      resetMapZoom() {
+        this.mapZoom = 1;
+        this.mapPanX = 0;
+        this.mapPanY = 0;
+        const vp = document.getElementById("tacticalMapViewport");
+        if (vp) vp.style.cursor = 'default';
+        this.applyMapTransform();
+      }
+
+      applyMapTransform() {
+        const stage = document.getElementById("tacticalMapStage");
+        if (!stage) return;
+        stage.style.transition = this.isPanning ? 'none' : 'transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1)';
+        stage.style.transform = `scale(${this.mapZoom}) translate(${this.mapPanX}px, ${this.mapPanY}px)`;
+      }
+
+      toggleMapFullscreen() {
+        const vp = document.getElementById("tacticalMapViewport");
+        const closeBar = document.getElementById("mapFsCloseBar");
+        if (!vp) return;
+        vp.classList.toggle("fullscreen-mode");
+        const isFs = vp.classList.contains("fullscreen-mode");
+        if (closeBar) closeBar.style.display = isFs ? 'flex' : 'none';
+        if (!isFs) {
+          this.resetMapZoom();
+        }
+      }
+
       renderScoreboard() {
         const grid = document.getElementById("scoreboardCardsGrid");
         if (!grid) return;
@@ -2099,35 +2403,103 @@
         });
       }
 
+      syncDistrictDefinitions() {
+        if (!this.state.districts || !Array.isArray(this.state.districts)) {
+          this.state.districts = JSON.parse(JSON.stringify(DISTRICTS));
+          return;
+        }
+        DISTRICTS.forEach(def => {
+          let existing = this.state.districts.find(d => d.id === def.id);
+          if (!existing) {
+            this.state.districts.push(JSON.parse(JSON.stringify(def)));
+          } else {
+            existing.name = def.name;
+            existing.numRoman = def.numRoman;
+            existing.x = def.x;
+            existing.y = def.y;
+            existing.tagOffsetX = def.tagOffsetX;
+            existing.tagOffsetY = def.tagOffsetY;
+            existing.perk = def.perk;
+            existing.lore = def.lore;
+            existing.isCentral = def.isCentral;
+          }
+        });
+      }
+
       renderMordheimMap() {
         const svg = document.getElementById("mordheimSvgMap");
         if (!svg) return;
         svg.innerHTML = "";
 
+        // Asegurar que las coordenadas y nombres coincidan con las canónicas
+        this.syncDistrictDefinitions();
+
+        // 1. CAPA DE TOPÓNIMOS Y GRANDES HITOS URBANOS (LEGIBILIDAD MEJORADA)
+        const LANDMARKS = [
+          { text: "RÍO STIR", x: 420, y: 470, rotate: -42, size: 16, weight: 800 },
+          { text: "BARRIO NOBLE", x: 240, y: 165, size: 14, weight: 700 },
+          { text: "PLAZA DEL MERCADO", x: 690, y: 450, size: 14, weight: 700 },
+          { text: "TEMPLO DE MORR", x: 215, y: 775, size: 13, weight: 700 },
+          { text: "BARRIO BAJO", x: 660, y: 725, size: 14, weight: 700 },
+          { text: "MUELLES FLUVIALES", x: 610, y: 215, size: 13, weight: 700 },
+          { text: "CRÁTER DEL POZO", x: 685, y: 645, size: 14, weight: 800 }
+        ];
+
+        LANDMARKS.forEach(lm => {
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("class", "map-landmark-tag");
+          const tr = lm.rotate ? `translate(${lm.x}, ${lm.y}) rotate(${lm.rotate})` : `translate(${lm.x}, ${lm.y})`;
+          g.setAttribute("transform", tr);
+          g.innerHTML = `
+            <text text-anchor="middle" font-family="'Cinzel', serif" font-weight="${lm.weight}" font-size="${lm.size}" letter-spacing="3" fill="#2d2218" stroke="#f6ebd4" stroke-width="4" paint-order="stroke fill" opacity="0.92">${lm.text}</text>
+          `;
+          svg.appendChild(g);
+        });
+
+        // 2. CAPA DE PINES TÁCTICOS Y PLACAS DE DISTRITO LEGIBLES
         this.state.districts.forEach(d => {
           let ringColor = "#8e806f";
-          let fillColor = "rgba(87, 82, 73, 0.75)";
-          if (d.owner === "david") { ringColor = "#ffd700"; fillColor = "rgba(122, 21, 21, 0.85)"; }
-          if (d.owner === "sergio") { ringColor = "#73d13d"; fillColor = "rgba(27, 77, 36, 0.85)"; }
-          if (d.owner === "javi") { ringColor = "#ffa940"; fillColor = "rgba(138, 79, 8, 0.85)"; }
+          let fillColor = "rgba(40, 34, 28, 0.92)";
+          if (d.owner === "david") { ringColor = "#e63946"; fillColor = "rgba(122, 21, 21, 0.94)"; }
+          if (d.owner === "sergio") { ringColor = "#52c41a"; fillColor = "rgba(27, 77, 36, 0.94)"; }
+          if (d.owner === "javi") { ringColor = "#fa8c16"; fillColor = "rgba(138, 79, 8, 0.94)"; }
 
           const isSelected = d.id === this.selectedDistrictId;
           const radius = d.isCentral ? 22 : 18;
 
+          const tagOffX = d.tagOffsetX !== undefined ? d.tagOffsetX : 0;
+          const tagOffY = d.tagOffsetY !== undefined ? d.tagOffsetY : 32;
+
+          const labelText = `${d.numRoman}. ${d.name}`;
+          const tagWidth = Math.max(120, labelText.length * 8.2 + 22);
+
           const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
           g.setAttribute("class", `map-pin ${isSelected ? 'active' : ''}`);
+          // IMPORTANTE: translate() fijo en el grupo SVG para inmunidad total a temblores
           g.setAttribute("transform", `translate(${d.x}, ${d.y})`);
-          g.onclick = () => {
+          g.setAttribute("data-district-id", d.id);
+
+          g.onclick = (e) => {
+            e.stopPropagation();
             this.selectedDistrictId = d.id;
             this.renderMordheimMap();
             this.renderDistrictDetails(d.id);
           };
 
           g.innerHTML = `
-            ${isSelected ? `<circle r="${radius + 7}" fill="none" stroke="#241d17" stroke-width="2.5" stroke-dasharray="4 3"/>` : ""}
-            <circle class="pin-ring" r="${radius + 2}" fill="none" stroke="${ringColor}" stroke-width="2"/>
-            <circle r="${radius}" fill="${fillColor}" stroke="#17130e" stroke-width="2"/>
-            <text y="5" fill="#ffffff" font-family="'Cinzel', serif" font-weight="900" font-size="${d.isCentral ? 13 : 11}" text-anchor="middle" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.8))">${d.numRoman}</text>
+            <!-- Halo de selección activa -->
+            ${isSelected ? `<circle class="pin-active-halo" r="${radius + 8}" fill="none" stroke="#ffd700" stroke-width="2.5" stroke-dasharray="5 3" filter="drop-shadow(0 0 6px #ffd700)"/>` : ""}
+
+            <!-- Anillo y núcleo del pin -->
+            <circle class="pin-ring" r="${radius + 3}" fill="none" stroke="${ringColor}" stroke-width="${isSelected ? 3.5 : 2.5}"/>
+            <circle class="pin-core" r="${radius}" fill="${fillColor}" stroke="#14100c" stroke-width="2"/>
+            <text class="pin-num" y="${d.isCentral ? 5 : 4}" fill="#ffffff" font-family="'Cinzel', serif" font-weight="900" font-size="${d.isCentral ? 14 : 12}" text-anchor="middle" filter="drop-shadow(1px 1px 2px rgba(0,0,0,0.9))">${d.numRoman}</text>
+
+            <!-- Placa / Cartela de Identificación con tipografía de alto contraste -->
+            <g class="pin-tag" transform="translate(${tagOffX}, ${tagOffY})">
+              <rect class="pin-tag-bg" x="-${tagWidth/2}" y="-12" width="${tagWidth}" height="24" rx="4" fill="rgba(20, 16, 12, 0.90)" stroke="${ringColor}" stroke-width="${isSelected ? 2 : 1.3}"/>
+              <text class="pin-tag-text" x="0" y="4" text-anchor="middle" font-family="'Cinzel', serif" font-weight="700" font-size="11.5" fill="#fdfaf3" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.85))">${labelText}</text>
+            </g>
           `;
           svg.appendChild(g);
         });
