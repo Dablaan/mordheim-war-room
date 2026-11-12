@@ -1043,7 +1043,7 @@
               <span class="login-avatar">🧛</span>
               <div>
                 <div class="login-card-title">David (Árbitro GM)</div>
-                <div class="login-card-desc">Lord Carmesí • PIN: <strong>1348</strong></div>
+                <div class="login-card-desc">Lord Carmesí • Acceso Privado con PIN</div>
               </div>
             </div>
             <!-- Sergio -->
@@ -1051,7 +1051,7 @@
               <span class="login-avatar">🐀</span>
               <div>
                 <div class="login-card-title">Sergio</div>
-                <div class="login-card-desc">Señor del Clan Scutrix • PIN: <strong>6995</strong></div>
+                <div class="login-card-desc">Señor del Clan Scutrix • Acceso Privado con PIN</div>
               </div>
             </div>
             <!-- Javi -->
@@ -1059,7 +1059,7 @@
               <span class="login-avatar">⚒️</span>
               <div>
                 <div class="login-card-title">Javi</div>
-                <div class="login-card-desc">Patriarca Hijos del Yunque • PIN: <strong>4091</strong></div>
+                <div class="login-card-desc">Patriarca Hijos del Yunque • Acceso Privado con PIN</div>
               </div>
             </div>
             <!-- Espectador -->
@@ -1067,7 +1067,7 @@
               <span class="login-avatar">👁️</span>
               <div>
                 <div class="login-card-title">Espectador Neutral</div>
-                <div class="login-card-desc">Acceso público (Sin PIN / Sin secretos)</div>
+                <div class="login-card-desc">Acceso libre de visitante (Solo lectura)</div>
               </div>
             </div>
           </div>
@@ -1529,13 +1529,13 @@
               Introduce tu PIN Maestro de Árbitro:
             </div>
             <div style="display: flex; gap: 0.5rem; justify-content: center; max-width: 320px; margin: 0 auto;">
-              <input type="password" id="gmQuickPinInput" class="form-control" placeholder="1348" value="1348" maxlength="4" style="text-align: center; font-size: 1.3rem; letter-spacing: 5px; width: 140px;" onkeyup="if(event.key==='Enter') app.unlockGmPanel()"/>
+              <input type="password" id="gmQuickPinInput" class="form-control" placeholder="****" value="" maxlength="4" style="text-align: center; font-size: 1.3rem; letter-spacing: 5px; width: 140px;" onkeyup="if(event.key==='Enter') app.unlockGmPanel()"/>
               <button class="btn-action" onclick="app.unlockGmPanel()" style="padding: 0.5rem 1.2rem; font-weight: 800;">
                 <i class="fa-solid fa-key"></i> Desbloquear
               </button>
             </div>
             <div id="gmQuickPinError" style="font-size: 0.78rem; color: var(--faction-david); font-weight: 800; margin-top: 0.6rem; display: none;">
-              ⚠️ Clave incorrecta. El PIN maestro de David es 1348.
+              ⚠️ Clave de Árbitro incorrecta.
             </div>
           </div>
         </div>
@@ -2103,11 +2103,11 @@
           this.onUserLoggedIn();
         } else {
           if (box) box.style.display = 'block';
-          const expected = USERS[userId].pin;
-          if (prompt) prompt.innerHTML = `Introduce el PIN de <strong>${USERS[userId].name}</strong> (Clave: <strong>${expected}</strong>)`;
+          if (prompt) prompt.innerHTML = `Introduce el PIN secreto de <strong>${USERS[userId].name}</strong>:`;
           const input = document.getElementById("loginPinInput");
           if (input) {
-            input.value = expected;
+            input.value = '';
+            input.placeholder = '****';
             input.focus();
           }
         }
@@ -2258,84 +2258,27 @@
         }
       }
 
-      // MOTOR DINÁMICO DE COMUNICACIÓN CON GOOGLE GEMINI (AUTO-DISCOVERY & LISTMODELS)
-      async getAvailableModels() {
-        if (!this.geminiApiKey) throw new Error("No hay clave de API configurada.");
-
-        for (const apiVer of ['v1beta', 'v1']) {
-          try {
-            const resp = await fetch(`https://generativelanguage.googleapis.com/${apiVer}/models?key=${this.geminiApiKey}`);
-            if (resp.ok) {
-              const data = await resp.json();
-              if (data.models && Array.isArray(data.models)) {
-                const usable = data.models.filter(m => 
-                  m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent")
-                );
-                if (usable.length > 0) {
-                  return { apiVer, models: usable };
-                }
-              }
-            } else {
-              const errData = await resp.json().catch(() => ({}));
-              console.warn(`ListModels ${apiVer} error:`, errData);
-            }
-          } catch(e) {
-            console.warn(`ListModels ${apiVer} network error:`, e);
-          }
-        }
-        return null;
-      }
-
-      pickBestModel(modelsList) {
-        const preferences = [
-          'gemini-1.5-flash-latest',
-          'gemini-1.5-flash',
-          'gemini-2.0-flash',
-          'gemini-1.5-pro-latest',
-          'gemini-1.5-pro',
-          'gemini-pro',
-          'flash'
-        ];
-
-        for (const pref of preferences) {
-          const match = modelsList.find(m => m.name.toLowerCase().includes(pref));
-          if (match) return match.name;
-        }
-
-        return modelsList[0].name;
+      // MOTOR TRANSPARENTE DE COMUNICACIÓN CON GOOGLE GEMINI CON DIAGNÓSTICO EN VIVO
+      cleanApiKey(k) {
+        if (!k) return '';
+        // Eliminar comillas dobles, simples o espacios en blanco accidentales al copiar/pegar
+        return k.replace(/^[\"'\s]+|[\"'\s]+$/g, '').trim();
       }
 
       async callGemini(contentsPayload) {
-        if (!this.geminiApiKey) {
-          throw new Error("No hay clave de Gemini configurada en el Panel GM.");
+        const key = this.cleanApiKey(this.geminiApiKey);
+        if (!key) {
+          throw new Error("No hay clave de Gemini configurada. Pega tu clave en el Panel GM.");
         }
 
-        // Descubrir modelos autorizados de forma dinámica si no están en caché
-        if (!this.cachedModel) {
-          try {
-            const discovery = await this.getAvailableModels();
-            if (discovery && discovery.models.length > 0) {
-              this.cachedApiVer = discovery.apiVer;
-              this.cachedModel = this.pickBestModel(discovery.models);
-              console.log("Modelo de Gemini detectado automáticamente:", this.cachedModel, "vía", this.cachedApiVer);
-            }
-          } catch(e) {
-            console.warn("Fallo al listar modelos:", e);
-          }
-        }
-
-        const apiVer = this.cachedApiVer || 'v1beta';
-        const candidateModels = this.cachedModel 
-          ? [this.cachedModel, 'models/gemini-1.5-flash-latest', 'models/gemini-1.5-flash', 'models/gemini-2.0-flash', 'models/gemini-pro']
-          : ['models/gemini-1.5-flash-latest', 'models/gemini-1.5-flash', 'models/gemini-2.0-flash', 'models/gemini-pro'];
-
+        // Modelos soportados en orden de prioridad
+        const models = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-pro'];
         let lastError = null;
 
-        for (const modelPath of candidateModels) {
-          const cleanPath = modelPath.startsWith('models/') ? modelPath : `models/${modelPath}`;
+        for (const model of models) {
           try {
-            const endpoint = `https://generativelanguage.googleapis.com/${apiVer}/${cleanPath}:generateContent?key=${this.geminiApiKey}`;
-            const resp = await fetch(endpoint, {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+            const resp = await fetch(url, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ contents: contentsPayload })
@@ -2343,93 +2286,145 @@
 
             if (resp.ok) {
               const data = await resp.json();
-              if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-                this.cachedModel = cleanPath;
+              if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
                 return {
                   text: data.candidates[0].content.parts[0].text,
-                  model: cleanPath.replace('models/', '')
+                  model: model
                 };
               }
             } else {
               const errBody = await resp.json().catch(() => ({}));
-              const msg = errBody.error && errBody.error.message ? errBody.error.message : `HTTP ${resp.status}`;
-              lastError = new Error(`[${cleanPath.replace('models/', '')}] ${msg}`);
+              const msg = errBody.error?.message || `HTTP ${resp.status} ${resp.statusText}`;
+              lastError = new Error(`[${model}] ${msg}`);
+              console.warn(`Llamada a ${model} devolvió error:`, lastError.message);
             }
           } catch(err) {
             lastError = err;
+            console.warn(`Error de red llamando a ${model}:`, err.message);
           }
         }
 
-        throw lastError || new Error("No se pudo obtener respuesta de ningún modelo de Gemini.");
+        throw lastError || new Error("No se pudo obtener respuesta de Google Gemini.");
+      }
+
+      diagnoseGeminiError(msg, code) {
+        const m = (msg || '').toLowerCase();
+        if (m.includes('api key not valid') || m.includes('api_key_invalid') || m.includes('invalid api key')) {
+          return "👉 <strong>Causa:</strong> La clave de API no es válida o está incompleta.<br>• <strong>Solución:</strong> Entra en <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio (aistudio.google.com)</a>, pulsa <em>'Create API key'</em>, copia la clave nueva completa y pégala aquí.";
+        }
+        if (m.includes('generative language api has not been used') || m.includes('disabled') || m.includes('not enabled')) {
+          return "👉 <strong>Causa:</strong> La API de Gemini no está habilitada en tu proyecto de Google Cloud.<br>• <strong>Solución:</strong> Crea la clave directamente desde <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio</a> (que la activa automáticamente de forma gratuita y sin configuración manual).";
+        }
+        if (m.includes('quota') || m.includes('resource_exhausted') || code === 429) {
+          return "👉 <strong>Causa:</strong> Límite de peticiones por minuto alcanzado.<br>• <strong>Solución:</strong> Espera 30 segundos y vuelve a pulsar Probar Conexión.";
+        }
+        if (m.includes('permission_denied') || code === 403) {
+          return "👉 <strong>Causa:</strong> Permiso denegado. Tu clave tiene restricciones de IP, dominio o aplicación en Google Cloud que bloquean el uso desde GitHub Pages.<br>• <strong>Solución:</strong> En la consola de Google Cloud, edita la clave y pon Restricciones de API en 'Ninguna'.";
+        }
+        return "👉 <strong>Sugerencia:</strong> Si la clave fue creada en Google Cloud, asegúrate de que pertenezca a 'Generative Language API'. La forma más fácil y directa es generarla en <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:#7a1515; text-decoration:underline; font-weight:bold;'>Google AI Studio</a>.";
       }
 
       async testGeminiConnection() {
         const input = document.getElementById("geminiApiKeyInput");
-        const key = input ? input.value.trim() : this.geminiApiKey;
+        let rawVal = input ? input.value : "";
+        if (!rawVal && this.geminiApiKey) rawVal = this.geminiApiKey;
+        const key = this.cleanApiKey(rawVal);
+
         const out = document.getElementById("geminiTestOutput");
         const status = document.getElementById("geminiKeyStatus");
 
         if (!key) {
-          alert("Introduce o pega primero tu clave de API de Gemini.");
+          alert("Pega primero tu clave de API de Gemini en la casilla de texto.");
+          if (input) input.focus();
           return;
         }
 
         this.geminiApiKey = key;
         localStorage.setItem(GEMINI_CONFIG_KEY, key);
-        this.cachedModel = null; // Reiniciar para forzar descubrimiento limpio
 
         if (out) {
           out.style.display = "block";
-          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Consultando catálogo de modelos de Google autorizados para tu clave...</em>`;
+          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Enviando ping de prueba a los servidores de Google Gemini...</em>`;
         }
 
+        // Realizar prueba directa con gemini-1.5-flash
         try {
-          const discovery = await this.getAvailableModels();
-          if (!discovery || discovery.models.length === 0) {
-            throw new Error("Google rechazó la clave o no tiene modelos de 'generateContent' autorizados.");
+          const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+          const resp = await fetch(testUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: "Responde únicamente: '¡Conexión arcana con Mordheim verificada y operativa!'" }] }]
+            })
+          });
+
+          if (resp.ok) {
+            const data = await resp.json();
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "OK";
+            if (out) {
+              out.innerHTML = `
+                <div style="color: #1b4d24; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.3rem;">
+                  <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN CON GOOGLE GEMINI VERIFICADA CON ÉXITO!
+                </div>
+                <div style="background: #fff; padding: 0.4rem 0.6rem; border: 1.5px solid #1b4d24; font-style: italic; color: #17130e; margin-bottom: 0.4rem; line-height: 1.35;">
+                  «${reply.trim()}»
+                </div>
+                <div style="font-size: 0.74rem; color: #1b4d24; font-weight: 700;">
+                  ✓ Modelo activo: <strong>gemini-1.5-flash</strong>. Los chats del Oráculo y Contacto con el Heraldo responderán ahora con IA real en vivo.
+                </div>
+              `;
+            }
+            if (status) status.innerHTML = "✅ IA Conectada y Verificada (gemini-1.5-flash)";
+            return;
           }
 
-          const modelNames = discovery.models.map(m => m.name.replace('models/', '')).join(', ');
-          this.cachedApiVer = discovery.apiVer;
-          this.cachedModel = this.pickBestModel(discovery.models);
+          // Si Google devolvió un error HTTP
+          const errData = await resp.json().catch(() => ({}));
+          const errMsg = errData.error?.message || `HTTP ${resp.status} ${resp.statusText}`;
+          const errCode = errData.error?.code || resp.status;
+          const errStatus = errData.error?.status || "";
 
-          const testPayload = [
-            { role: "user", parts: [{ text: "Confirma en una frase breve y con ambientación de Mordheim que la conexión está activa." }] }
-          ];
-          const result = await this.callGemini(testPayload);
+          // Intentar verificar si la clave al menos tiene acceso a listar modelos
+          const listResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`).catch(() => null);
+          let extraInfo = "";
+          if (listResp && listResp.ok) {
+            const listData = await listResp.json().catch(() => ({}));
+            const modelList = (listData.models || []).map(m => m.name.replace('models/', '')).join(', ');
+            extraInfo = `<div style="font-size: 0.72rem; color: #333; margin-top: 0.3rem;">Modelos detectados en tu cuenta: <strong>${modelList || 'ninguno'}</strong></div>`;
+          }
 
           if (out) {
             out.innerHTML = `
-              <div style="color: #1b4d24; font-weight: 800; font-size: 0.88rem; margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN VERIFICADA CON ÉXITO!
+              <div style="color: #7a1515; font-weight: 800; font-size: 0.88rem; margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Google devolvió un error (Código ${errCode} ${errStatus}):
               </div>
-              <div style="font-style: italic; color: var(--ink-dark); margin-bottom: 0.4rem; background: #fff; padding: 0.4rem 0.6rem; border: 1px solid #1b4d24; line-height: 1.35;">
-                «${result.text}»
+              <div style="font-family: monospace; font-size: 0.78rem; color: #7a1515; background: #fae8e8; padding: 0.5rem; border: 1.5px solid #7a1515; margin-bottom: 0.4rem; word-break: break-word;">
+                ${errMsg}
               </div>
-              <div style="font-size: 0.72rem; color: #1b4d24; font-weight: 700; margin-bottom: 0.2rem;">
-                ✓ Modelo seleccionado: <strong>${result.model}</strong> (${discovery.apiVer})
-              </div>
-              <div style="font-size: 0.7rem; color: var(--ink-muted); line-height: 1.3;">
-                Modelos disponibles en tu cuenta: ${modelNames}
+              ${extraInfo}
+              <div style="font-size: 0.74rem; color: var(--ink-dark); line-height: 1.4; margin-top: 0.4rem; background: #fff; padding: 0.5rem; border: 1px dashed var(--line-sepia);">
+                ${this.diagnoseGeminiError(errMsg, errCode)}
               </div>
             `;
           }
-          if (status) status.innerHTML = `✅ Conectada (${result.model})`;
-        } catch(err) {
+          if (status) status.innerHTML = "⚠️ Error en la clave";
+
+        } catch(netErr) {
           if (out) {
             out.innerHTML = `
               <div style="color: #7a1515; font-weight: 800; margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-triangle-exclamation"></i> Error al verificar con Google Gemini:
+                <i class="fa-solid fa-triangle-exclamation"></i> Error de Red en el Navegador:
               </div>
-              <div style="font-family: monospace; font-size: 0.76rem; color: #7a1515; background: #fae8e8; padding: 0.4rem; border: 1px solid #7a1515; margin-bottom: 0.4rem;">
-                ${err.message}
+              <div style="font-family: monospace; font-size: 0.78rem; color: #7a1515; background: #fae8e8; padding: 0.5rem; border: 1.5px solid #7a1515; margin-bottom: 0.4rem;">
+                ${netErr.message}
               </div>
-              <div style="font-size: 0.72rem; color: var(--ink-muted); line-height: 1.35;">
-                Comprueba que tu clave en Google AI Studio (aistudio.google.com) esté habilitada y no tenga restricciones de origen que bloqueen GitHub Pages.
+              <div style="font-size: 0.74rem; color: var(--ink-dark); line-height: 1.4;">
+                El navegador no pudo conectar con <code>generativelanguage.googleapis.com</code>.<br>
+                • Si estás usando el navegador <strong>Brave</strong> o extensiones como <strong>uBlock Origin</strong> o <strong>AdBlock</strong>, suelen bloquear las llamadas a APIs de Google. Desactívalas para este sitio y vuelve a pulsar "Probar Conexión".
               </div>
             `;
           }
-          if (status) status.innerHTML = "⚠️ Fallo en la verificación";
+          if (status) status.innerHTML = "⚠️ Error de red o bloqueo de navegador";
         }
       }
 
