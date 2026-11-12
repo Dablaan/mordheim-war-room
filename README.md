@@ -1,12 +1,12 @@
-# ⚔️ KAR-DRAKOR: WAR ROOM (Portal Web de Campaña)
+# ⚔️ MORDHEIM: WAR ROOM (Portal Web de Campaña)
 ## Cuartel General 100% Online para Age of Fantasy: Skirmish (v3.6.0)
 
-[![GitHub Pages Deployment](https://img.shields.io/badge/Status-Live%2024%2F7-brightgreen)](https://dablaan.github.io/kar-drakor-war-room/)
+[![GitHub Pages Deployment](https://img.shields.io/badge/Status-Live%2024%2F7-brightgreen)](https://dablaan.github.io/mordheim-war-room/)
 [![System](https://img.shields.io/badge/System-OnePageRules%20v3.6.0-blue)](https://onepagerules.com/)
 
-Portal web oficial y salón de guerra interactivo para la campaña narrativa **"Las Cenizas de Kar-Drakor"**. Diseñado con una cuidada estética de gaceta histórica renacentista, grabados en madera y estilo *Town Cryer* de Mordheim.
+Portal web oficial y salón de guerra interactivo para la campaña narrativa **"Mordheim: La Ciudad de los Condenados"** (adaptación oficial de OPR). Diseñado con una cuidada estética de gaceta histórica renacentista, grabados en madera y estilo *Town Cryer* de Mordheim.
 
-👉 **Acceso Online Permanente:** [https://dablaan.github.io/kar-drakor-war-room/](https://dablaan.github.io/kar-drakor-war-room/)
+👉 **Acceso Online Permanente:** [https://dablaan.github.io/mordheim-war-room/](https://dablaan.github.io/mordheim-war-room/)
 
 ---
 

@@ -1,5 +1,5 @@
 # 📖 Manual Maestro del Administrador y Diseñador
-## KAR-DRAKOR: WAR ROOM — Portal Web & Cuartel General de Campaña
+## MORDHEIM: WAR ROOM — Portal Web & Cuartel General de Campaña
 
 > **Propósito de este documento**: Esta guía contiene toda la información técnica, arquitectónica, estética y operativa necesaria para que cualquier desarrollador, diseñador o director de juego ajeno al proyecto pueda comprenderlo al 100%, mantenerlo, modificar su diseño, añadir nuevas rondas o periódicos y administrar la campaña en la nube.
 
@@ -9,8 +9,8 @@
 
 | Parámetro | Detalle / Enlace Oficial |
 | :--- | :--- |
-| **Aplicación Web en Vivo (24/7)** | [https://dablaan.github.io/kar-drakor-war-room/](https://dablaan.github.io/kar-drakor-war-room/) |
-| **Repositorio Oficial de Código** | [https://github.com/Dablaan/kar-drakor-war-room](https://github.com/Dablaan/kar-drakor-war-room) |
+| **Aplicación Web en Vivo (24/7)** | [https://dablaan.github.io/mordheim-war-room/](https://dablaan.github.io/mordheim-war-room/) |
+| **Repositorio Oficial de Código** | [https://github.com/Dablaan/mordheim-war-room](https://github.com/Dablaan/mordheim-war-room) |
 | **Carpeta Local de Desarrollo** | `C:\Users\David\Desktop\Kar-Drakor-WarRoom\` |
 | **Carpeta Original de Campaña (Obsidian)** | `Garbancito/30 Recursos/One Page Rules/Campaña Lidon/` |
 | **Registro Central de Credenciales** | `Garbancito/20 Áreas/Gestión Digital/Registro_Central_APIs_y_Tokens.md` |
