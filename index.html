@@ -1,427 +1,456 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MORDHEIM: WAR ROOM — Gaceta Táctica &amp; Cuartel General de Campaña</title>
 
-  <!-- PWA & Mobile Web App settings -->
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Mordheim"/>
-  <link rel="icon" type="image/png" href="./assets/Mapa_Kar_Drakor.png"/>
+  <!-- Google Fonts de Imprenta Antigua y Gótica -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=IM+Fell+English:ital@0;1&family=Pirata+One&family=MedievalSharp&family=Metamorphous&display=swap" rel="stylesheet">
 
-  <!-- Google Fonts: Medieval, Renaissance & Historical Print Styles -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IM+Fell+DW+Pica:ital@0;1&family=IM+Fell+English:ital@0;1&family=Pirata+One&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&family=UnifrakturMaguntia&display=swap" rel="stylesheet"/>
+  <!-- FontAwesome 6 (Iconografía) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- FontAwesome 6 CDN -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
-
-  <!-- Supabase JS v2 CDN (Persistencia en tiempo real en la nube) -->
+  <!-- Supabase JS Client para Nube 24/7 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
-      /* Historical Gazette & Aged Parchment Palette */
-      --bg-parchment: #f6eedb;
-      --bg-parchment-sheet: #fff9ee;
+      --bg-wood-dark: #120e0a;
+      --bg-parchment-sheet: #f6eedb;
       --bg-parchment-dim: #ebdcb9;
-      --bg-parchment-aged: #f4e8cc;
-      --ink-black: #14110d;
-      --ink-dark: #221c15;
-      --ink-muted: #5e5345;
-      --ink-faint: #8e806f;
-      --line-sepia: #9e8e78;
-      --line-dark: #1b1610;
+      --bg-parchment-aged: #dfcb9f;
+      --bg-parchment-light: #fbf3df;
+      --line-sepia: #8b7355;
+      --line-dark: #3a2e22;
+      --ink-black: #17130e;
+      --ink-dark: #29221b;
+      --ink-muted: #5e5245;
 
       /* Facciones */
       --faction-david: #7a1515;
-      --faction-david-bg: #fae8e8;
-      --faction-david-border: #7a1515;
-      
+      --faction-david-bg: rgba(122, 21, 21, 0.12);
       --faction-sergio: #1b4d24;
-      --faction-sergio-bg: #eaf3ec;
-      --faction-sergio-border: #1b4d24;
-      
+      --faction-sergio-bg: rgba(27, 77, 36, 0.12);
       --faction-javi: #8a4f08;
-      --faction-javi-bg: #fdf3e5;
-      --faction-javi-border: #8a4f08;
-      
+      --faction-javi-bg: rgba(138, 79, 8, 0.12);
       --faction-neutral: #575249;
-      --faction-neutral-bg: #ede7db;
-      
-      --font-fraktur: 'UnifrakturMaguntia', 'Cinzel', serif;
-      --font-title: 'Playfair Display', 'Cinzel', Georgia, serif;
-      --font-gothic: 'Cinzel', serif;
-      --font-body: 'EB Garamond', Georgia, serif;
-      --font-press-body: 'IM Fell DW Pica', 'IM Fell English', Georgia, serif;
-      --font-header-title: 'Pirata One', cursive, serif;
+      --faction-neutral-bg: rgba(87, 82, 73, 0.12);
+
+      --font-gothic: 'Pirata One', 'MedievalSharp', fantasy, serif;
+      --font-title: 'Cinzel', 'Times New Roman', serif;
+      --font-body: 'IM Fell English', Georgia, serif;
+      --font-press-title: 'Metamorphous', 'Cinzel', serif;
+      --font-press-body: 'IM Fell English', Georgia, serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg-parchment);
-      color: var(--ink-black);
+      background-color: var(--bg-wood-dark);
+      background-image:
+        radial-gradient(circle at 50% 10%, rgba(246, 238, 219, 0.08) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+      color: var(--ink-dark);
       font-family: var(--font-body);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      font-size: 15px;
       line-height: 1.5;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(138, 79, 8, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 88% 85%, rgba(122, 21, 21, 0.05) 0%, transparent 50%),
-        linear-gradient(0deg, rgba(235, 220, 185, 0.6) 0%, rgba(246, 238, 219, 0.9) 100%);
+      min-height: 100vh;
+      padding: 0.6rem 0.6rem 2.5rem 0.6rem;
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 7px; height: 7px; }
-    ::-webkit-scrollbar-track { background: var(--bg-parchment-dim); border-left: 1px solid var(--line-sepia); }
-    ::-webkit-scrollbar-thumb { background: var(--line-sepia); border: 1px solid var(--ink-dark); }
-    ::-webkit-scrollbar-thumb:hover { background: var(--ink-black); }
-
-    /* TYPOGRAPHY UTILITIES */
-    .font-fraktur { font-family: var(--font-fraktur); }
-    .title-gothic { font-family: var(--font-title); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
-    .text-lore { font-family: var(--font-body); font-size: 1.05rem; }
-
-    /* HEADER & HISTORICAL MASTHEAD */
-    header.war-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--bg-parchment-sheet);
-      border-bottom: 3px double var(--ink-black);
-      box-shadow: 0 4px 15px rgba(20, 17, 13, 0.12);
-      padding: 0.5rem 1rem;
-    }
-    .header-container {
-      max-width: 1240px;
+    /* CONTENEDOR CENTRAL DE LA GACETA */
+    .gazette-wrapper {
+      max-width: 1220px;
       margin: 0 auto;
+      background: var(--bg-parchment-sheet);
+      background-image:
+        radial-gradient(#d8c49a 0.8px, transparent 0.8px),
+        linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(0,0,0,0.04));
+      background-size: 20px 20px, 100% 100%;
+      border: 4px solid var(--ink-black);
+      box-shadow:
+        0 0 0 2px var(--bg-parchment-sheet),
+        0 0 0 5px var(--ink-black),
+        0 15px 35px rgba(0, 0, 0, 0.7);
+      position: relative;
+    }
+
+    /* CABECERA DE IMPRENTA GÓTICA */
+    .gazette-header {
+      padding: 1rem 1.4rem 0.8rem 1.4rem;
+      border-bottom: 3px double var(--ink-black);
+      background: var(--bg-parchment-dim);
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       justify-content: space-between;
+      align-items: center;
       gap: 1rem;
     }
-    .brand-masthead {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
+
+    .header-branding { display: flex; align-items: center; gap: 1rem; }
+    .header-logo-icon {
+      font-size: 2.2rem;
+      color: var(--faction-david);
+      filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.3));
     }
-    .brand-woodcut-seal {
-      width: 44px;
-      height: 44px;
-      border: 2px solid var(--ink-black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      background: var(--bg-parchment-dim);
-      box-shadow: 2px 2px 0 var(--ink-black);
-    }
-    .brand-title-banner {
-      font-family: var(--font-fraktur);
-      font-size: 1.85rem;
+    .header-title-main {
+      font-family: var(--font-gothic);
+      font-size: 2.2rem;
+      line-height: 1.05;
       color: var(--ink-black);
-      line-height: 1;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
-    .brand-sub {
+    .header-sub-main {
       font-family: var(--font-title);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
       color: var(--ink-muted);
-      letter-spacing: 0.14em;
       text-transform: uppercase;
       font-weight: 700;
       margin-top: 2px;
-      border-top: 1px solid var(--line-sepia);
-      padding-top: 2px;
     }
 
-    /* USER BADGE */
-    .user-badge {
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .identity-chip {
       background: var(--bg-parchment-sheet);
-      border: 2px solid var(--ink-black);
-      padding: 0.35rem 0.8rem;
-      cursor: pointer;
-      box-shadow: 3px 3px 0 var(--ink-black);
-      transition: all 0.15s ease;
+      border: 1.5px solid var(--ink-black);
+      padding: 0.35rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 2px 2px 0 var(--ink-black);
+      font-family: var(--font-title);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .btn-action {
+      background: var(--bg-parchment-sheet);
+      border: 1.5px solid var(--ink-black);
       color: var(--ink-black);
-    }
-    .user-badge:hover {
-      background: #fff;
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0 var(--ink-black);
-    }
-    .user-badge-icon { font-size: 1.25rem; }
-    .user-badge-role {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      color: var(--faction-david);
       font-family: var(--font-title);
       font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: 2px 2px 0 var(--ink-black);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: all 0.12s ease;
     }
-    .user-badge-name { font-size: 0.85rem; font-weight: 700; font-family: var(--font-title); }
+    .btn-action:hover {
+      background: #ffffff;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink-black);
+    }
+    .btn-action:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--ink-black);
+    }
+    .btn-action.btn-danger {
+      background: #ebd2d2;
+      color: var(--faction-david);
+      border-color: var(--faction-david);
+    }
 
-    /* FOLIO BANNER */
+    /* TIRA DE FOLIO / METADATOS DE IMPRENTA */
     .gazette-folio-strip {
-      max-width: 1240px;
-      margin: 0.6rem auto 0;
-      width: calc(100% - 2rem);
-      border-top: 2px solid var(--ink-black);
-      border-bottom: 1px solid var(--ink-black);
-      padding: 0.3rem 0.5rem;
+      border-bottom: 2px solid var(--ink-black);
+      background: #e4d3a9;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      padding: 0.3rem 1.4rem;
       font-family: var(--font-title);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--ink-black);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--ink-dark);
-      background: var(--bg-parchment-sheet);
     }
 
-    /* MAIN CONTAINER */
-    main.war-main {
-      flex: 1;
-      max-width: 1240px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 0.8rem 1rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
+    /* MARCADOR DE CAMPAÑA SUPERIOR */
+    .scoreboard-strip {
+      border-bottom: 2px solid var(--ink-black);
+      background: #ecdcba;
+      padding: 0.6rem 1.4rem;
     }
-
-    /* SCOREBOARD SECTION */
     .scoreboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.8rem;
     }
     .commander-card {
       background: var(--bg-parchment-sheet);
-      border: 2px solid var(--ink-black);
-      box-shadow: 3px 3px 0 var(--ink-black);
-      padding: 0.85rem 1rem;
-      position: relative;
+      border: 1.5px solid var(--ink-black);
+      padding: 0.6rem 0.8rem;
+      box-shadow: 2px 2px 0 var(--ink-black);
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.4rem;
     }
-    .commander-card.david { border-top: 6px solid var(--faction-david); }
-    .commander-card.sergio { border-top: 6px solid var(--faction-sergio); }
-    .commander-card.javi { border-top: 6px solid var(--faction-javi); }
-    .commander-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px dashed var(--line-sepia);
-      padding-bottom: 0.4rem;
-    }
-    .commander-info { display: flex; align-items: center; gap: 0.65rem; }
-    .commander-avatar {
-      width: 36px;
-      height: 36px;
-      border: 1px solid var(--ink-black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-      background: var(--bg-parchment-aged);
-      box-shadow: 1px 1px 0 var(--ink-black);
-    }
-    .commander-name { font-size: 1rem; font-weight: 700; color: var(--ink-black); font-family: var(--font-title); }
-    .commander-faction { font-size: 0.76rem; color: var(--ink-muted); font-style: italic; }
-    .rank-tag {
-      font-size: 0.62rem;
-      padding: 0.15rem 0.5rem;
-      font-family: var(--font-title);
-      font-weight: 800;
-      background: var(--bg-parchment-dim);
-      border: 1px solid var(--ink-black);
-      color: var(--ink-black);
-      text-transform: uppercase;
-    }
+    .commander-card.david { border-left: 5px solid var(--faction-david); }
+    .commander-card.sergio { border-left: 5px solid var(--faction-sergio); }
+    .commander-card.javi { border-left: 5px solid var(--faction-javi); }
 
-    .commander-stats {
+    .cmd-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cmd-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cmd-avatar { font-size: 1.3rem; }
+    .cmd-name { font-size: 0.92rem; font-weight: 800; font-family: var(--font-title); color: var(--ink-black); }
+    .cmd-faction { font-size: 0.72rem; color: var(--ink-muted); font-style: italic; }
+    .cmd-stats {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      background: #fbf6ec;
-      border: 1px solid var(--ink-black);
-      padding: 0.35rem 0.2rem;
+      border: 1px solid var(--line-sepia);
+      background: #faf4e6;
+      padding: 0.25rem 0.4rem;
       text-align: center;
     }
-    .stat-box:not(:last-child) { border-right: 1px dashed var(--line-sepia); }
-    .stat-val { font-size: 1.25rem; font-weight: 800; color: var(--ink-black); font-family: var(--font-title); }
-    .stat-lbl { font-size: 0.62rem; color: var(--ink-muted); text-transform: uppercase; font-family: var(--font-title); font-weight: 600; }
-    .commander-districts { font-size: 0.78rem; color: var(--ink-dark); display: flex; align-items: center; gap: 0.4rem; }
+    .stat-val { font-size: 1.15rem; font-weight: 800; font-family: var(--font-title); }
+    .stat-lbl { font-size: 0.62rem; color: var(--ink-muted); text-transform: uppercase; font-family: var(--font-title); }
 
-    /* TABS */
+    /* NAVEGACIÓN POR PESTAÑAS (FOLIO TABS) */
     .tabs-nav {
       display: flex;
-      gap: 0.35rem;
-      overflow-x: auto;
-      padding-bottom: 0.2rem;
+      background: #decba2;
       border-bottom: 2px solid var(--ink-black);
+      overflow-x: auto;
       scrollbar-width: none;
+      padding: 0.35rem 0.6rem 0 0.6rem;
+      gap: 0.3rem;
     }
     .tabs-nav::-webkit-scrollbar { display: none; }
+
     .tab-btn {
-      background: var(--bg-parchment-dim);
+      background: #ebd9b5;
       border: 1.5px solid var(--ink-black);
       border-bottom: none;
       color: var(--ink-dark);
-      padding: 0.5rem 0.95rem;
-      font-size: 0.8rem;
-      font-weight: 700;
       font-family: var(--font-title);
-      letter-spacing: 0.05em;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 0.55rem 0.95rem;
       cursor: pointer;
-      display: flex;
+      text-transform: uppercase;
+      display: inline-flex;
       align-items: center;
       gap: 0.45rem;
       white-space: nowrap;
-      transition: all 0.15s ease;
-      text-transform: uppercase;
+      transition: all 0.12s ease;
+      position: relative;
+      top: 1px;
     }
-    .tab-btn:hover { background: #fffdf8; color: var(--ink-black); }
+    .tab-btn:hover { background: #fbf5e6; }
     .tab-btn.active {
       background: var(--bg-parchment-sheet);
-      color: var(--ink-black);
       border-bottom: 2px solid var(--bg-parchment-sheet);
-      margin-bottom: -2px;
-      box-shadow: inset 0 2px 0 var(--ink-black);
+      color: var(--ink-black);
+      box-shadow: 0 -2px 0 var(--ink-black);
       font-weight: 900;
     }
-    .tab-btn.gm-only { border-color: var(--faction-david); color: var(--faction-david); }
+    .tab-btn.gm-only {
+      color: var(--faction-david);
+      border-color: var(--faction-david);
+      background: #fae8e8;
+    }
+    .tab-btn.gm-only.active {
+      background: var(--bg-parchment-sheet);
+      border-color: var(--ink-black);
+    }
 
-    .tab-pane { display: none; animation: inkFade 0.2s ease-out forwards; }
+    /* CONTENIDO DE LAS PESTAÑAS */
+    .tab-pane {
+      display: none;
+      padding: 1.4rem;
+      animation: fadeIn 0.15s ease-in-out;
+    }
     .tab-pane.active { display: block; }
-    @keyframes inkFade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* TAB 1: CARTOGRAFÍA */
-    .map-container-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 1rem;
-    }
-    @media (max-width: 920px) { .map-container-wrapper { grid-template-columns: 1fr; } }
-    .map-card {
-      background: var(--bg-parchment-sheet);
+    /* PESTAÑA 0: LOGIN VIEW (GATEWAY) */
+    .login-container {
+      max-width: 680px;
+      margin: 1.5rem auto;
       border: 3px double var(--ink-black);
-      padding: 1rem;
-      position: relative;
-      box-shadow: 4px 4px 0 rgba(20, 17, 13, 0.15);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: #faf4e6;
+      padding: 1.8rem;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.25);
+      text-align: center;
     }
-    .map-svg-frame {
-      width: 100%;
-      max-width: 620px;
-      height: 480px;
-      background: #faf2dc url('./assets/Mapa_Kar_Drakor.png') center/cover no-repeat;
-      background-blend-mode: multiply;
-      border: 2px solid var(--ink-black);
-      box-shadow: inset 0 0 25px rgba(138, 79, 8, 0.25);
-      position: relative;
+    .login-crest {
+      font-size: 3rem;
+      color: var(--faction-david);
+      margin-bottom: 0.5rem;
     }
-    svg.tactical-svg { width: 100%; height: 100%; cursor: crosshair; }
-    .map-legend {
-      display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-      margin-top: 0.8rem;
-      font-size: 0.78rem;
-      color: var(--ink-dark);
-      font-family: var(--font-title);
-      font-weight: 700;
-    }
-    .legend-item { display: flex; align-items: center; gap: 0.45rem; }
-    .legend-color { width: 14px; height: 14px; border: 1.5px solid var(--ink-black); box-shadow: 1px 1px 0 var(--ink-black); }
-
-    .district-details-card {
-      background: var(--bg-parchment-sheet);
-      border: 3px double var(--ink-black);
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-      box-shadow: 4px 4px 0 rgba(20, 17, 13, 0.15);
-    }
-    .district-badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-family: var(--font-title);
-      padding: 0.2rem 0.6rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border: 1.5px solid var(--ink-black);
-    }
-    .badge-sergio { background: var(--faction-sergio-bg); color: var(--faction-sergio); border-color: var(--faction-sergio); }
-    .badge-david { background: var(--faction-david-bg); color: var(--faction-david); border-color: var(--faction-david); }
-    .badge-javi { background: var(--faction-javi-bg); color: var(--faction-javi); border-color: var(--faction-javi); }
-    .badge-neutral { background: var(--faction-neutral-bg); color: var(--faction-neutral); border-color: var(--faction-neutral); }
-
-    .perk-box { background: #fbf6ec; border: 1px dashed var(--ink-black); padding: 0.8rem; }
-    .perk-title { font-size: 0.75rem; color: var(--ink-black); font-weight: 800; text-transform: uppercase; margin-bottom: 0.25rem; font-family: var(--font-title); }
-    .perk-desc { font-size: 0.92rem; font-style: italic; color: var(--ink-dark); font-family: var(--font-body); line-height: 1.4; }
-    .gm-control-box { background: #fdf5f5; border: 2px solid var(--faction-david); padding: 0.8rem; }
-    .gm-control-title { font-size: 0.72rem; color: var(--faction-david); font-family: var(--font-title); font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem; }
-    .gm-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; }
-    .gm-claim-btn {
-      padding: 0.45rem;
-      font-size: 0.72rem;
-      font-weight: 800;
-      cursor: pointer;
-      border: 1.5px solid var(--ink-black);
-      background: var(--bg-parchment-sheet);
+    .login-title {
+      font-family: var(--font-gothic);
+      font-size: 2.2rem;
       color: var(--ink-black);
+      line-height: 1.1;
+      margin-bottom: 0.4rem;
+    }
+    .login-subtitle {
       font-family: var(--font-title);
-      box-shadow: 1px 1px 0 var(--ink-black);
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
     }
-    .gm-claim-btn:hover { background: #fff; transform: translate(-1px, -1px); }
 
-    /* TAB 2: MISIÓN */
-    .mission-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.2rem; }
-    @media (max-width: 850px) { .mission-grid { grid-template-columns: 1fr; } }
-    .panel {
-      background: var(--bg-parchment-sheet);
-      border: 3px double var(--ink-black);
-      padding: 1.2rem;
-      box-shadow: 4px 4px 0 rgba(20, 17, 13, 0.12);
+    .login-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
     }
-    .panel-header {
-      border-bottom: 2px solid var(--ink-black);
-      padding-bottom: 0.6rem;
-      margin-bottom: 1rem;
+    @media (max-width: 600px) { .login-grid { grid-template-columns: 1fr; } }
+
+    .login-user-card {
+      border: 2px solid var(--ink-black);
+      background: var(--bg-parchment-sheet);
+      padding: 0.85rem;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink-black);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 0.8rem;
+      transition: all 0.12s ease;
     }
-    .panel-title { font-size: 1.15rem; color: var(--ink-black); font-family: var(--font-title); font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
-    .mission-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.6rem; margin-bottom: 1rem; }
-    .spec-item { background: #faf4e6; padding: 0.55rem; border: 1px solid var(--ink-black); border-left: 4px solid var(--ink-black); }
-    .spec-label { font-size: 0.65rem; color: var(--ink-muted); text-transform: uppercase; font-family: var(--font-title); font-weight: 700; }
-    .spec-value { font-size: 0.95rem; font-weight: 800; color: var(--ink-black); font-family: var(--font-title); }
+    .login-user-card:hover {
+      background: #ffffff;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink-black);
+    }
+    .login-user-card.selected {
+      border-color: var(--faction-david);
+      background: #fbf2f2;
+      box-shadow: 3px 3px 0 var(--faction-david);
+    }
+    .login-avatar { font-size: 1.6rem; }
+    .login-card-title { font-family: var(--font-title); font-size: 0.92rem; font-weight: 800; color: var(--ink-black); }
+    .login-card-desc { font-size: 0.72rem; color: var(--ink-muted); font-style: italic; }
 
-    /* NIEBLA DE GUERRA */
-    .confidential-card {
+    .login-pin-box {
+      border: 2px dashed var(--ink-black);
+      background: #fdfaf3;
+      padding: 1.2rem;
+      max-width: 360px;
+      margin: 0 auto;
+      display: none;
+    }
+    .login-pin-input {
+      width: 140px;
+      font-family: var(--font-title);
+      font-size: 1.3rem;
+      letter-spacing: 0.3em;
+      text-align: center;
+      padding: 0.4rem;
+      border: 2px solid var(--ink-black);
+      background: #ffffff;
+      margin: 0.6rem 0;
+    }
+
+    /* PESTAÑA 1: EL HERALDO */
+    .herald-nav {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .border-woodcut-double {
+      border: 3px double #241d17;
+      background: #f4ecdc;
+      padding: 1.2rem;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
+    }
+    .woodcut-crop {
+      width: 100%;
+      height: auto;
+      max-height: 440px;
+      object-fit: cover;
+      filter: contrast(1.15) brightness(0.96) sepia(0.28);
+      mix-blend-mode: multiply;
+      display: block;
+    }
+    .drop-cap {
+      float: left;
+      font-family: var(--font-gothic);
+      font-size: 3.4rem;
+      line-height: 0.8;
+      padding-right: 8px;
+      padding-top: 4px;
+      color: #611515;
+    }
+
+    /* PESTAÑA 2: MISIONES */
+    .mission-nav-bar {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid var(--ink-black);
+      padding-bottom: 0.4rem;
+    }
+    .mission-layout {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 1.2rem;
+    }
+    @media (max-width: 860px) { .mission-layout { grid-template-columns: 1fr; } }
+
+    .panel-box {
+      border: 3px double var(--ink-black);
+      background: var(--bg-parchment-sheet);
+      padding: 1.2rem;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+    }
+    .panel-title-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--ink-black);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .spec-cell {
+      border: 1px solid var(--ink-black);
+      border-left: 4px solid var(--ink-black);
+      background: #faf4e6;
+      padding: 0.5rem;
+    }
+    .spec-cell-lbl { font-size: 0.65rem; color: var(--ink-muted); text-transform: uppercase; font-family: var(--font-title); font-weight: 800; }
+    .spec-cell-val { font-size: 0.95rem; font-weight: 800; color: var(--ink-black); font-family: var(--font-title); }
+
+    .confidential-seal {
       background: #faf2f2;
       border: 2px solid var(--faction-david);
       padding: 1.2rem;
@@ -429,11 +458,11 @@
       overflow: hidden;
       box-shadow: 3px 3px 0 var(--faction-david);
     }
-    .confidential-card::before {
+    .confidential-seal::before {
       content: "CONFIDENCIAL";
       position: absolute;
-      right: -30px;
-      top: 18px;
+      right: -28px;
+      top: 16px;
       background: var(--faction-david);
       color: #fff;
       font-size: 0.62rem;
@@ -442,819 +471,764 @@
       padding: 0.2rem 2.2rem;
       transform: rotate(45deg);
       border: 1px dashed #fff;
-      pointer-events: none;
       letter-spacing: 0.15em;
     }
-    .fog-locked { text-align: center; padding: 2.5rem 1rem; color: var(--ink-muted); }
-    .fog-locked i { font-size: 2.5rem; color: var(--line-sepia); margin-bottom: 0.8rem; }
 
-    /* TAB 3: AAR */
-    .aar-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-    @media (max-width: 850px) { .aar-layout { grid-template-columns: 1fr; } }
-    .casualty-sim-box { background: #faf4e6; border: 2px solid var(--ink-black); padding: 1rem; text-align: center; margin-top: 1rem; }
-    .d6-cube {
-      width: 60px;
-      height: 60px;
-      background: #ffffff;
-      color: var(--ink-black);
-      font-size: 2.2rem;
-      font-weight: 900;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0.8rem 0;
-      box-shadow: 3px 3px 0 var(--ink-black);
-      border: 2px solid var(--ink-black);
-      font-family: var(--font-title);
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* PESTAÑA 3: CARTOGRAFÍA TÁCTICA */
+    .map-grid-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 1.2rem;
+      align-items: start;
     }
-    .btn-action {
-      background: var(--ink-black);
-      color: #fff9ee;
-      font-family: var(--font-title);
-      font-weight: 700;
-      font-size: 0.82rem;
-      padding: 0.55rem 1.1rem;
-      border: 1.5px solid var(--ink-black);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      box-shadow: 2px 2px 0 rgba(27, 22, 16, 0.4);
-      transition: all 0.15s;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .btn-action:hover { background: #332b21; transform: translate(-1px, -1px); box-shadow: 3px 3px 0 rgba(27, 22, 16, 0.6); }
-    .aar-item {
-      background: #fbf6eb;
-      border: 1.5px solid var(--ink-black);
-      border-left: 5px solid var(--ink-black);
-      padding: 0.85rem;
-      margin-bottom: 0.85rem;
-      box-shadow: 2px 2px 0 rgba(20, 17, 13, 0.1);
-    }
-    .aar-item-meta {
-      font-size: 0.76rem;
-      color: var(--ink-black);
-      font-family: var(--font-title);
-      font-weight: 700;
-      margin-bottom: 0.3rem;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px dashed var(--line-sepia);
-      padding-bottom: 0.25rem;
-    }
-    .aar-text { font-size: 0.95rem; color: var(--ink-dark); font-family: var(--font-body); line-height: 1.45; }
+    @media (max-width: 950px) { .map-grid-layout { grid-template-columns: 1fr; } }
 
-    /* ==========================================================================
-       TAB 4: EL HERALDO DE KAR-DRAKOR (ESTILO MORDHEIM TOWN CRYER AUTÉNTICO)
-       ========================================================================== */
-    .newsprint-sheet {
-      background: radial-gradient(circle at 50% 30%, #fbf3df 0%, #f3e5c5 60%, #e6d0a1 100%);
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.4), inset 0 0 80px rgba(115, 87, 45, 0.25);
+    .tactical-map-viewport {
       position: relative;
-      border: 2px solid #54432c;
-      padding: 2rem;
-      color: #181411;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .newsprint-sheet::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: 
-        radial-gradient(ellipse at 15% 10%, rgba(139, 90, 43, 0.12) 0%, transparent 40%),
-        radial-gradient(ellipse at 85% 85%, rgba(100, 60, 20, 0.16) 0%, transparent 45%);
-      pointer-events: none;
-      mix-blend-mode: multiply;
-    }
-    .woodcut-crop {
-      filter: contrast(120%) brightness(96%) sepia(25%);
-      mix-blend-mode: multiply;
-    }
-    .border-woodcut-double {
-      border-style: double;
-      border-width: 4px;
-      border-color: #26211c;
-    }
-    .drop-cap {
-      float: left;
-      font-family: var(--font-fraktur);
-      font-size: 3.4rem;
-      line-height: 0.75;
-      padding-top: 4px;
-      padding-right: 8px;
-      padding-bottom: 2px;
-      color: var(--ink-black);
-    }
-
-    /* TAB 5: ORÁCULO DE REGLAS */
-    .oracle-chat-box {
-      display: flex;
-      flex-direction: column;
-      height: 480px;
-      background: #faf5e8;
-      border: 2px solid var(--ink-black);
+      border: 3px double var(--ink-black);
+      background: #ede1c7;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
       overflow: hidden;
     }
-    .chat-messages {
-      flex: 1;
-      padding: 1.1rem;
+    .tactical-map-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: contrast(1.08) brightness(0.98);
+    }
+    .tactical-map-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+    }
+
+    /* Marcador elegante de mapa */
+    .map-pin {
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .map-pin:hover {
+      transform: scale(1.18);
+      filter: drop-shadow(0 0 6px rgba(0,0,0,0.6));
+    }
+    .map-pin.active .pin-ring {
+      stroke: #ffffff;
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 8px #ffd700);
+    }
+
+    /* PESTAÑA 5: EL ORÁCULO & BUZÓN */
+    .oracle-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    @media (max-width: 860px) { .oracle-layout { grid-template-columns: 1fr; } }
+
+    .chat-box-feed {
+      height: 380px;
       overflow-y: auto;
+      border: 2px solid var(--ink-black);
+      background: #fdfaf3;
+      padding: 0.8rem;
       display: flex;
       flex-direction: column;
-      gap: 0.9rem;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
     }
-    .msg { max-width: 84%; padding: 0.8rem 1rem; font-size: 0.95rem; line-height: 1.45; border: 1px solid var(--ink-black); }
-    .msg.oracle { background: #ffffff; border-left: 5px solid var(--ink-black); color: var(--ink-black); align-self: flex-start; }
-    .msg.user { background: #ece3cf; border-right: 5px solid var(--ink-black); color: var(--ink-black); align-self: flex-end; }
-    .msg-sender { font-size: 0.72rem; font-weight: 800; font-family: var(--font-title); color: var(--ink-black); margin-bottom: 0.25rem; text-transform: uppercase; }
-    .chat-input-bar { display: flex; gap: 0.5rem; padding: 0.75rem; background: var(--bg-parchment-sheet); border-top: 2px solid var(--ink-black); }
-    .chat-input {
-      flex: 1;
-      background: #ffffff;
-      border: 1.5px solid var(--ink-black);
-      color: var(--ink-black);
-      padding: 0.6rem 0.8rem;
-      font-size: 0.95rem;
-      font-family: var(--font-body);
-      outline: none;
-    }
-    .quick-rules-chips { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.8rem; }
-    .rule-chip {
-      background: var(--bg-parchment-dim);
+    .chat-bubble {
+      padding: 0.75rem 0.9rem;
       border: 1px solid var(--ink-black);
-      color: var(--ink-black);
-      font-family: var(--font-title);
-      font-weight: 700;
-      font-size: 0.72rem;
-      padding: 0.3rem 0.65rem;
-      cursor: pointer;
-      box-shadow: 1px 1px 0 var(--ink-black);
-      text-transform: uppercase;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      max-width: 88%;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
     }
-    .rule-chip:hover { background: #fff; transform: translate(-1px, -1px); }
-
-    /* MODAL */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(20, 17, 13, 0.75);
-      backdrop-filter: blur(2px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-card {
+    .chat-bubble.bot {
+      align-self: flex-start;
       background: var(--bg-parchment-sheet);
-      border: 4px double var(--ink-black);
-      max-width: 460px;
-      width: 100%;
-      padding: 1.5rem;
-      box-shadow: 6px 6px 0 var(--ink-black);
+      border-left: 4px solid var(--faction-david);
     }
-    .identity-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #faf4e6;
-      border: 1.5px solid var(--ink-black);
-      padding: 0.75rem 0.85rem;
-      margin-bottom: 0.65rem;
-      cursor: pointer;
-      box-shadow: 2px 2px 0 var(--ink-black);
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: #e8edd8;
+      border-right: 4px solid var(--faction-sergio);
     }
-    .identity-option:hover { background: #fff; transform: translate(-1px, -1px); }
+    .chat-bubble.npc {
+      align-self: flex-start;
+      background: #fbf5e6;
+      border-left: 4px solid #8a4f08;
+    }
 
-    /* FORMS */
-    .form-group { margin-bottom: 0.85rem; }
-    .form-label { display: block; font-size: 0.74rem; font-family: var(--font-title); font-weight: 800; color: var(--ink-black); margin-bottom: 0.3rem; text-transform: uppercase; }
     .form-control {
       width: 100%;
-      background: #ffffff;
       border: 1.5px solid var(--ink-black);
-      color: var(--ink-black);
+      background: #ffffff;
       padding: 0.55rem 0.75rem;
-      font-size: 0.95rem;
       font-family: var(--font-body);
-      outline: none;
+      font-size: 0.9rem;
+      color: var(--ink-black);
+      box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    textarea.form-control { resize: vertical; min-height: 80px; }
+
+    /* PESTAÑA 6: CONTACTO CON EL HERALDO (NPCS) */
+    .npc-selector-bar {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+      margin-bottom: 1rem;
+      scrollbar-width: none;
+    }
+    .npc-card-btn {
+      border: 2px solid var(--ink-black);
+      background: var(--bg-parchment-dim);
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-title);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+      transition: all 0.12s ease;
+      box-shadow: 2px 2px 0 var(--ink-black);
+    }
+    .npc-card-btn:hover { background: #fff; }
+    .npc-card-btn.active {
+      background: var(--bg-parchment-sheet);
+      border-color: var(--faction-david);
+      box-shadow: 3px 3px 0 var(--faction-david);
+      color: var(--faction-david);
     }
 
-    footer.war-footer {
-      border-top: 2px solid var(--ink-black);
-      background: var(--bg-parchment-sheet);
-      padding: 0.6rem 1rem;
-      font-size: 0.75rem;
-      color: var(--ink-dark);
-      font-family: var(--font-title);
+    /* PIE DE PÁGINA */
+    .gazette-footer {
+      border-top: 3px double var(--ink-black);
+      background: var(--bg-parchment-dim);
+      padding: 0.8rem 1.4rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.8rem;
+      font-size: 0.72rem;
+      font-family: var(--font-title);
+      font-weight: 700;
+      color: var(--ink-muted);
     }
-    .sync-status { display: flex; align-items: center; gap: 0.4rem; font-weight: 700; }
-    .sync-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--faction-sergio); border: 1px solid var(--ink-black); }
-    .sync-dot.offline { background: var(--faction-javi); }
-
-    .map-link-line { stroke: var(--ink-black); stroke-width: 2.2; stroke-dasharray: 6 3; }
-    .map-node { cursor: pointer; transition: all 0.2s; }
-    .node-text { font-family: var(--font-title); font-size: 11px; font-weight: 800; fill: #ffffff; text-anchor: middle; pointer-events: none; }
+    .sync-status { display: flex; align-items: center; gap: 0.4rem; font-weight: 800; }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #2b8a3e; box-shadow: 0 0 5px #2b8a3e; }
+    .sync-dot.offline { background: #d97706; box-shadow: none; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER FIJO ESTILO GACETA HISTÓRICA -->
-  <header class="war-header">
-    <div class="header-container">
-      <div class="brand-masthead">
-        <div class="brand-woodcut-seal">
-          <i class="fa-solid fa-scroll"></i>
-        </div>
+  <div class="gazette-wrapper">
+
+    <!-- CABECERA PRINCIPAL -->
+    <header class="gazette-header">
+      <div class="header-branding">
+        <i class="fa-solid fa-skull-crossbones header-logo-icon"></i>
         <div>
-          <div class="brand-title-banner">Mordheim: War Room</div>
-          <div class="brand-sub">Gaceta Táctica de Campaña • Age of Fantasy: Skirmish v3.6.0</div>
+          <h1 class="header-title-main">Mordheim: War Room</h1>
+          <div class="header-sub-main">Cuartel General &amp; Registro Táctico Oficial • Age of Fantasy: Skirmish v3.6.0</div>
         </div>
       </div>
-      <!-- BOTÓN IDENTIDAD / PERFIL -->
-      <div class="user-badge" id="btnOpenIdentity">
-        <span class="user-badge-icon" id="userIcon">🧛</span>
-        <div>
-          <div class="user-badge-role" id="userRole">Game Master &amp; Árbitro</div>
-          <div class="user-badge-name" id="userName">David (Sangre Carmesí)</div>
+      <div class="header-actions">
+        <!-- Chip de usuario identificado -->
+        <div class="identity-chip" id="userHeaderChip">
+          <span id="userHeaderAvatar">👁️</span>
+          <span id="userHeaderName">Identifícate</span>
         </div>
-        <i class="fa-solid fa-feather" style="font-size: 0.75rem; color: var(--ink-black); margin-left: 0.4rem;"></i>
+        <button class="btn-action" id="btnLogout" onclick="app.logout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Salir / Cambiar
+        </button>
       </div>
+    </header>
+
+    <!-- TIRA DE FOLIO / METADATOS -->
+    <div class="gazette-folio-strip">
+      <span><i class="fa-solid fa-landmark"></i> ARCHIVOS DEL TRIBUNAL DE GUERRA</span>
+      <span>AÑO DE LAS SOMBRAS 1599 • IMPRENTA DE LA CIUDAD CONDENADA</span>
+      <span id="headerRoundTag">RONDA 02 EN CURSO</span>
     </div>
-  </header>
 
-  <!-- TIRA DE FOLIO / METADATOS DE IMPRENTA -->
-  <div class="gazette-folio-strip">
-    <span><i class="fa-solid fa-landmark"></i> ARCHIVOS DEL TRIBUNAL DE GUERRA</span>
-    <span>AÑO DE LAS SOMBRAS 1599 • IMPRENTA OFICIAL DE LA FORTALEZA</span>
-    <span>EDICIÓN EXTRAORDINARIA</span>
-  </div>
-
-  <!-- CUERPO PRINCIPAL -->
-  <main class="war-main">
-
-    <!-- MARCADOR DE CAMPAÑA PERMANENTE -->
-    <section class="scoreboard-section">
-      <div class="scoreboard-grid" id="scoreboardGrid">
-        <!-- Generado dinámicamente con las 3 facciones -->
+    <!-- MARCADOR DE CAMPAÑA (TRES FACCIONES) -->
+    <section class="scoreboard-strip" id="campaignScoreboard">
+      <div class="scoreboard-grid" id="scoreboardCardsGrid">
+        <!-- Inyectado por JS -->
       </div>
     </section>
 
-    <!-- NAVEGACIÓN POR PESTAÑAS (FOLIO TABS) -->
-    <nav class="tabs-nav">
-      <button class="tab-btn active" data-tab="tab-map">
-        <i class="fa-solid fa-map-location-dot"></i> 1. Cartografía Táctica
+    <!-- BARRA DE PESTAÑAS (ORDEN DE DAVID: 1 Heraldo, 2 Misiones, 3 Mapa, 4 AAR, 5 Oráculo, 6 Contacto, 7 GM) -->
+    <nav class="tabs-nav" id="mainTabsNav">
+      <button class="tab-btn active" data-tab="tab-gazette">
+        <i class="fa-solid fa-newspaper"></i> 1. El Heraldo
       </button>
       <button class="tab-btn" data-tab="tab-mission">
-        <i class="fa-solid fa-shield-halved"></i> 2. Misión &amp; Niebla
+        <i class="fa-solid fa-shield-halved"></i> 2. Misiones
+      </button>
+      <button class="tab-btn" data-tab="tab-map">
+        <i class="fa-solid fa-map-location-dot"></i> 3. Cartografía Táctica
       </button>
       <button class="tab-btn" data-tab="tab-aar">
-        <i class="fa-solid fa-scroll"></i> 3. Partes de Guerra
-      </button>
-      <button class="tab-btn" data-tab="tab-gazette">
-        <i class="fa-solid fa-newspaper"></i> 4. El Heraldo
+        <i class="fa-solid fa-scroll"></i> 4. Partes de Guerra
       </button>
       <button class="tab-btn" data-tab="tab-oracle">
-        <i class="fa-solid fa-balance-scale"></i> 5. Oráculo v3.6.0
+        <i class="fa-solid fa-balance-scale"></i> 5. El Oráculo
       </button>
-      <button class="tab-btn gm-only" data-tab="tab-gm" id="tabGmBtn">
-        <i class="fa-solid fa-crown"></i> 6. Panel GM
+      <button class="tab-btn" data-tab="tab-roleplay">
+        <i class="fa-solid fa-comments"></i> 6. Contacto con el Heraldo
+      </button>
+      <button class="tab-btn gm-only" data-tab="tab-gm" id="tabGmBtn" style="display: none;">
+        <i class="fa-solid fa-crown"></i> 7. Panel GM
       </button>
     </nav>
 
-    <!-- ========================================== -->
-    <!-- PESTAÑA 1: MAPA TÁCTICO INTERACTIVO        -->
-    <!-- ========================================== -->
-    <section class="tab-pane active" id="tab-map">
-      <div class="map-container-wrapper">
-        <div class="map-card">
-          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; border-bottom: 1px solid var(--ink-black); padding-bottom: 0.35rem;">
-            <div class="title-gothic" style="color: var(--ink-black); font-size: 0.95rem;">
-              <i class="fa-solid fa-compass"></i> Cartografía de los Nueve Baluartes
-            </div>
-            <span style="font-size: 0.72rem; color: var(--ink-muted); font-style: italic;">Haz clic en un baluarte para inspeccionar</span>
-          </div>
-          <div class="map-svg-frame">
-            <svg class="tactical-svg" id="tacticalMapSvg" viewbox="0 0 500 420">
-              <!-- Rosa de los vientos / Brújula grabada en el fondo -->
-              <g opacity="0.25" transform="translate(430, 65)">
-                <circle fill="none" r="32" stroke="var(--ink-black)" stroke-width="1.5"></circle>
-                <path d="M 0 -32 L 5 -8 L 0 0 L -5 -8 Z" fill="var(--ink-black)"></path>
-                <path d="M 0 32 L 5 8 L 0 0 L -5 8 Z" fill="var(--ink-black)"></path>
-                <path d="M 32 0 L 8 5 L 0 0 L 8 -5 Z" fill="var(--ink-black)"></path>
-                <path d="M -32 0 L -8 5 L 0 0 L -8 -5 Z" fill="var(--ink-black)"></path>
-                <text fill="var(--ink-black)" font-family="'Cinzel', serif" font-size="9" font-weight="bold" text-anchor="middle" y="-36">N</text>
-              </g>
-              <!-- Conexiones entre distritos grabadas -->
-              <line class="map-link-line" x1="70" x2="250" y1="70" y2="70"></line>
-              <line class="map-link-line" x1="250" x2="430" y1="70" y2="70"></line>
-              <line class="map-link-line" x1="70" x2="70" y1="70" y2="210"></line>
-              <line class="map-link-line" x1="430" x2="430" y1="70" y2="210"></line>
-              <line class="map-link-line" x1="250" x2="250" y1="70" y2="210"></line>
-              <line class="map-link-line" x1="70" x2="250" y1="210" y2="210"></line>
-              <line class="map-link-line" x1="250" x2="430" y1="210" y2="210"></line>
-              <line class="map-link-line" x1="70" x2="70" y1="210" y2="350"></line>
-              <line class="map-link-line" x1="430" x2="430" y1="210" y2="350"></line>
-              <line class="map-link-line" x1="250" x2="250" y1="210" y2="350"></line>
-              <line class="map-link-line" x1="70" x2="250" y1="350" y2="350"></line>
-              <line class="map-link-line" x1="250" x2="430" y1="350" y2="350"></line>
-              <!-- Nodos SVG grabados inyectados por JS -->
-              <g id="mapNodesGroup"></g>
-            </svg>
-          </div>
-          <div class="map-legend">
-            <div class="legend-item"><div class="legend-color" style="background: var(--faction-david);"></div> David (Sangre Carmesí)</div>
-            <div class="legend-item"><div class="legend-color" style="background: var(--faction-sergio);"></div> Sergio (Clan Scutrix)</div>
-            <div class="legend-item"><div class="legend-color" style="background: var(--faction-javi);"></div> Javi (Hijos del Yunque)</div>
-            <div class="legend-item"><div class="legend-color" style="background: var(--faction-neutral);"></div> Baluarte Disputado</div>
-          </div>
-        </div>
+    <main class="war-main">
 
-        <!-- PANEL DE DETALLES DEL DISTRITO SELECCIONADO -->
-        <div class="district-details-card" id="districtDetailsCard">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--line-sepia); padding-bottom: 0.35rem;">
-            <div id="districtDetailNum" style="font-size: 0.75rem; color: var(--ink-black); font-family: var(--font-title); font-weight: 800;">DISTRITO I</div>
-            <div class="district-badge badge-sergio" id="districtDetailBadge">Control: Sergio</div>
-          </div>
-          <h3 class="title-gothic" id="districtDetailName" style="font-size: 1.3rem; color: var(--ink-black);">La Roca de Sigmar</h3>
-          <div class="perk-box">
-            <div class="perk-title"><i class="fa-solid fa-scroll"></i> Privilegio Táctico del Distrito:</div>
-            <div class="perk-desc" id="districtDetailPerk">«Vigilancia Sacra: Permite desplegar 1 unidad con Scout.»</div>
-          </div>
-          <div style="font-size: 0.9rem; color: var(--ink-muted); font-family: var(--font-body); line-height: 1.45;">
-            <strong style="color: var(--ink-black); font-family: var(--font-title);">Historial de Asedio:</strong> Baluarte reclamado en la Ronda 01. Los vigías del Clan Scutrix patrullan los accesos al río con mosquetes y veneno de disformidad.
-          </div>
-          <!-- CONTROLES GM RÁPIDOS -->
-          <div class="gm-control-box" id="districtGmControls">
-            <div class="gm-control-title">
-              <i class="fa-solid fa-feather-pointed"></i> Arbitraje de Campaña: Asignar Soberanía
-            </div>
-            <div class="gm-btn-group">
-              <button class="gm-claim-btn" onclick="app.setDistrictControl('david')">🧛 David</button>
-              <button class="gm-claim-btn" onclick="app.setDistrictControl('sergio')">🐀 Sergio</button>
-              <button class="gm-claim-btn" onclick="app.setDistrictControl('javi')">⚒️ Javi</button>
-              <button class="gm-claim-btn" onclick="app.setDistrictControl('neutral')">🛡️ Neutral</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 0: LOGIN DE ENTRADA (GUARDIA DE MORDHEIM)       -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-login">
+        <div class="login-container">
+          <div class="login-crest"><i class="fa-solid fa-shield-halved"></i></div>
+          <h2 class="login-title">Puesto de Control de la Guardia</h2>
+          <p class="login-subtitle">Selecciona tu credencial e introduce tu clave de acceso secreta</p>
 
-    <!-- ========================================== -->
-    <!-- PESTAÑA 2: MISIÓN ACTIVA & NIEBLA GUERRA   -->
-    <!-- ========================================== -->
-    <section class="tab-pane" id="tab-mission">
-      <div class="mission-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-flag-checkered"></i> Ronda 01: El Asalto a la Puerta del Abismo
-            </div>
-            <span class="rank-tag">ORDEN ACTIVA</span>
-          </div>
-          <div class="mission-specs">
-            <div class="spec-item">
-              <div class="spec-label">Reglamento</div>
-              <div class="spec-value">AoF: Skirmish v3.6.0</div>
-            </div>
-            <div class="spec-item">
-              <div class="spec-label">Puntos de Banda</div>
-              <div class="spec-value">300 coronas</div>
-            </div>
-            <div class="spec-item">
-              <div class="spec-label">Límite de Turnos</div>
-              <div class="spec-value">4 Rondas</div>
-            </div>
-            <div class="spec-item">
-              <div class="spec-label">Mesa de Asedio</div>
-              <div class="spec-value">3' x 3' (90x90 cm)</div>
-            </div>
-          </div>
-          <div style="margin-bottom: 1rem;">
-            <h4 class="title-gothic" style="font-size: 0.9rem; color: var(--ink-black); margin-bottom: 0.4rem; border-bottom: 1px dashed var(--line-sepia); padding-bottom: 0.2rem;">
-              <i class="fa-solid fa-scroll"></i> Trasfondo Bélico &amp; Condiciones de Victoria
-            </h4>
-            <p class="text-lore" style="color: var(--ink-dark); margin-bottom: 0.6rem;">
-              Tras el impacto del cometa de dos colas sobre las cúpulas de Mordheim, las tres avanzadas se disputan el paso de la Roca de Sigmar y los muelles fluviales. Aquel que controle la entrada forzará a las demás bandas a pagar tributo de sangre en cada incursión.
-            </p>
-            <ul style="font-size: 0.9rem; color: var(--ink-muted); padding-left: 1.3rem; line-height: 1.6;">
-              <li><strong>Objetivo Principal:</strong> Mantener al final de la Ronda 4 más unidades a 3" del monolito central (+1 VP).</li>
-              <li><strong>Ruptura de Líneas:</strong> Eliminar al Héroe enemigo antes de la ronda 3 otorga +15 coronas de oro.</li>
-              <li><strong>Botín de Campaña:</strong> El vencedor adquiere el control directo de 1 distrito adyacente libre.</li>
-            </ul>
-          </div>
-          <div style="text-align: right; border-top: 1px dashed var(--line-sepia); padding-top: 0.6rem;">
-            <a href="./assets/Hoja_Mision_Ronda_01.pdf" target="_blank" class="btn-action">
-              <i class="fa-solid fa-file-pdf"></i> Descargar Hoja Oficial de Misión (PDF)
-            </a>
-          </div>
-        </div>
-
-        <!-- NIEBLA DE GUERRA -->
-        <div class="confidential-card">
-          <div style="font-size: 0.72rem; color: var(--faction-david); font-family: var(--font-title); font-weight: 800; margin-bottom: 0.3rem;">
-            <i class="fa-solid fa-stamp"></i> DESPACHO CLANDESTINO
-          </div>
-          <h3 class="title-gothic" style="font-size: 1.25rem; color: var(--ink-black); margin-bottom: 0.8rem;">
-            Orden Secreta de Ronda
-          </h3>
-          <div id="fogOfWarContent">
-            <!-- Dinámico según usuario logueado -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- PESTAÑA 3: PARTES DE GUERRA & BAJAS        -->
-    <!-- ========================================== -->
-    <section class="tab-pane" id="tab-aar">
-      <div class="aar-layout">
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-pen-fancy"></i> Registrar Crónica de Batalla
-            </div>
-          </div>
-          <form id="aarForm" onsubmit="app.submitAar(event)">
-            <div class="form-group">
-              <label class="form-label">Comandante que Reporta</label>
-              <input class="form-control" id="aarReporter" readonly="" style="background: #fbf6ec;" type="text"/>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
-              <div class="form-group">
-                <label class="form-label">Banda Enfrentada</label>
-                <select class="form-control" id="aarOpponent" required="">
-                  <option value="Sergio (Clan Scutrix)">Sergio (Ratmen)</option>
-                  <option value="David (Sangre Carmesí)">David (Vampiric Undead)</option>
-                  <option value="Javi (Hijos del Yunque)">Javi (Dwarf Guilds)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Dictamen Final</label>
-                <select class="form-control" id="aarResult">
-                  <option value="Victoria Decisiva (+2 VP)">Victoria Decisiva (+2 VP)</option>
-                  <option value="Victoria Marginal (+1 VP)">Victoria Marginal (+1 VP)</option>
-                  <option value="Empate Sangriento (0 VP)">Empate Sangriento (0 VP)</option>
-                  <option value="Derrota Deshonrosa (0 VP)">Derrota Deshonrosa (0 VP)</option>
-                </select>
+          <div class="login-grid">
+            <!-- David -->
+            <div class="login-user-card" onclick="app.selectLoginUser('david')">
+              <span class="login-avatar">🧛</span>
+              <div>
+                <div class="login-card-title">David</div>
+                <div class="login-card-desc">Lord Carmesí &amp; Árbitro GM</div>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Relato de la Batalla (Crónica en 1ª persona)</label>
-              <textarea class="form-control" id="aarStory" placeholder="Describe los duelos, bajas heroicas y el destino de la refriega..." required="" rows="3"></textarea>
+            <!-- Sergio -->
+            <div class="login-user-card" onclick="app.selectLoginUser('sergio')">
+              <span class="login-avatar">🐀</span>
+              <div>
+                <div class="login-card-title">Sergio</div>
+                <div class="login-card-desc">Señor del Clan Scutrix</div>
+              </div>
             </div>
-            <button class="btn-action" style="width: 100%; justify-content: center;" type="submit">
-              <i class="fa-solid fa-feather-pointed"></i> Grabar en los Archivos de Guerra
-            </button>
-          </form>
-
-          <!-- SIMULADOR INTERACTIVO DE BAJAS -->
-          <div class="casualty-sim-box">
-            <div class="title-gothic" style="font-size: 0.85rem; color: var(--ink-black);">
-              <i class="fa-solid fa-skull"></i> Tirada de Supervivencia Post-Batalla (1D6)
+            <!-- Javi -->
+            <div class="login-user-card" onclick="app.selectLoginUser('javi')">
+              <span class="login-avatar">⚒️</span>
+              <div>
+                <div class="login-card-title">Javi</div>
+                <div class="login-card-desc">Patriarca Hijos del Yunque</div>
+              </div>
             </div>
-            <p style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.2rem; font-style: italic;">
-              Determina el destino de los guerreros abatidos en la contienda:
-            </p>
-            <div class="d6-cube" id="d6Display">?</div>
-            <div id="casualtyResultText" style="min-height: 40px; font-size: 0.9rem; font-weight: 700; color: var(--ink-black); font-family: var(--font-title);">
-              Lanza los dados de hueso para conocer el destino
-            </div>
-            <button class="btn-action" onclick="app.rollCasualty()" style="margin-top: 0.6rem; padding: 0.4rem 1rem; font-size: 0.75rem;" type="button">
-              <i class="fa-solid fa-dice-d6"></i> Tirar 1D6 de Bajas
-            </button>
-          </div>
-        </div>
-
-        <!-- HISTORIAL DE CRÓNICAS -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-book-skull"></i> Muro de Crónicas &amp; Despachos
+            <!-- Espectador -->
+            <div class="login-user-card" onclick="app.selectLoginUser('spectator')">
+              <span class="login-avatar">👁️</span>
+              <div>
+                <div class="login-card-title">Espectador Neutral</div>
+                <div class="login-card-desc">Acceso libre (Sin secretos)</div>
+              </div>
             </div>
           </div>
-          <div id="aarFeedContainer" style="max-height: 520px; overflow-y: auto; padding-right: 0.3rem;">
-            <!-- Despachos dinámicos -->
+
+          <!-- Cuadro de PIN -->
+          <div class="login-pin-box" id="loginPinBox">
+            <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.85rem;" id="loginPinPrompt">Introduce tu PIN</div>
+            <input type="password" id="loginPinInput" class="login-pin-input" maxlength="4" placeholder="****" onkeyup="if(event.key==='Enter') app.submitPin()"/>
+            <div>
+              <button class="btn-action" onclick="app.submitPin()" style="padding: 0.5rem 1.4rem;">
+                <i class="fa-solid fa-key"></i> Entrar a la Sala
+              </button>
+            </div>
+            <div id="loginPinError" style="font-size: 0.76rem; color: var(--faction-david); font-weight: 800; margin-top: 0.5rem; display: none;">
+              PIN incorrecto. Consulta con el Árbitro.
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ========================================================================== -->
-    <!-- PESTAÑA 4: HEMEROTECA EL HERALDO (DISEÑO MORDHEIM TOWN CRYER AUTÉNTICO)    -->
-    <!-- ========================================================================== -->
-    <section class="tab-pane" id="tab-gazette">
-      <div style="display: flex; justify-content: center; gap: 0.6rem; margin-bottom: 1.2rem; flex-wrap: wrap;">
-        <button class="tab-btn" id="btnGazette0" onclick="app.showGazette(0)">Edición 00 (Fundacional)</button>
-        <button class="tab-btn" id="btnGazette1" onclick="app.showGazette(1)">Edición 01</button>
-        <button class="tab-btn active" id="btnGazette2" onclick="app.showGazette(2)">Edición 02 (Extraordinaria)</button>
-      </div>
-
-      <!-- PERIÓDICO RETRO IMPRENTA MORDHEIM -->
-      <main class="newsprint-sheet" id="gazetteViewer">
-        <!-- Top Ornamental Border -->
-        <div style="border-top: 2px solid #26211c; border-bottom: 2px solid #26211c; padding: 2px 0; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
-          <div style="height: 2px; background: #26211c; flex-grow: 1;"></div>
-          <span style="padding: 0 10px; font-size: 11px; font-weight: 900; letter-spacing: 0.2em; color: #26211c;">❖ ✠ ❖</span>
-          <div style="height: 2px; background: #26211c; flex-grow: 1;"></div>
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 1: EL HERALDO DE MORDHEIM (FOLIO 1)             -->
+      <!-- ======================================================== -->
+      <section class="tab-pane active" id="tab-gazette">
+        <!-- Selector de Edición -->
+        <div class="herald-nav">
+          <button class="btn-action" id="btnGazette0" onclick="app.showGazette(0)">
+            <i class="fa-solid fa-meteor"></i> Edición 00 (Fundacional)
+          </button>
+          <button class="btn-action" id="btnGazette1" onclick="app.showGazette(1)">
+            <i class="fa-solid fa-shield"></i> Edición 01 (Apertura)
+          </button>
+          <button class="btn-action active" id="btnGazette2" onclick="app.showGazette(2)">
+            <i class="fa-solid fa-skull"></i> Edición 02 (Última: ¡La Fuga de Loky!)
+          </button>
         </div>
 
-        <!-- HeaderSection -->
-        <header style="text-align: center; position: relative; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #2b251f;">
-          <div style="display: flex; justify-content: center; margin-bottom: 4px;">
-            <div style="padding: 2px 14px; border: 1px solid #3e3428; background: #ecdcb3; box-shadow: inset 0 0 6px rgba(0,0,0,0.1);">
-              <span style="font-family: var(--font-gothic); font-size: 13px; font-weight: 900; letter-spacing: 0.35em; color: #241e17; text-transform: uppercase;">
-                M O R D H E I M
+        <article class="border-woodcut-double">
+          <!-- Cabecera del Diario -->
+          <div style="text-align: center; border-bottom: 2px solid #28211b; padding-bottom: 8px; margin-bottom: 12px;">
+            <div style="font-family: var(--font-title); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #5a4b3d;" id="gazetteIssueMeta">
+              Número 2 (Extraordinaria) • Tras la Batalla en el Bastión Central
+            </div>
+            <h2 id="gazetteLeadTitle" style="font-family: var(--font-gothic); font-size: 2.5rem; line-height: 1.05; color: #1a1613; margin: 4px 0;">
+              ¡LA MASACRE Y LA FUGA DE LOKY!
+            </h2>
+            <div id="gazetteSublead" style="font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: #6a1a1a; letter-spacing: 0.08em; text-transform: uppercase;">
+              COBARDÍA HISTÓRICA EN LA ENCRUCIJADA
+            </div>
+          </div>
+
+          <!-- Cuadrícula: Crónica + Xilografía -->
+          <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 16px; align-items: start;">
+            <!-- Crónica Izquierda -->
+            <div id="gazetteLeftCol" style="font-size: 0.95rem; text-align: justify; color: #1d1814;">
+              <!-- Inyectado por JS -->
+            </div>
+            <!-- Xilografía Derecha -->
+            <div>
+              <div style="border: 2px solid #221c17; background: var(--bg-parchment-light); padding: 4px; box-shadow: 3px 3px 0 rgba(0,0,0,0.2);">
+                <img id="gazetteMainImg" src="./assets/portada_edicion_02.jpg" alt="Grabado oficial" class="woodcut-crop" />
+                <p id="gazetteImgCaption" style="font-size: 0.78rem; text-align: center; font-style: italic; margin-top: 6px; font-weight: 700; color: #2d241c;">
+                  Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.
+                </p>
+              </div>
+              <div style="text-align: center; margin-top: 10px;">
+                <a id="gazettePdfLink" href="./assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf" target="_blank" class="btn-action">
+                  <i class="fa-solid fa-file-pdf"></i> Abrir Edición Completa en PDF
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 2: MISIONES & ÓRDENES SECRETAS (FOLIO 2)        -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-mission">
+        <!-- Selector de Misiones -->
+        <div class="mission-nav-bar">
+          <button class="btn-action" id="btnMission1" onclick="app.showMission(1)">
+            <i class="fa-solid fa-flag-checkered"></i> Ronda 01: El Despertar del Colmillo
+          </button>
+          <button class="btn-action active" id="btnMission2" onclick="app.showMission(2)">
+            <i class="fa-solid fa-meteor"></i> Ronda 02: La Caza de la Piedra Bruja (Activa)
+          </button>
+        </div>
+
+        <div class="mission-layout">
+          <!-- Columna Izquierda: Detalles de la Misión -->
+          <div class="panel-box">
+            <div class="panel-title-strip">
+              <h3 class="panel-title" id="missionTitleDisplay" style="font-family: var(--font-gothic); font-size: 1.6rem;">
+                Ronda 02: La Caza de la Piedra Bruja en las Ruinas
+              </h3>
+              <span class="rank-tag" id="missionStatusBadge" style="background: var(--faction-sergio-bg); color: var(--faction-sergio); border: 1.5px solid var(--faction-sergio); padding: 0.2rem 0.6rem; font-weight: 800; font-family: var(--font-title); font-size: 0.72rem;">
+                RONDA EN CURSO
               </span>
             </div>
-          </div>
 
-          <div style="display: flex; align-items: center; justify-content: center; margin: 4px 0;">
-            <h1 style="font-family: var(--font-fraktur); font-size: 4.8rem; letter-spacing: -0.02em; color: #14100c; line-height: 0.95;">
-              El Heraldo
-            </h1>
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: center; margin-top: -6px; margin-bottom: 8px;">
-            <div style="height: 1px; width: 60px; background: #3d3226;"></div>
-            <p style="font-family: var(--font-header-title); font-size: 2.2rem; padding: 0 14px; font-style: italic; color: #231d17;">
-              de Mordheim
-            </p>
-            <div style="height: 1px; width: 60px; background: #3d3226;"></div>
-          </div>
-
-          <div style="border-top: 1px solid #3d3226; border-bottom: 1px solid #3d3226; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-family: var(--font-press-body); font-weight: bold; color: #2a221b;">
-            <div id="gazetteIssueMeta">
-              <span>Número 1</span> • <span>Publicado tras la Apertura de la Gran Falla</span>
-            </div>
-            <div style="text-transform: uppercase; font-family: var(--font-gothic); font-size: 11px; letter-spacing: 0.08em;">
-              2 Coronas de Cobre
-            </div>
-          </div>
-        </header>
-
-        <!-- Titulares Principales -->
-        <section style="text-align: center; padding: 8px 0 12px 0;">
-          <h2 id="gazetteLeadTitle" style="font-family: var(--font-gothic); font-size: 2rem; font-weight: 900; letter-spacing: 0.04em; color: #14100c; text-transform: uppercase; line-height: 1.15;">
-            EL DESPERTAR DEL COLMILLO DE HIERRO
-          </h2>
-          <h3 id="gazetteSublead" style="font-family: var(--font-header-title); font-size: 1.5rem; color: #221c17; text-transform: uppercase; margin-top: 4px;">
-            ¿PROMESAS DE GLORIA O TUMBA SIN NOMBRE?
-          </h3>
-          <div style="max-width: 580px; margin: 8px auto; display: flex; align-items: center; justify-content: center;">
-            <span style="height: 1.5px; background: #221c17; width: 40px;"></span>
-            <p id="gazetteDeck" style="font-family: var(--font-press-body); font-style: italic; font-size: 14px; padding: 0 12px; font-weight: 600; color: #1e1915;">
-              Tres señores de la guerra convergen hacia los portones sellados tras cuatro siglos de silencio
-            </p>
-            <span style="height: 1.5px; background: #221c17; width: 40px;"></span>
-          </div>
-        </section>
-
-        <!-- Cuadrícula Principal con Xilografía / Grabado -->
-        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; padding-bottom: 16px; border-bottom: 2px solid #2b251f;">
-          <!-- Columna Izquierda: Crónica -->
-          <div id="gazetteLeftCol" style="font-family: var(--font-press-body); font-size: 13.5px; line-height: 1.5; text-align: justify; color: #171412;">
-            <!-- Inyectado por JS -->
-          </div>
-
-          <!-- Columna Derecha: Grabado Ilustrado -->
-          <div>
-            <div class="border-woodcut-double" style="padding: 4px; background: #e7d8b2; box-shadow: 3px 3px 0 rgba(0,0,0,0.2);">
-              <div style="border: 1.5px solid #221c17; background: #fbf3df; overflow: hidden; max-height: 440px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 15px rgba(115, 87, 45, 0.2);">
-                <img id="gazetteMainImg" src="./assets/portada_edicion_02.jpg" alt="Xilografía oficial" class="woodcut-crop" style="width: 100%; height: auto; display: block;"/>
+            <!-- Especificaciones -->
+            <div class="spec-grid">
+              <div class="spec-cell">
+                <div class="spec-cell-lbl">Reglamento</div>
+                <div class="spec-cell-val" id="missionRulebook">AoF: Skirmish v3.6.0</div>
               </div>
-              <p id="gazetteImgCaption" style="font-family: var(--font-press-body); font-size: 11px; text-align: center; font-style: italic; margin-top: 6px; font-weight: 600; color: #29221b;">
-                Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.
-              </p>
+              <div class="spec-cell">
+                <div class="spec-cell-lbl">Puntos de Banda</div>
+                <div class="spec-cell-val" id="missionPoints">300 pts (+botín)</div>
+              </div>
+              <div class="spec-cell">
+                <div class="spec-cell-lbl">Límite de Rondas</div>
+                <div class="spec-cell-val" id="missionTurns">4 Rondas</div>
+              </div>
+              <div class="spec-cell">
+                <div class="spec-cell-lbl">Mesa de Asedio</div>
+                <div class="spec-cell-val" id="missionTableSize">90x90 (David) / 120x120 (Sergio &amp; Javi)</div>
+              </div>
             </div>
-            <div style="text-align: center; margin-top: 10px;">
-              <a id="gazettePdfLink" href="./assets/El_Heraldo_de_Kar_Drakor_Edicion_01.pdf" target="_blank" class="btn-action" style="font-size: 0.72rem; padding: 0.4rem 0.8rem;">
-                <i class="fa-solid fa-file-pdf"></i> Abrir Edición Completa en PDF
+
+            <!-- Trasfondo y Objetivos -->
+            <div style="margin-bottom: 1rem;">
+              <h4 style="font-family: var(--font-title); font-size: 0.88rem; color: var(--ink-black); margin-bottom: 0.4rem; border-bottom: 1px dashed var(--line-sepia); padding-bottom: 0.2rem;">
+                <i class="fa-solid fa-scroll"></i> Trasfondo Bélico &amp; Directivas de Escaramuza
+              </h4>
+              <p id="missionLoreText" style="font-size: 0.92rem; color: var(--ink-dark); margin-bottom: 0.8rem; line-height: 1.5;">
+                <!-- Inyectado por JS -->
+              </p>
+              <h4 style="font-family: var(--font-title); font-size: 0.88rem; color: var(--ink-black); margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-bullseye"></i> Objetivos Tácticos:
+              </h4>
+              <ul id="missionObjectivesList" style="padding-left: 1.4rem; font-size: 0.9rem; line-height: 1.6; color: var(--ink-dark);">
+                <!-- Inyectado por JS -->
+              </ul>
+            </div>
+
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+              <a href="./assets/Hoja_Mision_Ronda_01.pdf" target="_blank" class="btn-action">
+                <i class="fa-solid fa-file-pdf"></i> Descargar Orden de Batalla en PDF
+              </a>
+              <a href="./assets/Mapa_Mesa_90x90_Escaramuza.png" target="_blank" class="btn-action">
+                <i class="fa-solid fa-map"></i> Plano de Despliegue de Mesa
               </a>
             </div>
           </div>
-        </div>
 
-        <!-- Faldón Inferior "En este número" -->
-        <footer style="margin-top: 14px; padding-top: 6px;">
-          <div style="display: grid; grid-template-columns: 100px 60px 1fr 1fr; border: 2px solid #2b251f; background: #ecddb6; text-align: center; font-family: var(--font-press-body); font-size: 10.5px; line-height: 1.3;">
-            <div style="padding: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #dfce9f; border-right: 1px solid #2b251f;">
-              <span style="font-family: var(--font-gothic); font-weight: 900; font-size: 11px; text-transform: uppercase;">En este</span>
-              <span style="font-family: var(--font-header-title); font-size: 16px; margin-top: -3px;">número</span>
-            </div>
-            <div style="padding: 4px; display: flex; align-items: center; justify-content: center; background: #e5d4aa; border-right: 1px solid #2b251f;">
-              <div style="width: 38px; height: 44px; border: 1.5px solid #241e18; background: #ecdcb3; color: #5a1515; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 1px 1px 0 #241e18;">
-                <i class="fa-solid fa-skull"></i>
+          <!-- Columna Derecha: Órdenes Secretas (Niebla de Guerra) -->
+          <div>
+            <div class="confidential-seal">
+              <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.82rem; color: var(--faction-david); margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-user-secret"></i> DIRECTIVA CLANDESTINA DE FACCIÓN
+              </div>
+              <div id="fogOfWarSecretBox">
+                <!-- Inyectado por JS según el usuario autenticado -->
               </div>
             </div>
-            <div style="padding: 6px 8px; text-align: left; border-right: 1px solid #2b251f;">
-              <strong style="display: block; font-size: 11px;">El Gran Asedio a la Puerta:</strong>
-              Reporte de bajas del Clan Scutrix y la Casa Sangre Carmesí, <span style="text-decoration: underline;">pág. 2</span>
-            </div>
-            <div style="padding: 6px 8px; text-align: left;">
-              <strong style="display: block; font-size: 11px;">Tratado de Baluartes:</strong>
-              Privilegios estratégicos de los 9 distritos subterráneos, <span style="text-decoration: underline;">pág. 4</span>
-            </div>
-          </div>
-          <div style="margin-top: 8px; text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; font-family: var(--font-gothic); color: #493b2a;">
-            Impreso bajo Cédula del Tribunal Arbitral de Mordheim • Prohibida su quema o alteración sacrílega
-          </div>
-        </footer>
-      </main>
-    </section>
 
-    <!-- ========================================== -->
-    <!-- PESTAÑA 5: ORÁCULO DE REGLAS CON IA        -->
-    <!-- ========================================== -->
-    <section class="tab-pane" id="tab-oracle">
-      <div class="panel" style="max-width: 820px; margin: 0 auto;">
-        <div class="panel-header">
-          <div class="panel-title">
-            <i class="fa-solid fa-scale-balanced"></i> Tribunal Arbitral • Árbitro de la Fortaleza
-          </div>
-          <span style="font-size: 0.72rem; color: var(--ink-black); font-weight: 800; font-family: var(--font-title);">CÓDICE AoF: Skirmish v3.6.0</span>
-        </div>
-        <div class="oracle-chat-box">
-          <div class="chat-messages" id="chatMessages">
-            <div class="msg oracle">
-              <div class="msg-sender"><i class="fa-solid fa-scroll"></i> Árbitro Inquisitorial</div>
-              ¡Saludos, señor de la guerra! Soy el custodio de las leyes bélicas de Mordheim. Consulta cualquier regla de <strong>Age of Fantasy: Skirmish v3.6.0</strong> (Acciones Hold/Advance/Rush/Charge, chequeos de Moral al 50%, Fatiga tras combate, Cobertura o Terreno Difícil).
+            <!-- Tabla de Tamaño de Mesa Acordado -->
+            <div style="margin-top: 1rem; border: 2px solid var(--ink-black); background: #faf4e6; padding: 0.8rem; font-size: 0.82rem;">
+              <div style="font-family: var(--font-title); font-weight: 800; color: var(--ink-black); margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-ruler-combined"></i> Normativa de Mesas de Juego
+              </div>
+              <p style="margin-bottom: 0.4rem;">
+                <strong>Casa de David:</strong> 90 x 90 cm (Pasadizos estrechos, criptas y combate cerrado).
+              </p>
+              <p>
+                <strong>Casa de Sergio / Javi (Loky):</strong> 120 x 120 cm (Grandes plazas, avenidas derruidas y maniobra exterior).
+              </p>
             </div>
           </div>
-          <div class="chat-input-bar">
-            <input class="chat-input" id="oracleInput" onkeydown="if(event.key==='Enter') app.askOracle()" placeholder="Formula tu duda sobre el reglamento..." type="text"/>
-            <button class="btn-action" onclick="app.askOracle()" style="padding: 0.5rem 1rem;">
-              <i class="fa-solid fa-feather-pointed"></i>
-            </button>
-          </div>
         </div>
-        <div class="quick-rules-chips">
-          <span class="rule-chip" onclick="app.askQuickRule('¿Cuáles son las 4 acciones de activación básica?')">⚡ 4 Acciones Básicas</span>
-          <span class="rule-chip" onclick="app.askQuickRule('¿Cómo funciona la Fatiga tras el combate cuerpo a cuerpo?')">⚔️ Fatiga en CaC</span>
-          <span class="rule-chip" onclick="app.askQuickRule('¿Cuándo se chequea Moral y qué ocurre al fallar?')">💀 Chequeo de Moral (50%)</span>
-          <span class="rule-chip" onclick="app.askQuickRule('¿Cómo afecta la Cobertura a las tiradas de disparo?')">🛡️ Reglas de Cobertura</span>
-          <span class="rule-chip" onclick="app.askQuickRule('¿Cómo funciona trepar y saltar escenografía?')">🧗 Trepar y Caídas</span>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ========================================== -->
-    <!-- PESTAÑA 6: PANEL GAME MASTER (DAVID)       -->
-    <!-- ========================================== -->
-    <section class="tab-pane" id="tab-gm">
-      <div class="panel" style="max-width: 820px; margin: 0 auto; border-color: var(--faction-david);">
-        <div class="panel-header" style="border-color: var(--faction-david);">
-          <div class="panel-title" style="color: var(--faction-david);">
-            <i class="fa-solid fa-crown"></i> Gran Consejo del Árbitro (David)
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 3: CARTOGRAFÍA TÁCTICA (NUEVO MAPA MORDHEIM)    -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-map">
+        <div class="map-grid-layout">
+          <!-- Visor del Mapa de Mordheim -->
+          <div class="tactical-map-viewport">
+            <img src="./assets/mapa_mordheim.jpg" alt="Mapa Canónico de Mordheim" class="tactical-map-img" />
+            <!-- Capa interactiva SVG ajustada a 1077x794 -->
+            <svg class="tactical-map-overlay" viewBox="0 0 1077 794" id="mordheimSvgMap">
+              <!-- Nodos interactivos generados por JS -->
+            </svg>
           </div>
-          <span class="rank-tag" style="background: var(--faction-david-bg); border-color: var(--faction-david); color: var(--faction-david);">ACCESO PRIVILEGIADO</span>
+
+          <!-- Ficha de Distrito Seleccionado -->
+          <div class="panel-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--ink-black); padding-bottom: 0.4rem; margin-bottom: 0.6rem;">
+              <span id="districtDetailNum" style="font-family: var(--font-title); font-weight: 800; font-size: 0.82rem;">DISTRITO I</span>
+              <span class="district-badge" id="districtDetailBadge" style="padding: 0.2rem 0.6rem; font-weight: 800; font-family: var(--font-title); font-size: 0.72rem; border: 1.5px solid var(--ink-black);">Control: Sergio</span>
+            </div>
+
+            <h3 id="districtDetailName" style="font-family: var(--font-gothic); font-size: 1.8rem; color: var(--ink-black); margin-bottom: 0.4rem;">La Roca de Sigmar</h3>
+
+            <div style="background: #faf4e6; border: 1.5px dashed var(--ink-black); padding: 0.75rem; margin-bottom: 0.8rem;">
+              <div style="font-family: var(--font-title); font-size: 0.75rem; font-weight: 800; color: var(--faction-david); text-transform: uppercase;">
+                <i class="fa-solid fa-scroll"></i> Privilegio Táctico:
+              </div>
+              <div id="districtDetailPerk" style="font-size: 0.92rem; font-style: italic; color: var(--ink-dark); margin-top: 2px;">
+                «Vigilancia Sacra: Permite desplegar 1 unidad con Scout a 12 pulgadas del despliegue base.»
+              </div>
+            </div>
+
+            <p id="districtDetailLore" style="font-size: 0.88rem; color: var(--ink-muted); line-height: 1.45; margin-bottom: 1rem;">
+              Monasterio insular en mitad del cauce del río Stir. Soportó la onda expansiva del cometa gracias a la devoción de sus defensoras.
+            </p>
+
+            <!-- Controles GM (Solo David) -->
+            <div id="districtGmBox" style="display: none; border-top: 2px solid var(--faction-david); padding-top: 0.8rem; background: #faf2f2; padding: 0.6rem;">
+              <div style="font-family: var(--font-title); font-size: 0.72rem; font-weight: 800; color: var(--faction-david); margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-crown"></i> Arbitraje GM: Asignar Soberanía Territorial
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;">
+                <button class="btn-action" onclick="app.setDistrictOwner('david')">🧛 David</button>
+                <button class="btn-action" onclick="app.setDistrictOwner('sergio')">🐀 Sergio</button>
+                <button class="btn-action" onclick="app.setDistrictOwner('javi')">⚒️ Javi</button>
+                <button class="btn-action" onclick="app.setDistrictOwner('neutral')">🛡️ Neutral</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
-          <div class="form-group">
-            <label class="form-label">Avanzar Ronda de Campaña</label>
-            <select class="form-control" id="gmRoundSelect" onchange="app.setRound(this.value)">
-              <option value="1">Ronda 1: La Puerta del Abismo</option>
-              <option value="2">Ronda 2: El Asedio a las Forjas</option>
-              <option value="3">Ronda 3: La Peste en las Cloacas</option>
-              <option value="4">Ronda 4: La Noche de Sangre</option>
-              <option value="5">Ronda 5: La Toma del Trono Hendido</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Gestión de Tesoro &amp; Victoria</label>
-            <div style="display: flex; gap: 0.5rem; margin-top: 0.2rem;">
-              <button class="btn-action" onclick="app.gmAddGoldToAll(20)" style="font-size: 0.72rem; padding: 0.5rem;">
-                <i class="fa-solid fa-coins"></i> +20 Oro a Todos
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 4: PARTES DE GUERRA (AARs) (FOLIO 4)             -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-aar">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+          <!-- Enviar nuevo Parte -->
+          <div class="panel-box">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.5rem; margin-bottom: 0.6rem;">
+              <i class="fa-solid fa-feather-pointed"></i> Grabar Despacho Inmediato
+            </h3>
+            <form onsubmit="app.submitAar(event)">
+              <div style="margin-bottom: 0.6rem;">
+                <label style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-title);">Rival Enfrentado:</label>
+                <select id="aarOpponent" class="form-control">
+                  <option value="Sergio (Clan Scutrix)">Sergio (Clan Scutrix)</option>
+                  <option value="David (Sangre Carmesí)">David (Sangre Carmesí)</option>
+                  <option value="Javi (Hijos del Yunque)">Javi (Hijos del Yunque)</option>
+                  <option value="Guarnición Neutral">Guarnición Neutral</option>
+                </select>
+              </div>
+              <div style="margin-bottom: 0.6rem;">
+                <label style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-title);">Resultado del Choque:</label>
+                <select id="aarResult" class="form-control">
+                  <option value="Victoria Decisiva (+2 VP)">Victoria Decisiva (+2 VP)</option>
+                  <option value="Victoria Pírrica (+1.5 VP)">Victoria Pírrica (+1.5 VP)</option>
+                  <option value="Empate Sangriento (+1 VP)">Empate Sangriento (+1 VP)</option>
+                  <option value="Derrota Táctica (+0.5 VP)">Derrota Táctica (+0.5 VP)</option>
+                  <option value="Masacre Sufrida (0 VP)">Masacre Sufrida (0 VP)</option>
+                </select>
+              </div>
+              <div style="margin-bottom: 0.8rem;">
+                <label style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-title);">Crónica de la Refriega:</label>
+                <textarea id="aarStory" class="form-control" placeholder="Relata el choque, las bajas y los momentos gloriosos de tu banda..." required></textarea>
+              </div>
+              <button type="submit" class="btn-action">
+                <i class="fa-solid fa-stamp"></i> Sellar Parte y Sincronizar
               </button>
-              <button class="btn-action" onclick="app.gmAwardVpToActive()" style="font-size: 0.72rem; padding: 0.5rem; background: var(--faction-david);">
-                <i class="fa-solid fa-trophy"></i> +1 VP a David
-              </button>
+            </form>
+          </div>
+
+          <!-- Historial de Partes -->
+          <div class="panel-box">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.5rem; margin-bottom: 0.6rem;">
+              <i class="fa-solid fa-scroll"></i> Despachos Anteriores
+            </h3>
+            <div id="aarFeedContainer" style="max-height: 440px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;">
+              <!-- Inyectado por JS -->
             </div>
           </div>
         </div>
-        <div style="background: #faf4e6; border: 1.5px solid var(--ink-black); padding: 1.1rem;">
-          <div class="title-gothic" style="font-size: 0.85rem; color: var(--ink-black); margin-bottom: 0.5rem;">
-            <i class="fa-solid fa-database"></i> Copia de Seguridad &amp; Exportación de Datos
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 5: EL ORÁCULO DEL METAJUEGO & BUZÓN (FOLIO 5)    -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-oracle">
+        <div class="oracle-layout">
+          <!-- Columna Izquierda: Asistente de Reglas & Metajuego -->
+          <div class="panel-box">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.5rem; margin-bottom: 0.4rem;">
+              <i class="fa-solid fa-balance-scale"></i> Consultorio de Reglas &amp; Metajuego
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 0.8rem;">
+              Pregunta cualquier duda sobre <em>Age of Fantasy: Skirmish v3.6.0</em>, creación de bandas con ArmyForge o escenografía 3D disponible.
+            </p>
+
+            <div class="chat-box-feed" id="oracleChatFeed">
+              <div class="chat-bubble bot">
+                <strong>Oráculo Arcano:</strong> ¡Saludos, comandante! Estoy versado en las reglas oficiales de AoFS v3.6.0, en el catálogo de escenografía 3MF de nuestra campaña y en el balance de bandas. ¿Qué requieres esclarecer?
+              </div>
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
+              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('acciones')">Acciones v3.6.0</button>
+              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('fatiga')">Fatiga Melé</button>
+              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('moral')">Chequeo 50%</button>
+              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('escenografia')">Escenografía 3D</button>
+              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('armyforge')">ArmyForge Bandas</button>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="oracleQueryInput" class="form-control" placeholder="Escribe tu consulta arbitral..." onkeyup="if(event.key==='Enter') app.sendOracleQuery()"/>
+              <button class="btn-action" onclick="app.sendOracleQuery()">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
           </div>
-          <p style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 0.8rem; font-style: italic;">
-            Descarga el pergamino JSON oficial con el estado actual de los 9 distritos, marcador de comandantes, crónicas AAR y órdenes secretas.
-          </p>
-          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
-            <button class="btn-action" onclick="app.exportCampaignJson()">
-              <i class="fa-solid fa-file-export"></i> Exportar Campaña (JSON)
+
+          <!-- Columna Derecha: Buzón de Sugerencias & Escenografía 3D -->
+          <div class="panel-box">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.5rem; margin-bottom: 0.4rem;">
+              <i class="fa-solid fa-inbox"></i> Buzón del Metajuego &amp; Escenografía 3D
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 0.8rem;">
+              Registra sugerencias de reglas de la casa, mejoras para la web o solicita piezas de escenografía para imprimir en 3D.
+            </p>
+
+            <form onsubmit="app.submitSuggestion(event)">
+              <div style="margin-bottom: 0.6rem;">
+                <label style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-title);">Tipo de Sugerencia:</label>
+                <select id="sugCategory" class="form-control">
+                  <option value="Escenografía para Imprimir 3D">🖨️ Escenografía para Imprimir 3D</option>
+                  <option value="Reglas de Campaña">⚔️ Reglas de Campaña / Casa</option>
+                  <option value="Mejora de la WebApp">💻 Mejora de la WebApp</option>
+                  <option value="Propuesta de Misión">📜 Propuesta de Escenario / Misión</option>
+                </select>
+              </div>
+
+              <div style="margin-bottom: 0.6rem;">
+                <label style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-title);">Tu Sugerencia Detallada:</label>
+                <textarea id="sugContent" class="form-control" placeholder="Describe tu propuesta, enlace STL o sugerencia para la campaña..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-action" style="margin-bottom: 1rem;">
+                <i class="fa-solid fa-paper-plane"></i> Registrar en el Buzón
+              </button>
+            </form>
+
+            <div style="border-top: 1px dashed var(--line-sepia); padding-top: 0.6rem;">
+              <h4 style="font-family: var(--font-title); font-size: 0.82rem; font-weight: 800; margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-cubes"></i> Catálogo 3D Disponible (3MF):
+              </h4>
+              <ul style="font-size: 0.8rem; color: var(--ink-dark); line-height: 1.5; padding-left: 1.2rem;">
+                <li><strong>Mansión en Ruinas (Building 4):</strong> 2 plantas, bloqueo de visión.</li>
+                <li><strong>Ruinas Ulvheim (Placas 6 y 17):</strong> Arcos y parapetos modulares.</li>
+                <li><strong>Casas Derruidas 2 y 3:</strong> Terreno difícil y cobertura gótica.</li>
+                <li><strong>Cajas &amp; Barriles:</strong> Barricadas bajas con cobertura +1 salvación.</li>
+                <li><strong>Bosque Tenebroso:</strong> Árboles marchitos para terreno exterior.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 6: CONTACTO CON EL HERALDO (NPCS & ROLEPLAY)     -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-roleplay">
+        <div class="panel-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--ink-black); padding-bottom: 0.5rem; margin-bottom: 0.8rem;">
+            <div>
+              <h3 style="font-family: var(--font-gothic); font-size: 1.8rem; margin: 0;">
+                <i class="fa-solid fa-comments"></i> Las Voces de la Ciudad Condenada
+              </h3>
+              <p style="font-size: 0.8rem; color: var(--ink-muted);">
+                Interactúa con los supervivientes, fanáticos y granujas que merodean por Mordheim.
+              </p>
+            </div>
+          </div>
+
+          <!-- Selector de Personajes -->
+          <div class="npc-selector-bar">
+            <button class="npc-card-btn active" id="btnNpcGunter" onclick="app.selectNpc('gunter')">
+              <span>🍺</span> Gunter «Tres-Dedos» (Tabernero)
             </button>
-            <button class="btn-action" onclick="app.resetCampaignData()" style="background: #e2d6c1; color: var(--ink-black);">
-              <i class="fa-solid fa-rotate-left"></i> Restaurar Valores Iniciales
+            <button class="npc-card-btn" id="btnNpcLothar" onclick="app.selectNpc('lothar')">
+              <span>🕯️</span> Padre Lothar (Flagelante)
+            </button>
+            <button class="npc-card-btn" id="btnNpcSteinhardt" onclick="app.selectNpc('steinhardt')">
+              <span>📜</span> Burgomaestre Von Steinhardt
+            </button>
+            <button class="npc-card-btn" id="btnNpcLoky" onclick="app.selectNpc('loky')">
+              <span>🗡️</span> Loky el Desertor (Fugitivo R01)
+            </button>
+            <button class="npc-card-btn" id="btnNpcCronista" onclick="app.selectNpc('cronista')">
+              <span>✒️</span> El Cronista Mayor
+            </button>
+          </div>
+
+          <!-- Perfil del Personaje Activo -->
+          <div style="background: #faf4e6; border: 1.5px solid var(--ink-black); padding: 0.75rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.8rem;">
+            <span id="activeNpcAvatar" style="font-size: 2rem;">🍺</span>
+            <div>
+              <div id="activeNpcName" style="font-family: var(--font-title); font-weight: 800; font-size: 0.95rem; color: var(--ink-black);">Gunter «Tres-Dedos»</div>
+              <div id="activeNpcDesc" style="font-size: 0.8rem; color: var(--ink-muted); font-style: italic;">Tuerto, desdentado y con un delantal sucio. Conoce todos los chismes de los arrabales.</div>
+            </div>
+          </div>
+
+          <!-- Feed del Chat con el Personaje -->
+          <div class="chat-box-feed" id="roleplayChatFeed" style="height: 340px;">
+            <!-- Inyectado por JS -->
+          </div>
+
+          <!-- Entrada de Mensaje -->
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="roleplayInput" class="form-control" placeholder="Escribe tu réplica o pregunta al personaje..." onkeyup="if(event.key==='Enter') app.sendRoleplayMessage()"/>
+            <button class="btn-action" onclick="app.sendRoleplayMessage()">
+              <i class="fa-solid fa-paper-plane"></i> Hablar
             </button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-  </main>
+      <!-- ======================================================== -->
+      <!-- PESTAÑA 7: PANEL GM DE DAVID (FOLIO 7)                   -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="tab-gm">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+          <!-- Ajustes de Campaña -->
+          <div class="panel-box">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.6rem; color: var(--faction-david); margin-bottom: 0.6rem;">
+              <i class="fa-solid fa-crown"></i> Control de Campaña (Solo Árbitro)
+            </h3>
 
-  <!-- FOOTER HISTÓRICO -->
-  <footer class="war-footer">
-    <div>
-      <strong>MORDHEIM WAR ROOM</strong> • Gaceta Oficial • Age of Fantasy: Skirmish v3.6.0
-    </div>
-    <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncText">Sincronización Cloud Activa (Supabase)</span>
-    </div>
-  </footer>
+            <div style="margin-bottom: 1rem;">
+              <label style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-title);">Ronda Activa de Campaña:</label>
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.3rem;">
+                <input type="number" id="gmRoundInput" class="form-control" style="width: 80px;" min="1" max="10" value="2"/>
+                <button class="btn-action" onclick="app.updateGmRound()">Actualizar Ronda</button>
+              </div>
+            </div>
 
-  <!-- MODAL: SELECTOR DE IDENTIDAD CON PIN DE GM -->
-  <div class="modal-overlay" id="identityModal">
-    <div class="modal-card">
-      <div class="title-gothic" style="font-size: 1.15rem; color: var(--ink-black); margin-bottom: 0.3rem;">
-        <i class="fa-solid fa-masks-theater"></i> Seleccionar Comandante
-      </div>
-      <p style="font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 1rem; font-style: italic;">
-        Tu identidad determina tus órdenes secretas y tus privilegios de mando en la sala de guerra.
-      </p>
+            <!-- Conexión Segura con Gemini API (Guardada en Supabase, nunca en Git) -->
+            <div style="border: 1.5px solid var(--faction-david); background: #faf2f2; padding: 0.8rem; margin-bottom: 1rem;">
+              <div style="font-family: var(--font-title); font-size: 0.75rem; font-weight: 800; color: var(--faction-david); margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-brain"></i> Configuración Inteligencia Artificial (Gemini)
+              </div>
+              <p style="font-size: 0.75rem; color: var(--ink-dark); margin-bottom: 0.4rem;">
+                Guarda tu clave de Gemini aquí. Se almacena directamente en la base de datos de Supabase para que Sergio y Javi puedan hablar con los bots sin subir claves a GitHub.
+              </p>
+              <input type="password" id="geminiApiKeyInput" class="form-control" placeholder="AIzaSy..." style="margin-bottom: 0.4rem;"/>
+              <button class="btn-action" onclick="app.saveGeminiKey()">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar en Supabase
+              </button>
+              <span id="geminiKeyStatus" style="font-size: 0.72rem; margin-left: 0.5rem; font-weight: 700;"></span>
+            </div>
 
-      <!-- OPCIÓN DAVID (GM) -->
-      <div class="identity-option" onclick="app.selectIdentity('david')">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span style="font-size: 1.3rem;">🧛</span>
-          <div>
-            <div style="font-weight: 700; color: var(--ink-black); font-size: 0.9rem; font-family: var(--font-title);">David (Casa Sangre Carmesí)</div>
-            <div style="font-size: 0.72rem; color: var(--faction-david); font-weight: 700;">Game Master &amp; Árbitro (PIN: 1348)</div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn-action" onclick="app.saveState()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Forzar Guardado en Nube
+              </button>
+              <button class="btn-action" onclick="app.rollD6Test()">
+                <i class="fa-solid fa-dice-d6"></i> Tirar D6 de Campaña
+              </button>
+            </div>
+            <div id="gmDiceResult" style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 800;"></div>
+          </div>
+
+          <!-- Sugerencias Recibidas de los Jugadores -->
+          <div class="panel-box">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.6rem; color: var(--ink-black); margin-bottom: 0.6rem;">
+              <i class="fa-solid fa-inbox"></i> Sugerencias del Tribunal
+            </h3>
+            <div id="gmSuggestionsList" style="max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem;">
+              <!-- Inyectado por JS -->
+            </div>
           </div>
         </div>
-        <i class="fa-solid fa-lock" style="color: var(--faction-david); font-size: 0.85rem;"></i>
-      </div>
+      </section>
 
-      <!-- OPCIÓN SERGIO -->
-      <div class="identity-option" onclick="app.selectIdentity('sergio')">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span style="font-size: 1.3rem;">🐀</span>
-          <div>
-            <div style="font-weight: 700; color: var(--ink-black); font-size: 0.9rem; font-family: var(--font-title);">Sergio (Clan Scutrix)</div>
-            <div style="font-size: 0.72rem; color: var(--faction-sergio); font-weight: 700;">Señor de la Plaga • Ratmen</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-check" style="color: var(--faction-sergio); font-size: 0.85rem;"></i>
-      </div>
+    </main>
 
-      <!-- OPCIÓN JAVI -->
-      <div class="identity-option" onclick="app.selectIdentity('javi')">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span style="font-size: 1.3rem;">⚒️</span>
-          <div>
-            <div style="font-weight: 700; color: var(--ink-black); font-size: 0.9rem; font-family: var(--font-title);">Javi (Hijos del Yunque)</div>
-            <div style="font-size: 0.72rem; color: var(--faction-javi); font-weight: 700;">Patriarca Minero • Dwarf Guilds</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-check" style="color: var(--faction-javi); font-size: 0.85rem;"></i>
+    <!-- PIE DE PÁGINA -->
+    <footer class="gazette-footer">
+      <div>
+        <span>MORDHEIM: WAR ROOM v2.0 • OnePageRules: Age of Fantasy Skirmish</span>
       </div>
+      <div class="sync-status">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncText">Conectando a Supabase...</span>
+      </div>
+    </footer>
 
-      <!-- OPCIÓN ESPECTADOR -->
-      <div class="identity-option" onclick="app.selectIdentity('spectator')">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span style="font-size: 1.3rem;">👁️</span>
-          <div>
-            <div style="font-weight: 700; color: var(--ink-black); font-size: 0.9rem; font-family: var(--font-title);">Espectador Neutral</div>
-            <div style="font-size: 0.72rem; color: var(--ink-muted);">Modo lectura pública (Sin órdenes secretas)</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-eye" style="color: var(--ink-muted); font-size: 0.85rem;"></i>
-      </div>
-
-      <!-- PIN DE GM -->
-      <div id="pinBox" style="display: none; margin-top: 0.8rem; background: #faf4e6; padding: 0.8rem; border: 1.5px solid var(--faction-david);">
-        <label class="form-label" style="color: var(--faction-david);">Introduce el PIN de Game Master</label>
-        <div style="display: flex; gap: 0.5rem;">
-          <input class="form-control" id="gmPinInput" maxlength="4" placeholder="****" type="password"/>
-          <button class="btn-action" onclick="app.verifyGmPin()" style="padding: 0.4rem 0.8rem;">Entrar</button>
-        </div>
-        <div id="pinError" style="font-size: 0.72rem; color: var(--faction-david); font-weight: 700; margin-top: 0.3rem; display: none;">PIN incorrecto. (Pista: 1348)</div>
-      </div>
-
-      <div style="text-align: right; margin-top: 1rem;">
-        <button class="btn-action" onclick="app.closeIdentityModal()" style="background: #e2d6c1; color: var(--ink-black);">Cancelar</button>
-      </div>
-    </div>
   </div>
 
-  <!-- SCRIPT ENGINE -->
+  <!-- SCRIPT ENGINE PRINCIPAL -->
   <script type="module">
-    // CONFIGURACIÓN CLOUD SUPABASE (Conectada con la base de datos de David)
+    // 1. CONFIGURACIÓN SUPABASE & MEMORIA
     const SUPABASE_URL = "https://gwryzkejvymurjnyfwpu.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw";
     const STORAGE_KEY = "kardrakor_warroom_v1";
+    const SUGGESTIONS_KEY = "mordheim_sugerencias";
+    const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
 
     let supabase = null;
     if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
@@ -1265,218 +1239,409 @@
       }
     }
 
-    // BASE DE DATOS INICIAL DE LA CAMPAÑA
-    const INITIAL_DATA = {
-      round: 1,
-      commanders: {
-        sergio: {
-          id: "sergio",
-          name: "Sergio",
-          factionName: "Ratmen - Clan Scutrix",
-          avatar: "🐀",
-          classKey: "sergio",
-          color: "#1b4d24",
-          vp: 3,
-          gold: 330,
-          districtsCount: 1,
-          status: "Vencedor de la Puerta",
-          secretOrder: {
-            title: "«Veneno en las Raíces»",
-            desc: "Sé el primer jugador en destruir una unidad enemiga o consigue que al menos dos unidades enemigas queden Acobardadas (Shaken) en la misma ronda mediante disparos o hechizos.",
-            reward: "+1 VP y +15 pts de tesorería hurtada."
-          }
-        },
-        david: {
-          id: "david",
-          name: "David",
-          factionName: "Vampiric Undead - Sangre Carmesí",
-          avatar: "🧛",
-          classKey: "david",
-          color: "#7a1515",
-          vp: 1,
-          gold: 315,
-          districtsCount: 1,
-          status: "Amo de las Catacumbas",
-          secretOrder: {
-            title: "«La Cosecha de la Primera Sangre»",
-            desc: "Controla un objetivo en mitad enemiga de la mesa al terminar la partida, o destruye al menos 1 unidad enemiga en combate cuerpo a cuerpo con tu Vampiro/Héroe.",
-            reward: "+1 VP y +15 pts de tesorería oculta."
-          }
-        },
-        javi: {
-          id: "javi",
-          name: "Javi",
-          factionName: "Dwarf Guilds - Hijos del Yunque",
-          avatar: "⚒️",
-          classKey: "javi",
-          color: "#8a4f08",
-          vp: 0,
-          gold: 300,
-          districtsCount: 0,
-          status: "Reagrupando en las Forjas",
-          secretOrder: {
-            title: "«Reconocimiento de Agravios»",
-            desc: "Mantén al menos el 50% de las unidades de tu banda intactas y asegura que tu Héroe sobreviva ileso al final del combate.",
-            reward: "+1 VP por disciplina táctica y +15 pts de oro ancestral enano."
-          }
+    // 2. CREDENCIALES & FACCIONES
+    const USERS = {
+      david: {
+        id: "david",
+        name: "David (Sangre Carmesí)",
+        role: "Lord Sangriento & Game Master",
+        faction: "Vampiric Undead",
+        avatar: "🧛",
+        color: "#7a1515",
+        pin: "1348",
+        isGm: true,
+        secretOrder: {
+          title: "Profanar la Capilla de las Almas",
+          desc: "Tus nigromantes exigen recuperar el Libro de los Muertos enterrado bajo el mausoleo central.",
+          reward: "+15 Coronas y Hechizo Menor Gratuito"
         }
       },
-      districts: [
-        {
-          id: 1,
-          numRoman: "I",
-          name: "La Roca de Sigmar",
-          owner: "sergio",
-          perk: "Vigilancia Sacra: Permite desplegar 1 unidad con la regla Scout en cualquier escenario.",
-          x: 70, y: 70,
-          icon: "fa-church"
-        },
-        {
-          id: 2,
-          numRoman: "II",
-          name: "El Cruce del Degollador",
-          owner: "neutral",
-          perk: "Mercado de Contrabando: La banda recibe +20 coronas de oro al finalizar cada ronda.",
-          x: 250, y: 70,
-          icon: "fa-coins"
-        },
-        {
-          id: 3,
-          numRoman: "III",
-          name: "La Forja de los Gremios",
-          owner: "neutral",
-          perk: "Maestría del Acero: Descuento permanente de 5 pts en cualquier mejora de arma.",
-          x: 430, y: 70,
-          icon: "fa-hammer"
-        },
-        {
-          id: 4,
-          numRoman: "IV",
-          name: "Las Criptas de Sylvania",
-          owner: "david",
-          perk: "Aura de Pavor: Una vez por partida, puedes forzar a una unidad enemiga a repetir un chequeo de moral superado.",
-          x: 70, y: 210,
-          icon: "fa-skull"
-        },
-        {
-          id: 9,
-          numRoman: "IX",
-          name: "El Pozo (The Pit)",
-          owner: "neutral",
-          perk: "Dominio de la Piedra Bruja: Concede +2 VP de campaña por ronda que se mantenga bajo control.",
-          x: 250, y: 210,
-          icon: "fa-meteor",
-          isCentral: true
-        },
-        {
-          id: 5,
-          numRoman: "V",
-          name: "El Gran Puente del Río Stir",
-          owner: "neutral",
-          perk: "Paso Estratégico: Elige automáticamente quién despliega 1º o 2º en sus batallas.",
-          x: 430, y: 210,
-          icon: "fa-archway"
-        },
-        {
-          id: 6,
-          numRoman: "VI",
-          name: "La Torre del Alquimista",
-          owner: "neutral",
-          perk: "Elixires de Disformidad: +1 a tiradas de recuperación de heridas y supervivencia post-batalla.",
-          x: 70, y: 350,
-          icon: "fa-flask-vial"
-        },
-        {
-          id: 7,
-          numRoman: "VII",
-          name: "El Foso de los Escombros",
-          owner: "neutral",
-          perk: "Carroñeo de Ruinas: Tira 1D6 tras cada batalla: con 4+ encuentras equipo gratis valorado en 15 pts.",
-          x: 250, y: 350,
-          icon: "fa-box-open"
-        },
-        {
-          id: 8,
-          numRoman: "VIII",
-          name: "El Laberinto de las Cloacas",
-          owner: "neutral",
-          perk: "Infiltración Murina: Permite a 1 unidad desplegar mediante la regla Ambush.",
-          x: 430, y: 350,
-          icon: "fa-spider"
+      sergio: {
+        id: "sergio",
+        name: "Sergio (Clan Scutrix)",
+        role: "Señor de la Plaga",
+        faction: "Ratmen",
+        avatar: "🐀",
+        color: "#1b4d24",
+        pin: "6995",
+        isGm: false,
+        secretOrder: {
+          title: "Asegurar el Altar Fluvial",
+          desc: "Tus ingenieros deben capturar los conductos del Río Stir para verter gas de disformidad en las cloacas.",
+          reward: "+20 Coronas de Oro"
         }
-      ],
-      aars: [
-        {
-          id: "aar_1",
-          author: "Sergio (Clan Scutrix)",
-          opponent: "David (Sangre Carmesí)",
-          result: "Victoria Decisiva (+2 VP)",
-          text: "¡Victoria chillona para el Clan Scutrix! El gas de disformidad envolvió a los esqueletos y Queek lideró la carga sobre el Bastión Central antes de que los no-muertos reaccionaran.",
-          time: "Ronda 01 • Encrucijada"
-        },
-        {
-          id: "aar_2",
-          author: "David (Sangre Carmesí)",
-          opponent: "Sergio (Clan Scutrix)",
-          result: "Derrota Táctica (+1 VP)",
-          text: "La horda de roedores se abalanzó con frenesí ciego. Logramos decapitar al campeón Queek con nuestras garras antes de replegarnos con dignidad hacia las Catacumbas Reales.",
-          time: "Ronda 01 • Criptas"
+      },
+      javi: {
+        id: "javi",
+        name: "Javi (Hijos del Yunque)",
+        role: "Patriarca Minero",
+        faction: "Dwarf Guilds",
+        avatar: "⚒️",
+        color: "#8a4f08",
+        pin: "7788",
+        isGm: false,
+        secretOrder: {
+          title: "Recuperar el Cofre del Gremio",
+          desc: "Un antiguo arcón con lingotes de gromril yace bajo los escombros de la Forja de los Gremios.",
+          reward: "Arma Rúnica Gratuita"
         }
-      ]
+      },
+      spectator: {
+        id: "spectator",
+        name: "Espectador Neutral",
+        role: "Forastero / Público",
+        faction: "Neutral",
+        avatar: "👁️",
+        color: "#575249",
+        pin: "",
+        isGm: false,
+        secretOrder: null
+      }
     };
 
-    // CÓDICE ARBITRAL
-    const RULES_KB = [
+    // 3. MORDHEIM CARTOGRAFÍA (1077 x 794)
+    const DISTRICTS = [
       {
-        keywords: ["accion", "acciones", "activacion", "hold", "advance", "rush", "charge"],
-        answer: "En <strong>Age of Fantasy: Skirmish v3.6.0</strong>, al activar una unidad debes elegir exactamente UNA acción:<br><br>" +
-                "• <strong>Hold:</strong> Quieto. Dispara a distancia completa.<br>" +
-                "• <strong>Advance:</strong> Mueve hasta 6\". Puede disparar.<br>" +
-                "• <strong>Rush:</strong> Mueve hasta 12\". Sin disparar ni cargar.<br>" +
-                "• <strong>Charge:</strong> Mueve hasta 12\" a contacto peana con peana para resolver combate cuerpo a cuerpo."
+        id: 1,
+        numRoman: "I",
+        name: "La Roca de Sigmar",
+        owner: "sergio",
+        perk: "Vigilancia Sacra: Permite desplegar 1 unidad con Scout a 12 pulgadas del despliegue base.",
+        lore: "Monasterio insular en mitad del cauce del río Stir. Soportó la onda expansiva del cometa gracias a la devoción de sus defensoras.",
+        x: 190, y: 395,
+        icon: "fa-fort-awesome"
       },
       {
-        keywords: ["fatiga", "fatigada", "cac", "cuerpo a cuerpo", "combate"],
-        answer: "<strong>Fatiga en Melé (v3.6.0):</strong> Tras resolver sus ataques en combate cuerpo a cuerpo, la unidad queda <em>Fatigada</em> hasta el final de la ronda completa. Mientras esté fatigada, si vuelve a combatir solo impactará con 6s naturales."
+        id: 2,
+        numRoman: "II",
+        name: "El Cruce del Degollador",
+        owner: "neutral",
+        perk: "Rutas de Contrabando: Ingreso de +15 coronas de oro adicionales tras cada escaramuza.",
+        lore: "Encrucijada exterior donde mercaderes sin escrúpulos compran esquirlas de piedra bruja.",
+        x: 535, y: 125,
+        icon: "fa-coins"
       },
       {
-        keywords: ["moral", "panico", "50", "acobardada", "shaken", "routed"],
-        answer: "<strong>Chequeo de Moral al 50%:</strong> Cuando una banda queda al 50% o menos de miniaturas/vida, chequea Calidad:<br>" +
-                "• Fallar por disparo causa <strong>Shaken (Acobardada)</strong>: no ataca ni mueve voluntariamente.<br>" +
-                "• Fallar en combate cuerpo a cuerpo tras perder el asalto causa <strong>Rout (Huida)</strong> y es retirada como baja."
+        id: 3,
+        numRoman: "III",
+        name: "La Forja de los Gremios",
+        owner: "neutral",
+        perk: "Maestría del Acero: Descuento permanente de 5 pts en cualquier mejora de arma.",
+        lore: "Antiguos talleres de los artesanos y enanos imperiales. Aún quedan yunques intactos.",
+        x: 760, y: 255,
+        icon: "fa-hammer"
       },
       {
-        keywords: ["cobertura", "cover", "disparo", "escenografia"],
-        answer: "<strong>Regla de Cobertura:</strong> Las miniaturas en cobertura obtienen un <strong>+1 a sus tiradas de Defensa</strong> contra ataques de disparo."
+        id: 4,
+        numRoman: "IV",
+        name: "Las Criptas de Sylvania",
+        owner: "david",
+        perk: "Aura de Pavor: Una vez por partida, puedes forzar a una unidad enemiga a repetir un chequeo de moral superado.",
+        lore: "Mausoleos profanados por la Casa Sangre Carmesí donde la niebla ponzoñosa jamás se disipa.",
+        x: 325, y: 620,
+        icon: "fa-skull"
       },
       {
-        keywords: ["trepar", "saltar", "caer", "caida", "terreno"],
-        answer: "<strong>Verticalidad:</strong> Cualquier miniatura puede trepar hasta 3\" verticales de forma gratuita como parte de su movimiento. Superar 3\" de altura requiere un chequeo de Calidad exitoso."
+        id: 9,
+        numRoman: "IX",
+        name: "El Pozo (The Pit)",
+        owner: "neutral",
+        perk: "Dominio de la Piedra Bruja: Concede +2 VP de campaña por ronda que se mantenga bajo control.",
+        lore: "El abismo titánico donde el bólido de disformidad pulverizó el centro geográfico de Mordheim.",
+        x: 540, y: 445,
+        icon: "fa-meteor",
+        isCentral: true
+      },
+      {
+        id: 5,
+        numRoman: "V",
+        name: "El Gran Puente del Río Stir",
+        owner: "neutral",
+        perk: "Paso Estratégico: Elige automáticamente quién despliega 1º o 2º en sus batallas.",
+        lore: "El viaducto de arcos de piedra que conecta el norte aristocrático con el sur obrero.",
+        x: 500, y: 285,
+        icon: "fa-archway"
+      },
+      {
+        id: 6,
+        numRoman: "VI",
+        name: "La Torre del Alquimista",
+        owner: "neutral",
+        perk: "Elixires de Disformidad: +1 a tiradas de recuperación de heridas y supervivencia post-batalla.",
+        lore: "Spira retorcida donde los sabios arcanos experimentaban antes de la catástrofe.",
+        x: 275, y: 215,
+        icon: "fa-flask-vial"
+      },
+      {
+        id: 7,
+        numRoman: "VII",
+        name: "El Foso de los Escombros",
+        owner: "neutral",
+        perk: "Carroñeo de Ruinas: Tira 1D6 tras cada batalla: con 4+ encuentras equipo gratis valorado en 15 pts.",
+        lore: "Laberinto de vigas caídas y sótanos reventados en el Distrito Bajo.",
+        x: 825, y: 555,
+        icon: "fa-box-open"
+      },
+      {
+        id: 8,
+        numRoman: "VIII",
+        name: "El Laberinto de las Cloacas",
+        owner: "neutral",
+        perk: "Infiltración Murina: Permite a 1 unidad desplegar mediante la regla Ambush.",
+        lore: "Dédalo subterráneo de aguas pútridas por donde los Hombres Rata emergen sin ser vistos.",
+        x: 395, y: 395,
+        icon: "fa-spider"
       }
     ];
 
+    // 4. MISIONES
+    const MISSIONS_DATA = {
+      1: {
+        id: 1,
+        title: "Ronda 01: El Despertar del Colmillo de Hierro",
+        badge: "COMPLETADA",
+        badgeStyle: "background: #dfcb9f; color: #3a2e22; border: 1.5px solid #3a2e22;",
+        rulebook: "AoF: Skirmish v3.6.0",
+        points: "300 pts",
+        turns: "4 Rondas",
+        tableSize: "90x90 cm (David) / 120x120 cm (Sergio & Javi)",
+        lore: "Tras el impacto del cometa sobre las cúpulas de Mordheim, las avanzadas de la Casa Sangre Carmesí y del Clan Scutrix se lanzaron a disputar el paso de La Roca de Sigmar y los muelles fluviales. El choque concluyó con la victoria de las ratas y la cobarde fuga de Loky.",
+        objectives: [
+          "Controlar La Roca de Sigmar al final de la Ronda 4 (+2 VP)",
+          "Eliminar al Campeón o Héroe enemigo (+1 VP)",
+          "Asegurar al menos 1 cofre de Piedra Bruja (+1 VP)"
+        ]
+      },
+      2: {
+        id: 2,
+        title: "Ronda 02: La Caza de la Piedra Bruja en las Ruinas",
+        badge: "RONDA EN CURSO",
+        badgeStyle: "background: var(--faction-sergio-bg); color: var(--faction-sergio); border: 1.5px solid var(--faction-sergio);",
+        rulebook: "AoF: Skirmish v3.6.0",
+        points: "300 pts (+botín acumulado)",
+        turns: "4 Rondas",
+        tableSize: "90x90 cm (David) / 120x120 cm (Sergio & Javi)",
+        lore: "Los ecos de la fuga de Loky aún resuenan en las tabernas de los arrabales. Tres filones de Piedra Bruja fosforescente han quedado al descubierto entre los escombros de la Plaza del Mercado y el Gran Puente del Río Stir. Las tres bandas se lanzan en una carrera desesperada para saquear los monolitos antes de que la niebla ponzoñosa los asfixie.",
+        objectives: [
+          "Recuperar esquirlas de Piedra Bruja (Marcadores de Objetivo: 3 repartidos) (+1 VP cada una)",
+          "Expulsar a las bandas rivales del cuadrante central (+2 VP)",
+          "Hacer que el líder enemigo chequee moral al 50% (+1 VP)"
+        ]
+      }
+    };
+
+    // 5. NPCS LORE DE MORDHEIM
+    const NPCS = {
+      gunter: {
+        name: "Gunter «Tres-Dedos»",
+        role: "Tabernero de Las Rocas",
+        avatar: "🍺",
+        desc: "Tuerto, desdentado y con un delantal manchado de cerveza y sangre seca. Conoce todos los chismes que se cuecen en los arrabales.",
+        systemPrompt: "Eres Gunter 'Tres-Dedos', tabernero borracho y cínico de la taberna 'El Cerdo Degollado' en los arrabales de Mordheim (OPR Skirmish). Hablas con hipo (*hic*), jerga castiza y picaresca medieval, quejándote de que nadie paga la cerveza y vendiendo cotilleos de la fuga de Loky, las ratas de Scutrix y los vampiros. Respuestas sabrosas de 2 a 3 párrafos.",
+        greeting: "¡*Hic*! Pasa, forastero... pero si no traes monedas o esquirlas de piedra verde para pagar la pinta de cerveza de nabos, date la vuelta. ¿Qué quieres saber de las ruinas?"
+      },
+      lothar: {
+        name: "Padre Lothar",
+        role: "Sacerdote Flagelante de Sigmar",
+        avatar: "🕯️",
+        desc: "Ojos inyectados en sangre, túnica rota y un mayal al cinto. Ve la mano del cometa como el castigo celestial a los impíos.",
+        systemPrompt: "Eres el Padre Lothar, un sacerdote fanático y flagelante del culto a Sigmar en Mordheim. Hablas con fervor apocalíptico, condenando la soberbia de la ciudad y clamando que el cometa de dos colas cayó para purgar a los pecadores. Odias a los hechiceros, a los vampiros y a los hombres rata. Exiges penitencia. Respuestas de 2 a 3 párrafos.",
+        greeting: "¡Arrepentíos! ¡El cometa de dos colas partió los cielos porque esta ciudad se revolcaba en la herejía! ¿Vienes a buscar la redención por el fuego o eres otro perro codicioso tras la piedra maldita?"
+      },
+      steinhardt: {
+        name: "Burgomaestre Von Steinhardt",
+        role: "Magistrado Imperial Exiliado",
+        avatar: "📜",
+        desc: "Viste ropajes de terciopelo raídos por la ceniza. Sostiene una pluma de ganso e intenta registrar la propiedad de una ciudad que ya no existe.",
+        systemPrompt: "Eres el Burgomaestre Von Steinhardt, antiguo alto magistrado y recaudador de Mordheim. Eres formal, educado y angustiado. Intentas mantener el protocolo civil, la legalidad imperial y reclamar los libros de cuentas perdidos. Respuestas elegantes, melancólicas y burocráticas.",
+        greeting: "Bienvenido a la cancillería de campaña, estimado conciudadano. Le ruego disculpe el estado de los archivos; el cataclismo ha desbaratado el registro fiscal. ¿Presenta credenciales o viene a declarar posesiones en los distritos?"
+      },
+      loky: {
+        name: "Loky el Desertor",
+        role: "Mercenario & Bribón Fugitivo",
+        avatar: "🗡️",
+        desc: "Oculto tras un pajar en El Cruce del Degollador. Sonríe con insolencia mientras mastica una brizna de paja.",
+        systemPrompt: "Eres Loky, el infame mercenario que huyó en el carromato de víveres en la Batalla de la Ronda 01. Eres un canalla astuto, cobarde confeso y orgulloso de estar vivo: 'Un soldado muerto no cobra dos veces, camarada'. Te burlas de los héroes y justificas tu retirada con que tus mulas tenían más cabeza que los enanos y las ratas. Respuestas chispeantes y sarcásticas.",
+        greeting: "¡Ssshh! ¡Baja la voz, condenado! Si Sergio o los enanos me ven por aquí me despellejan. Y que quede claro: ¡no fue una huida, fue una maniobra táctica de abastecimiento con mulas veloces! ¿Qué necesitas de Loky?"
+      },
+      cronista: {
+        name: "El Cronista Mayor",
+        role: "Redactor Jefe de El Heraldo",
+        avatar: "✒️",
+        desc: "Erudito y archivero de la imprenta imperial. Su pluma relata los hechos bélicos con objetividad histórica y rigor gótico.",
+        systemPrompt: "Eres el Cronista Mayor de El Heraldo de Mordheim. Tu tono es solemne, de imprenta gótica del siglo XVI. Conoces la cronología del desastre, el valor de la piedra bruja y el estado de las facciones. Respuestas eruditas y evocadoras de 2 a 3 párrafos.",
+        greeting: "Que la tinta conserve lo que el fuego y el acero amenazan con devorar. Soy el Cronista de El Heraldo. Preguntad sobre los anales de la ciudad o los partes de batalla."
+      }
+    };
+
+    // 6. CLASE PRINCIPAL WARROOM APP
     class WarRoomApp {
       constructor() {
-        this.currentUser = {
-          id: "david",
-          name: "David (Sangre Carmesí)",
-          role: "Game Master & Árbitro",
-          icon: "🧛",
-          isGm: true
-        };
+        this.currentUser = null;
         this.selectedDistrictId = 1;
-        this.state = JSON.parse(JSON.stringify(INITIAL_DATA));
+        this.currentMissionId = 2;
+        this.activeNpcKey = 'gunter';
+        this.geminiApiKey = '';
+        this.state = {
+          round: 2,
+          commanders: {
+            david: { vp: 1, gold: 300 },
+            sergio: { vp: 3, gold: 330 },
+            javi: { vp: 0, gold: 300 }
+          },
+          districts: JSON.parse(JSON.stringify(DISTRICTS)),
+          aars: [
+            {
+              id: "aar_1",
+              author: "Sergio (Clan Scutrix)",
+              opponent: "David (Sangre Carmesí)",
+              result: "Victoria Decisiva (+2 VP)",
+              text: "¡Victoria chillona para el Clan Scutrix! El gas de disformidad envolvió a los esqueletos y Queek lideró la carga sobre el Bastión Central antes de que los no-muertos reaccionaran.",
+              time: "Ronda 01 • Encrucijada"
+            },
+            {
+              id: "aar_2",
+              author: "David (Sangre Carmesí)",
+              opponent: "Sergio (Clan Scutrix)",
+              result: "Derrota Táctica (+1 VP)",
+              text: "La horda de roedores se abalanzó con frenesí ciego. Logramos decapitar al campeón Queek con nuestras garras antes de replegarnos con dignidad hacia las Catacumbas Reales.",
+              time: "Ronda 01 • Criptas"
+            }
+          ],
+          suggestions: []
+        };
+        this.loginSelectedUser = null;
         this.init();
       }
 
       async init() {
-        this.bindEvents();
+        this.setupNavigation();
         await this.loadCloudState();
+        this.checkSavedSession();
+      }
+
+      checkSavedSession() {
+        const saved = localStorage.getItem("mordheim_warroom_user");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (USERS[parsed.id]) {
+              this.currentUser = USERS[parsed.id];
+              this.onUserLoggedIn();
+              return;
+            }
+          } catch(e) {}
+        }
+        // Si no hay sesión, ir a pantalla de Login
+        this.showTab('tab-login');
+        this.updateUserChip();
+      }
+
+      selectLoginUser(userId) {
+        this.loginSelectedUser = userId;
+        document.querySelectorAll('.login-user-card').forEach(c => c.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+
+        const box = document.getElementById("loginPinBox");
+        const prompt = document.getElementById("loginPinPrompt");
+        const err = document.getElementById("loginPinError");
+        err.style.display = 'none';
+
+        if (userId === 'spectator') {
+          // Espectador entra directo sin PIN
+          this.currentUser = USERS.spectator;
+          localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
+          this.onUserLoggedIn();
+        } else {
+          box.style.display = 'block';
+          prompt.textContent = `Introduce el PIN de ${USERS[userId].name}`;
+          const input = document.getElementById("loginPinInput");
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      submitPin() {
+        if (!this.loginSelectedUser) return;
+        const input = document.getElementById("loginPinInput");
+        const err = document.getElementById("loginPinError");
+        const expected = USERS[this.loginSelectedUser].pin;
+
+        if (input.value === expected) {
+          err.style.display = 'none';
+          this.currentUser = USERS[this.loginSelectedUser];
+          localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
+          this.onUserLoggedIn();
+        } else {
+          err.style.display = 'block';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      onUserLoggedIn() {
+        document.getElementById("loginPinBox").style.display = 'none';
+        this.updateUserChip();
         this.renderAll();
+        // Por defecto activar El Heraldo (Pestaña 1)
+        this.showTab('tab-gazette');
+      }
+
+      logout() {
+        localStorage.removeItem("mordheim_warroom_user");
+        this.currentUser = null;
+        this.updateUserChip();
+        this.showTab('tab-login');
+      }
+
+      updateUserChip() {
+        const avatar = document.getElementById("userHeaderAvatar");
+        const name = document.getElementById("userHeaderName");
+        const gmTab = document.getElementById("tabGmBtn");
+        const districtGmBox = document.getElementById("districtGmBox");
+
+        if (this.currentUser) {
+          avatar.textContent = this.currentUser.avatar;
+          name.textContent = this.currentUser.name;
+          if (this.currentUser.isGm) {
+            gmTab.style.display = 'inline-flex';
+            if (districtGmBox) districtGmBox.style.display = 'block';
+          } else {
+            gmTab.style.display = 'none';
+            if (districtGmBox) districtGmBox.style.display = 'none';
+          }
+        } else {
+          avatar.textContent = "👁️";
+          name.textContent = "Sin Identificar";
+          gmTab.style.display = 'none';
+          if (districtGmBox) districtGmBox.style.display = 'none';
+        }
+      }
+
+      setupNavigation() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-tab');
+            this.showTab(target);
+          });
+        });
+      }
+
+      showTab(tabId) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+        const pane = document.getElementById(tabId);
+        if (pane) pane.classList.add('active');
+
+        const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+        if (btn) btn.classList.add('active');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       async loadCloudState() {
-        // 1. Cargar desde Supabase
+        // Cargar estado de campaña
         if (supabase) {
           try {
             const { data, error } = await supabase
@@ -1489,385 +1654,123 @@
               this.state = data.value;
               document.getElementById("syncDot").className = "sync-dot";
               document.getElementById("syncText").textContent = "Nube Conectada (Supabase 24/7)";
-              return;
             } else if (!error && !data) {
               await supabase.from('kv_store').upsert({ key: STORAGE_KEY, value: this.state });
             }
-          } catch (e) {
-            console.warn("Supabase fetch fallback:", e);
-          }
-        }
 
-        // 2. Fallback a LocalStorage
-        const local = localStorage.getItem(STORAGE_KEY);
-        if (local) {
-          try {
-            this.state = JSON.parse(local);
-          } catch(e) {}
+            // Cargar API Key de Gemini
+            const geminiRes = await supabase.from('kv_store').select('value').eq('key', GEMINI_CONFIG_KEY).maybeSingle();
+            if (geminiRes.data && geminiRes.data.value && geminiRes.data.value.apiKey) {
+              this.geminiApiKey = geminiRes.data.value.apiKey;
+              const input = document.getElementById("geminiApiKeyInput");
+              if (input) input.value = this.geminiApiKey;
+              const status = document.getElementById("geminiKeyStatus");
+              if (status) status.textContent = "✅ IA Conectada";
+            }
+          } catch (e) {
+            console.warn("Supabase fetch error:", e);
+            document.getElementById("syncDot").className = "sync-dot offline";
+            document.getElementById("syncText").textContent = "Modo Local / Desconectado";
+          }
         }
       }
 
       async saveState() {
-        // Guardar local
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-
-        // Guardar Supabase Cloud
         if (supabase) {
           try {
             await supabase.from('kv_store').upsert({ key: STORAGE_KEY, value: this.state });
             document.getElementById("syncDot").className = "sync-dot";
-            document.getElementById("syncText").textContent = "Sincronizado en la Nube 24/7";
+            document.getElementById("syncText").textContent = "Sincronizado en Supabase 24/7";
           } catch(e) {
-            document.getElementById("syncDot").className = "sync-dot offline";
-            document.getElementById("syncText").textContent = "Guardado Local (Sin red)";
+            console.warn("Supabase save error:", e);
           }
         }
-        this.renderAll();
-      }
-
-      bindEvents() {
-        document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-            btn.classList.add("active");
-            const targetPane = document.getElementById(btn.getAttribute("data-tab"));
-            if (targetPane) targetPane.classList.add("active");
-          });
-        });
-
-        document.getElementById("btnOpenIdentity").addEventListener("click", () => {
-          document.getElementById("identityModal").classList.add("open");
-        });
       }
 
       renderAll() {
-        this.renderUserBadge();
         this.renderScoreboard();
-        this.renderMap();
+        this.showGazette(2);
+        this.showMission(2);
+        this.renderMordheimMap();
         this.renderDistrictDetails(this.selectedDistrictId);
         this.renderFogOfWar();
         this.renderAarFeed();
-        this.showGazette(2);
-      }
-
-      renderUserBadge() {
-        document.getElementById("userIcon").textContent = this.currentUser.icon;
-        document.getElementById("userRole").textContent = this.currentUser.role;
-        document.getElementById("userName").textContent = this.currentUser.name;
-
-        const gmTabBtn = document.getElementById("tabGmBtn");
-        const districtGmControls = document.getElementById("districtGmControls");
-        if (this.currentUser.isGm) {
-          gmTabBtn.style.display = "flex";
-          if (districtGmControls) districtGmControls.style.display = "block";
-        } else {
-          gmTabBtn.style.display = "none";
-          if (districtGmControls) districtGmControls.style.display = "none";
-        }
-
-        const reporterInput = document.getElementById("aarReporter");
-        if (reporterInput) reporterInput.value = this.currentUser.name;
+        this.renderRoleplayGreeting();
+        this.renderGmSuggestions();
       }
 
       renderScoreboard() {
-        const grid = document.getElementById("scoreboardGrid");
+        const grid = document.getElementById("scoreboardCardsGrid");
+        if (!grid) return;
         grid.innerHTML = "";
 
-        const countMap = { david: 0, sergio: 0, javi: 0, neutral: 0 };
+        const distCounts = { david: 0, sergio: 0, javi: 0 };
         this.state.districts.forEach(d => {
-          if (countMap[d.owner] !== undefined) countMap[d.owner]++;
+          if (distCounts[d.owner] !== undefined) distCounts[d.owner]++;
         });
 
-        Object.values(this.state.commanders).forEach(cmd => {
+        const list = [
+          { key: 'david', u: USERS.david, c: this.state.commanders.david },
+          { key: 'sergio', u: USERS.sergio, c: this.state.commanders.sergio },
+          { key: 'javi', u: USERS.javi, c: this.state.commanders.javi }
+        ];
+
+        list.forEach(item => {
           const card = document.createElement("div");
-          card.className = `commander-card ${cmd.classKey}`;
+          card.className = `commander-card ${item.key}`;
           card.innerHTML = `
-            <div class="commander-header">
-              <div class="commander-info">
-                <div class="commander-avatar">${cmd.avatar}</div>
+            <div class="cmd-header">
+              <div class="cmd-identity">
+                <span class="cmd-avatar">${item.u.avatar}</span>
                 <div>
-                  <div class="commander-name">${cmd.name}</div>
-                  <div class="commander-faction">${cmd.factionName}</div>
+                  <div class="cmd-name">${item.u.name}</div>
+                  <div class="cmd-faction">${item.u.faction}</div>
                 </div>
               </div>
-              <span class="rank-tag">${cmd.status}</span>
+              <span style="font-size: 0.65rem; font-family: var(--font-title); font-weight: 800; background: #e8dcb9; padding: 0.15rem 0.4rem; border: 1px solid var(--ink-black);">
+                ${item.u.role}
+              </span>
             </div>
-
-            <div class="commander-stats">
-              <div class="stat-box">
-                <span class="stat-val" style="color: ${cmd.color};">${cmd.vp}</span>
-                <span class="stat-lbl">Puntos Victoria</span>
+            <div class="cmd-stats">
+              <div>
+                <div class="stat-val" style="color: ${item.u.color};">${item.c.vp}</div>
+                <div class="stat-lbl">Puntos Victoria</div>
               </div>
-              <div class="stat-box">
-                <span class="stat-val">${cmd.gold}</span>
-                <span class="stat-lbl">Coronas Oro</span>
+              <div>
+                <div class="stat-val">${item.c.gold}</div>
+                <div class="stat-lbl">Coronas Oro</div>
               </div>
-              <div class="stat-box">
-                <span class="stat-val">${countMap[cmd.id] || 0}</span>
-                <span class="stat-lbl">Baluartes</span>
+              <div>
+                <div class="stat-val">${distCounts[item.key] || 0}</div>
+                <div class="stat-lbl">Baluartes</div>
               </div>
-            </div>
-
-            <div class="commander-districts">
-              <i class="fa-solid fa-flag" style="color: ${cmd.color};"></i>
-              <span><strong>Posesiones:</strong> ${this.getCommanderDistrictsNames(cmd.id)}</span>
             </div>
           `;
           grid.appendChild(card);
         });
       }
 
-      getCommanderDistrictsNames(ownerKey) {
-        const list = this.state.districts.filter(d => d.owner === ownerKey).map(d => d.name);
-        return list.length > 0 ? list.join(", ") : "Ninguno reclamado";
-      }
-
-      renderMap() {
-        const group = document.getElementById("mapNodesGroup");
-        group.innerHTML = "";
-
-        this.state.districts.forEach(d => {
-          let fillColor = "#575249";
-          if (d.owner === "david") fillColor = "#7a1515";
-          if (d.owner === "sergio") fillColor = "#1b4d24";
-          if (d.owner === "javi") fillColor = "#8a4f08";
-
-          const isSelected = d.id === this.selectedDistrictId;
-          const radius = d.isCentral ? 25 : 21;
-
-          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-          g.setAttribute("class", "map-node");
-          g.setAttribute("transform", `translate(${d.x}, ${d.y})`);
-          g.onclick = () => {
-            this.selectedDistrictId = d.id;
-            this.renderMap();
-            this.renderDistrictDetails(d.id);
-          };
-
-          g.innerHTML = `
-            ${isSelected ? `<circle r="${radius + 7}" fill="none" stroke="#1b1610" stroke-width="2" stroke-dasharray="3 3"/>` : ""}
-            <circle class="node-glow" r="${radius + 2}" fill="none" stroke="${isSelected ? '#1b1610' : '#8e806f'}" stroke-width="1.5"/>
-            <circle r="${radius}" fill="${fillColor}" stroke="#1b1610" stroke-width="2"/>
-            <circle r="${radius - 4}" fill="none" stroke="#ffffff" opacity="0.4" stroke-width="1"/>
-            <text y="4" class="node-text">${d.numRoman}</text>
-          `;
-          group.appendChild(g);
-        });
-      }
-
-      renderDistrictDetails(id) {
-        const d = this.state.districts.find(item => item.id === id);
-        if (!d) return;
-
-        document.getElementById("districtDetailNum").textContent = `DISTRITO ${d.numRoman}`;
-        document.getElementById("districtDetailName").textContent = d.name;
-        document.getElementById("districtDetailPerk").textContent = `«${d.perk}»`;
-
-        const badge = document.getElementById("districtDetailBadge");
-        badge.className = "district-badge";
-        if (d.owner === "david") {
-          badge.classList.add("badge-david");
-          badge.textContent = "Control: David (Sangre Carmesí)";
-        } else if (d.owner === "sergio") {
-          badge.classList.add("badge-sergio");
-          badge.textContent = "Control: Sergio (Clan Scutrix)";
-        } else if (d.owner === "javi") {
-          badge.classList.add("badge-javi");
-          badge.textContent = "Control: Javi (Hijos del Yunque)";
-        } else {
-          badge.classList.add("badge-neutral");
-          badge.textContent = "Estado: Disputado (Neutral)";
-        }
-      }
-
-      setDistrictControl(newOwner) {
-        if (!this.currentUser.isGm) {
-          alert("Solo el Árbitro David posee privilegios para modificar el control territorial.");
-          return;
-        }
-        const d = this.state.districts.find(item => item.id === this.selectedDistrictId);
-        if (d) {
-          d.owner = newOwner;
-          this.saveState();
-        }
-      }
-
-      renderFogOfWar() {
-        const container = document.getElementById("fogOfWarContent");
-        
-        if (this.currentUser.id === "spectator") {
-          container.innerHTML = `
-            <div class="fog-locked">
-              <i class="fa-solid fa-lock"></i>
-              <div style="font-weight: 800; color: var(--ink-black); font-size: 0.95rem; font-family: var(--font-title);">DIRECTIVAS CLASIFICADAS</div>
-              <p style="font-size: 0.85rem; margin-top: 0.3rem;">
-                Estás visualizando la sala en modo Espectador Neutral. Para consultar directivas clandestinas debes identificarte con tu facción.
-              </p>
-            </div>
-          `;
-          return;
-        }
-
-        const cmd = this.state.commanders[this.currentUser.id];
-        if (!cmd) return;
-
-        container.innerHTML = `
-          <div style="background: var(--bg-parchment-sheet); border: 1.5px solid var(--faction-david); padding: 0.9rem; margin-bottom: 0.8rem; box-shadow: 2px 2px 0 var(--faction-david);">
-            <div style="font-size: 0.75rem; color: var(--faction-david); font-family: var(--font-title); font-weight: 800;">
-              <i class="fa-solid fa-scroll"></i> ${cmd.secretOrder.title}
-            </div>
-            <p class="text-lore" style="color: var(--ink-dark); margin-top: 0.4rem; font-style: italic; line-height: 1.45;">
-              "${cmd.secretOrder.desc}"
-            </p>
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between; background: #faf4e6; padding: 0.65rem; border: 1px solid var(--ink-black); border-left: 4px solid var(--faction-sergio);">
-            <span style="font-size: 0.72rem; color: var(--ink-black); font-family: var(--font-title); font-weight: 800;">RECOMPENSA DE EXPEDICIÓN:</span>
-            <span style="font-size: 0.82rem; font-weight: 800; color: var(--faction-sergio); font-family: var(--font-title);">${cmd.secretOrder.reward}</span>
-          </div>
-
-          <div style="font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.8rem; line-height: 1.4; font-style: italic;">
-            <i class="fa-solid fa-triangle-exclamation" style="color: var(--faction-javi);"></i>
-            <strong>Aviso de Árbitro:</strong> No reveles tu misión clasificada a los rivales hasta que la reclames tras la última activación de la Ronda 4.
-          </div>
-        `;
-      }
-
-      selectIdentity(target) {
-        if (target === "david") {
-          document.getElementById("pinBox").style.display = "block";
-          document.getElementById("gmPinInput").focus();
-        } else if (target === "sergio") {
-          this.currentUser = { id: "sergio", name: "Sergio (Clan Scutrix)", role: "Señor de la Plaga", icon: "🐀", isGm: false };
-          this.closeIdentityModal();
-          this.renderAll();
-        } else if (target === "javi") {
-          this.currentUser = { id: "javi", name: "Javi (Hijos del Yunque)", role: "Patriarca Minero", icon: "⚒️", isGm: false };
-          this.closeIdentityModal();
-          this.renderAll();
-        } else if (target === "spectator") {
-          this.currentUser = { id: "spectator", name: "Espectador Neutral", role: "Público General", icon: "👁️", isGm: false };
-          this.closeIdentityModal();
-          this.renderAll();
-        }
-      }
-
-      verifyGmPin() {
-        const pin = document.getElementById("gmPinInput").value;
-        const err = document.getElementById("pinError");
-        if (pin === "1348") {
-          err.style.display = "none";
-          this.currentUser = { id: "david", name: "David (Sangre Carmesí)", role: "Game Master & Árbitro", icon: "🧛", isGm: true };
-          this.closeIdentityModal();
-          this.renderAll();
-        } else {
-          err.style.display = "block";
-        }
-      }
-
-      closeIdentityModal() {
-        document.getElementById("identityModal").classList.remove("open");
-        document.getElementById("pinBox").style.display = "none";
-        document.getElementById("gmPinInput").value = "";
-      }
-
-      rollCasualty() {
-        const d6 = document.getElementById("d6Display");
-        const resText = document.getElementById("casualtyResultText");
-        d6.style.transform = "rotate(360deg) scale(1.15)";
-        
-        setTimeout(() => {
-          d6.style.transform = "rotate(0deg) scale(1)";
-          const roll = Math.floor(Math.random() * 6) + 1;
-          d6.textContent = roll;
-
-          if (roll === 1) {
-            d6.style.background = "#fae8e8";
-            d6.style.color = "var(--faction-david)";
-            resText.innerHTML = `<span style="color: var(--faction-david);">💀 1: MUERTO / DESTRUIDO</span><br><span style="font-size: 0.78rem; color: var(--ink-muted); font-weight: normal;">La unidad sucumbe y es retirada definitivamente de la banda.</span>`;
-          } else if (roll >= 2 && roll <= 5) {
-            d6.style.background = "#fdf3e5";
-            d6.style.color = "var(--faction-javi)";
-            resText.innerHTML = `<span style="color: var(--faction-javi);">🩹 ${roll}: RECUPERADO SIN SECUELAS</span><br><span style="font-size: 0.78rem; color: var(--ink-muted); font-weight: normal;">El guerrero sana sus heridas en el campamento y luchará en la siguiente ronda.</span>`;
-          } else {
-            d6.style.background = "#eaf3ec";
-            d6.style.color = "var(--faction-sergio)";
-            resText.innerHTML = `<span style="color: var(--faction-sergio);">⚡ 6: RECUPERADO CON VETERANÍA</span><br><span style="font-size: 0.78rem; color: var(--ink-muted); font-weight: normal;">¡Furia marcial! Obtiene +1 a Calidad en el Turno 1 de la siguiente ronda de campaña.</span>`;
-          }
-        }, 220);
-      }
-
-      submitAar(e) {
-        e.preventDefault();
-        const opponent = document.getElementById("aarOpponent").value;
-        const result = document.getElementById("aarResult").value;
-        const story = document.getElementById("aarStory").value;
-
-        const newAar = {
-          id: "aar_" + Date.now(),
-          author: this.currentUser.name,
-          opponent: opponent,
-          result: result,
-          text: story,
-          time: `Ronda 0${this.state.round} • Despacho Inmediato`
-        };
-
-        this.state.aars.unshift(newAar);
-        document.getElementById("aarStory").value = "";
-        this.saveState();
-        alert("⚔️ Parte de guerra grabado y sincronizado en la nube.");
-      }
-
-      renderAarFeed() {
-        const feed = document.getElementById("aarFeedContainer");
-        feed.innerHTML = "";
-
-        this.state.aars.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "aar-item";
-          div.innerHTML = `
-            <div class="aar-item-meta">
-              <span><strong>${item.author}</strong> vs ${item.opponent}</span>
-              <span>${item.time}</span>
-            </div>
-            <div style="font-size: 0.76rem; color: var(--faction-david); font-weight: 800; font-family: var(--font-title); margin-bottom: 0.35rem;">
-              <i class="fa-solid fa-stamp"></i> ${item.result}
-            </div>
-            <p class="aar-text">«${item.text}»</p>
-          `;
-          feed.appendChild(div);
-        });
-      }
-
-      // HEMEROTECA EL HERALDO (TEXTOS E ILUSTRACIONES EXACTAS DE LA CAMPAÑA)
       showGazette(editionNum) {
-        const b0 = document.getElementById("btnGazette0");
-        const b1 = document.getElementById("btnGazette1");
-        const b2 = document.getElementById("btnGazette2");
+        document.querySelectorAll('.herald-nav .btn-action').forEach(b => b.classList.remove('active'));
+        const btn = document.getElementById(`btnGazette${editionNum}`);
+        if (btn) btn.classList.add('active');
+
         const meta = document.getElementById("gazetteIssueMeta");
         const title = document.getElementById("gazetteLeadTitle");
         const sublead = document.getElementById("gazetteSublead");
-        const deck = document.getElementById("gazetteDeck");
         const leftCol = document.getElementById("gazetteLeftCol");
         const img = document.getElementById("gazetteMainImg");
         const caption = document.getElementById("gazetteImgCaption");
         const pdfLink = document.getElementById("gazettePdfLink");
 
-        if (b0) b0.classList.remove("active");
-        if (b1) b1.classList.remove("active");
-        if (b2) b2.classList.remove("active");
-
         if (editionNum === 0) {
-          if (b0) b0.classList.add("active");
-          meta.innerHTML = `<span>Número 0 (Fundacional)</span> • <span>La Caída del Cometa de Dos Colas</span>`;
+          meta.textContent = "Número 0 (Fundacional) • La Caída del Cometa de Dos Colas";
           title.textContent = "¡EL IMPACTO DEL COMETA Y LA CAÍDA DE MORDHEIM!";
           sublead.textContent = "LA GRAN METRÓPOLIS CALCINADA POR LA ESTRELLA ERRANTE";
-          deck.textContent = "Una lluvia de fuego cósmico y piedra bruja quiebra las cúpulas. Se decreta la veda imperial";
           img.src = "./assets/portada_edicion_00.jpg";
-          caption.textContent = "Xilografía Fundacional: El cometa de dos colas cayendo sobre las torres góticas de Mordheim.";
+          caption.textContent = "Xilografía Fundacional: El cometa de dos colas precipitándose sobre las cúpulas de Mordheim.";
           pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_00.pdf";
-
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
               <span class="drop-cap">E</span>l juicio anunciado por los astrónomos no fue un símbolo de gloria, sino la tumba de la mayor metrópolis imperial. En la víspera del nuevo milenio, el bólido celeste de mineral oscuro atravesó las nubes y pulverizó los palacios, hundiendo el centro geográfico en un abismo titánico conocido como <strong>El Pozo</strong>.
@@ -1880,15 +1783,12 @@
             </p>
           `;
         } else if (editionNum === 1) {
-          if (b1) b1.classList.add("active");
-          meta.innerHTML = `<span>Número 1</span> • <span>Apertura de la Campaña Urbana</span>`;
+          meta.textContent = "Número 1 • Apertura de la Campaña Urbana";
           title.textContent = "EL DESPERTAR DE LA CIUDAD CONDENADA";
           sublead.textContent = "TRES HUESTES CONVERGEN HACIA LAS RUINAS";
-          deck.textContent = "Las partidas de guerra cruzan los muros exteriores disputando cada losa y cada barricada de Mordheim";
           img.src = "./assets/portada_edicion_01.jpg";
           caption.textContent = "Xilografía de Época: Tres huestes convergiendo en las ruinas de Mordheim.";
           pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_01.pdf";
-
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
               <span class="drop-cap">L</span>a Ciudad Condenada ha abierto sus fauces. Tras meses de niebla ponzoñosa, los accesos a la metrópolis son disputados con furia sanguinaria. Tres señores de la guerra pugnan por el dominio del empedrado.
@@ -1897,19 +1797,16 @@
               Los espías confirman que los <strong>Ratmen del Clan Scutrix</strong> han emergido de las cloacas para fortificarse en los accesos al río, mientras que los <strong>Vampiric Undead de la Casa Sangre Carmesí</strong> profanan los mausoleos de la nobleza con artes nigrománticas.
             </p>
             <p>
-              Por su parte, los <strong>Dwarf Guilds de los Hijos del Yunque</strong> han jurado ante sus ancestros que cada caja fuerte enana expoliada será cobrada con sangre y fuego de plomo. ¡Que los dados rueden y el acero decida el destino de los nueve baluartes!
+              Por su parte, los <strong>Dwarf Guilds de los Hijos del Yunque</strong> han jurado ante sus ancestros que cada caja fuerte enana expoliada será cobrada con sangre y fuego de plomo.
             </p>
           `;
         } else {
-          if (b2) b2.classList.add("active");
-          meta.innerHTML = `<span>Número 2 (Extraordinaria)</span> • <span>Tras la Batalla en el Bastión Central</span>`;
+          meta.textContent = "Número 2 (Extraordinaria) • Tras la Batalla en el Bastión Central";
           title.textContent = "¡LA MASACRE Y LA FUGA DE LOKY!";
           sublead.textContent = "COBARDÍA HISTÓRICA EN LA ENCRUCIJADA";
-          deck.textContent = "El infame Loky huyó en el carromato de víveres dejando a sus hermanos a merced de los colmillos no-muertos";
           img.src = "./assets/portada_edicion_02.jpg";
           caption.textContent = "Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.";
           pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf";
-
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
               <span class="drop-cap">¡E</span>scándalo en los arrabales de Mordheim! Los mensajeros del Heraldo confirman la masacre en la Encrucijada. Mientras las garras vampíricas de Lord David decapitaban al campeón Queek del Clan Scutrix, el infame mercenario Loky abandonó el frente a todo galope.
@@ -1924,85 +1821,463 @@
         }
       }
 
-      // ORÁCULO DE REGLAS (RESPUESTAS INTELIGENTES LOCALES O GEMINI API)
-      askOracle() {
-        const input = document.getElementById("oracleInput");
+      showMission(roundNum) {
+        document.querySelectorAll('.mission-nav-bar .btn-action').forEach(b => b.classList.remove('active'));
+        const btn = document.getElementById(`btnMission${roundNum}`);
+        if (btn) btn.classList.add('active');
+
+        const m = MISSIONS_DATA[roundNum];
+        if (!m) return;
+
+        document.getElementById("missionTitleDisplay").textContent = m.title;
+        const badge = document.getElementById("missionStatusBadge");
+        badge.textContent = m.badge;
+        badge.style = m.badgeStyle;
+
+        document.getElementById("missionRulebook").textContent = m.rulebook;
+        document.getElementById("missionPoints").textContent = m.points;
+        document.getElementById("missionTurns").textContent = m.turns;
+        document.getElementById("missionTableSize").textContent = m.tableSize;
+        document.getElementById("missionLoreText").textContent = m.lore;
+
+        const ul = document.getElementById("missionObjectivesList");
+        ul.innerHTML = "";
+        m.objectives.forEach(obj => {
+          const li = document.createElement("li");
+          li.textContent = obj;
+          ul.appendChild(li);
+        });
+      }
+
+      renderMordheimMap() {
+        const svg = document.getElementById("mordheimSvgMap");
+        if (!svg) return;
+        svg.innerHTML = "";
+
+        this.state.districts.forEach(d => {
+          let ringColor = "#8e806f";
+          let fillColor = "rgba(87, 82, 73, 0.75)";
+          if (d.owner === "david") { ringColor = "#ffd700"; fillColor = "rgba(122, 21, 21, 0.85)"; }
+          if (d.owner === "sergio") { ringColor = "#73d13d"; fillColor = "rgba(27, 77, 36, 0.85)"; }
+          if (d.owner === "javi") { ringColor = "#ffa940"; fillColor = "rgba(138, 79, 8, 0.85)"; }
+
+          const isSelected = d.id === this.selectedDistrictId;
+          const radius = d.isCentral ? 22 : 18;
+
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("class", `map-pin ${isSelected ? 'active' : ''}`);
+          g.setAttribute("transform", `translate(${d.x}, ${d.y})`);
+          g.onclick = () => {
+            this.selectedDistrictId = d.id;
+            this.renderMordheimMap();
+            this.renderDistrictDetails(d.id);
+          };
+
+          g.innerHTML = `
+            ${isSelected ? `<circle r="${radius + 7}" fill="none" stroke="#241d17" stroke-width="2.5" stroke-dasharray="4 3"/>` : ""}
+            <circle class="pin-ring" r="${radius + 2}" fill="none" stroke="${ringColor}" stroke-width="2"/>
+            <circle r="${radius}" fill="${fillColor}" stroke="#17130e" stroke-width="2"/>
+            <text y="5" fill="#ffffff" font-family="'Cinzel', serif" font-weight="900" font-size="${d.isCentral ? 13 : 11}" text-anchor="middle" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.8))">${d.numRoman}</text>
+          `;
+          svg.appendChild(g);
+        });
+      }
+
+      renderDistrictDetails(id) {
+        const d = this.state.districts.find(item => item.id === id);
+        if (!d) return;
+
+        document.getElementById("districtDetailNum").textContent = `DISTRITO ${d.numRoman}`;
+        document.getElementById("districtDetailName").textContent = d.name;
+        document.getElementById("districtDetailPerk").textContent = `«${d.perk}»`;
+        document.getElementById("districtDetailLore").textContent = d.lore;
+
+        const badge = document.getElementById("districtDetailBadge");
+        if (d.owner === "david") {
+          badge.style = "background: var(--faction-david-bg); color: var(--faction-david); border-color: var(--faction-david);";
+          badge.textContent = "Control: David (Sangre Carmesí)";
+        } else if (d.owner === "sergio") {
+          badge.style = "background: var(--faction-sergio-bg); color: var(--faction-sergio); border-color: var(--faction-sergio);";
+          badge.textContent = "Control: Sergio (Clan Scutrix)";
+        } else if (d.owner === "javi") {
+          badge.style = "background: var(--faction-javi-bg); color: var(--faction-javi); border-color: var(--faction-javi);";
+          badge.textContent = "Control: Javi (Hijos del Yunque)";
+        } else {
+          badge.style = "background: var(--faction-neutral-bg); color: var(--faction-neutral); border-color: var(--faction-neutral);";
+          badge.textContent = "Estado: Disputado (Neutral)";
+        }
+      }
+
+      setDistrictOwner(ownerKey) {
+        if (!this.currentUser || !this.currentUser.isGm) {
+          alert("Solo el Árbitro David tiene autoridad para transferir soberanías.");
+          return;
+        }
+        const d = this.state.districts.find(x => x.id === this.selectedDistrictId);
+        if (d) {
+          d.owner = ownerKey;
+          this.renderMordheimMap();
+          this.renderDistrictDetails(d.id);
+          this.renderScoreboard();
+          this.saveState();
+        }
+      }
+
+      renderFogOfWar() {
+        const box = document.getElementById("fogOfWarSecretBox");
+        if (!box) return;
+
+        if (!this.currentUser || this.currentUser.id === 'spectator') {
+          box.innerHTML = `
+            <div style="text-align: center; padding: 1.5rem 0.5rem; color: var(--ink-muted);">
+              <i class="fa-solid fa-lock" style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--line-sepia);"></i>
+              <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.85rem;">ACCESO RESTRINGIDO</div>
+              <p style="font-size: 0.78rem; margin-top: 0.3rem;">Identifícate con tu facción para leer tus órdenes secretas de campamento.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const sec = this.currentUser.secretOrder;
+        if (!sec) return;
+
+        box.innerHTML = `
+          <div style="font-family: var(--font-title); font-size: 0.88rem; font-weight: 800; color: ${this.currentUser.color}; margin-bottom: 0.3rem;">
+            <i class="fa-solid fa-scroll"></i> ${sec.title}
+          </div>
+          <p style="font-size: 0.85rem; font-style: italic; color: var(--ink-dark); line-height: 1.45; margin-bottom: 0.6rem;">
+            "${sec.desc}"
+          </p>
+          <div style="background: #faf4e6; border: 1px solid var(--ink-black); padding: 0.4rem 0.6rem; font-size: 0.78rem; font-family: var(--font-title);">
+            <strong>Recompensa de Éxito:</strong> <span style="color: var(--faction-sergio); font-weight: 800;">${sec.reward}</span>
+          </div>
+        `;
+      }
+
+      // 7. PARTES DE GUERRA (AARs)
+      submitAar(e) {
+        e.preventDefault();
+        const author = this.currentUser ? this.currentUser.name : "Comandante Anónimo";
+        const opp = document.getElementById("aarOpponent").value;
+        const res = document.getElementById("aarResult").value;
+        const text = document.getElementById("aarStory").value;
+
+        const newAar = {
+          id: "aar_" + Date.now(),
+          author: author,
+          opponent: opp,
+          result: res,
+          text: text,
+          time: `Ronda 0${this.state.round} • Mordheim`
+        };
+
+        this.state.aars.unshift(newAar);
+        document.getElementById("aarStory").value = "";
+        this.renderAarFeed();
+        this.saveState();
+        alert("⚔️ Despacho de guerra sellado y sincronizado en la nube.");
+      }
+
+      renderAarFeed() {
+        const feed = document.getElementById("aarFeedContainer");
+        if (!feed) return;
+        feed.innerHTML = "";
+
+        this.state.aars.forEach(item => {
+          const div = document.createElement("div");
+          div.style = "background: var(--bg-parchment-sheet); border: 1.5px solid var(--ink-black); padding: 0.75rem; box-shadow: 2px 2px 0 var(--ink-black);";
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--ink-muted); font-family: var(--font-title); font-weight: 800; border-bottom: 1px dashed var(--line-sepia); padding-bottom: 0.2rem; margin-bottom: 0.35rem;">
+              <span><strong>${item.author}</strong> vs ${item.opponent}</span>
+              <span>${item.time}</span>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--faction-david); font-family: var(--font-title); margin-bottom: 0.3rem;">
+              <i class="fa-solid fa-stamp"></i> ${item.result}
+            </div>
+            <p style="font-size: 0.88rem; font-style: italic; color: var(--ink-dark); line-height: 1.4;">«${item.text}»</p>
+          `;
+          feed.appendChild(div);
+        });
+      }
+
+      // 8. EL ORÁCULO DEL METAJUEGO
+      askOraclePreset(type) {
+        const input = document.getElementById("oracleQueryInput");
+        if (type === 'acciones') input.value = "¿Cuáles son las 4 acciones de activación en Skirmish v3.6.0?";
+        if (type === 'fatiga') input.value = "¿Cómo funciona exactamente la fatiga en combate cuerpo a cuerpo?";
+        if (type === 'moral') input.value = "¿Cuándo se chequea pánico al 50% de la banda?";
+        if (type === 'escenografia') input.value = "¿Qué escenografía 3MF tenemos y qué cobertura da?";
+        if (type === 'armyforge') input.value = "¿Cómo configurar la banda en ArmyForge para 300 puntos?";
+        this.sendOracleQuery();
+      }
+
+      async sendOracleQuery() {
+        const input = document.getElementById("oracleQueryInput");
         const query = input.value.trim();
         if (!query) return;
 
-        this.appendMessage(query, "user", this.currentUser.name);
+        const feed = document.getElementById("oracleChatFeed");
+        // Bubble del usuario
+        const userBubble = document.createElement("div");
+        userBubble.className = "chat-bubble user";
+        userBubble.innerHTML = `<strong>${this.currentUser ? this.currentUser.name : 'Comandante'}:</strong> ${query}`;
+        feed.appendChild(userBubble);
         input.value = "";
+        feed.scrollTop = feed.scrollHeight;
 
+        // Bubble de pensando
+        const botBubble = document.createElement("div");
+        botBubble.className = "chat-bubble bot";
+        botBubble.innerHTML = `<em>Consultando los grimorios arcanos...</em>`;
+        feed.appendChild(botBubble);
+        feed.scrollTop = feed.scrollHeight;
+
+        // Intentar IA si hay clave guardada
+        if (this.geminiApiKey) {
+          try {
+            const prompt = `Eres el Oráculo Arcano de Mordheim para el sistema de juego OnePageRules: Age of Fantasy Skirmish v3.6.0.
+Conoces el reglamento oficial:
+- Activación de una acción por turno: Hold (dispara completo), Advance (mueve 6 pulg. y dispara), Rush (mueve 12 pulg.), Charge (mueve 12 pulg. a contacto peana con peana para melé).
+- Fatiga en melé: tras atacar, la unidad queda Fatigada hasta final de ronda (si vuelve a combatir solo impacta a 6s naturales).
+- Moral al 50%: chequear Calidad. Fallo por disparo causa Shaken (acobardada). Fallo en melé tras perder el asalto causa Rout (baja definitiva).
+- Cobertura da +1 a Defensa contra disparos. Trepar vertical hasta 3 pulg. gratis.
+- Escenografía 3MF disponible: Mansión en ruinas (Building 4, 2 plantas), Ruinas Ulvheim (Placas 6 y 17 modulares), Casas derruidas 2 y 3, Muros caídos, Pilas de cajas y barriles (cobertura baja), Bosque tenebroso.
+- Límites de banda: 300 pts en ArmyForge.
+Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador: "${query}"`;
+
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+              })
+            });
+
+            if (resp.ok) {
+              const data = await resp.json();
+              const reply = data.candidates[0].content.parts[0].text;
+              botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${reply.replace(/\n/g, '<br>')}`;
+              feed.scrollTop = feed.scrollHeight;
+              return;
+            }
+          } catch(e) {
+            console.warn("Gemini API call failed, using local rules KB:", e);
+          }
+        }
+
+        // Fallback Base de Conocimiento Local
         setTimeout(() => {
-          const answer = this.searchRules(query);
-          this.appendMessage(answer, "oracle", "Árbitro Inquisitorial");
+          let ans = "No he hallado un veredicto exacto en los pergaminos inmediatos. Consulta el manual oficial de AoFS v3.6.0 o remite tu duda al Árbitro David en el Panel GM.";
+          const q = query.toLowerCase();
+
+          if (q.includes("accion") || q.includes("hold") || q.includes("rush") || q.includes("charge")) {
+            ans = "<strong>Acciones en AoFS v3.6.0:</strong> Al activar una unidad eliges una acción:<br>• <strong>Hold:</strong> Quieto y dispara.<br>• <strong>Advance:</strong> Mueve 6 pulg. y dispara.<br>• <strong>Rush:</strong> Mueve 12 pulg. (sin disparo ni carga).<br>• <strong>Charge:</strong> Mueve 12 pulg. a contacto peana para combate cuerpo a cuerpo.";
+          } else if (q.includes("fatiga") || q.includes("cac") || q.includes("cuerpo a cuerpo")) {
+            ans = "<strong>Fatiga en Melé:</strong> Tras resolver sus ataques cuerpo a cuerpo, la unidad queda <em>Fatigada</em> hasta el final de la ronda completa. Si vuelve a combatir mientras esté fatigada, solo impactará con 6s naturales.";
+          } else if (q.includes("moral") || q.includes("50") || q.includes("panico") || q.includes("shaken") || q.includes("rout")) {
+            ans = "<strong>Chequeo de Moral al 50%:</strong> Cuando la banda queda al 50% o menos de miniaturas/vida, chequea Calidad:<br>• Fallo por disparo = <strong>Shaken (Acobardada)</strong>: no ataca ni mueve voluntariamente.<br>• Fallo tras perder un combate = <strong>Rout (Huida)</strong>: la miniatura es retirada como baja.";
+          } else if (q.includes("escenografia") || q.includes("3mf") || q.includes("imprimir") || q.includes("terreno")) {
+            ans = "<strong>Escenografía 3MF de Campaña:</strong><br>• <strong>Building 4:</strong> Mansión gótica de 2 plantas. Bloquea línea de visión y da altura.<br>• <strong>Ruinas Ulvheim (Placas 6 y 17):</strong> Muros con ventanas que otorgan +1 a cobertura.<br>• <strong>Cajas y Barriles:</strong> Cobertura baja.<br>• <strong>Bosque:</strong> Terreno difícil (-2 pulg. al avance).";
+          } else if (q.includes("armyforge") || q.includes("lista") || q.includes("puntos") || q.includes("crear")) {
+            ans = "<strong>Creación con ArmyForge:</strong> En la web de OPR ArmyForge selecciona <em>Age of Fantasy: Skirmish</em>. El presupuesto oficial de campaña es de <strong>300 puntos</strong> por banda, con un máximo de 1 Héroe y respetando el coste de equipo rúnico y magia.";
+          }
+
+          botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${ans}`;
+          feed.scrollTop = feed.scrollHeight;
         }, 300);
       }
 
-      askQuickRule(question) {
-        document.getElementById("oracleInput").value = question;
-        this.askOracle();
+      async submitSuggestion(e) {
+        e.preventDefault();
+        const cat = document.getElementById("sugCategory").value;
+        const text = document.getElementById("sugContent").value;
+        const author = this.currentUser ? this.currentUser.name : "Comandante";
+
+        const newSug = {
+          id: "sug_" + Date.now(),
+          author: author,
+          category: cat,
+          content: text,
+          date: new Date().toLocaleDateString('es-ES')
+        };
+
+        if (!this.state.suggestions) this.state.suggestions = [];
+        this.state.suggestions.unshift(newSug);
+        document.getElementById("sugContent").value = "";
+
+        // Guardar en Supabase
+        if (supabase) {
+          try {
+            await supabase.from('kv_store').upsert({ key: SUGGESTIONS_KEY, value: this.state.suggestions });
+          } catch(e) {}
+        }
+        this.saveState();
+        this.renderGmSuggestions();
+        alert("📜 Sugerencia sellada y remitida al Buzón del Tribunal.");
       }
 
-      searchRules(text) {
-        const normalized = text.toLowerCase();
-        for (const item of RULES_KB) {
-          if (item.keywords.some(k => normalized.includes(k))) {
-            return item.answer;
+      // 9. CONTACTO CON EL HERALDO (NPCS & ROLEPLAY)
+      selectNpc(npcKey) {
+        this.activeNpcKey = npcKey;
+        document.querySelectorAll('.npc-card-btn').forEach(b => b.classList.remove('active'));
+        const btn = document.getElementById(`btnNpc${npcKey.charAt(0).toUpperCase() + npcKey.slice(1)}`);
+        if (btn) btn.classList.add('active');
+
+        const npc = NPCS[npcKey];
+        if (!npc) return;
+
+        document.getElementById("activeNpcAvatar").textContent = npc.avatar;
+        document.getElementById("activeNpcName").textContent = npc.name;
+        document.getElementById("activeNpcDesc").textContent = npc.desc;
+
+        this.renderRoleplayGreeting();
+      }
+
+      renderRoleplayGreeting() {
+        const feed = document.getElementById("roleplayChatFeed");
+        if (!feed) return;
+        feed.innerHTML = "";
+
+        const npc = NPCS[this.activeNpcKey];
+        const bubble = document.createElement("div");
+        bubble.className = "chat-bubble npc";
+        bubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${npc.greeting}`;
+        feed.appendChild(bubble);
+      }
+
+      async sendRoleplayMessage() {
+        const input = document.getElementById("roleplayInput");
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const feed = document.getElementById("roleplayChatFeed");
+        const userBubble = document.createElement("div");
+        userBubble.className = "chat-bubble user";
+        userBubble.innerHTML = `<strong>${this.currentUser ? this.currentUser.name : 'Tú'}:</strong> ${msg}`;
+        feed.appendChild(userBubble);
+        input.value = "";
+        feed.scrollTop = feed.scrollHeight;
+
+        const npc = NPCS[this.activeNpcKey];
+        const npcBubble = document.createElement("div");
+        npcBubble.className = "chat-bubble npc";
+        npcBubble.innerHTML = `<em>${npc.avatar} ${npc.name} está respondiendo...</em>`;
+        feed.appendChild(npcBubble);
+        feed.scrollTop = feed.scrollHeight;
+
+        // Si hay clave Gemini, llamar a la IA
+        if (this.geminiApiKey) {
+          try {
+            const fullPrompt = `${npc.systemPrompt}
+Estás hablando con: ${this.currentUser ? this.currentUser.name : 'un comandante forastero'}.
+Mensaje que te acaba de decir: "${msg}".
+Responde en perfecto personaje, manteniendo tu tono y referencias a los sucesos de Mordheim y la fuga de Loky.`;
+
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: fullPrompt }] }]
+              })
+            });
+
+            if (resp.ok) {
+              const data = await resp.json();
+              const reply = data.candidates[0].content.parts[0].text;
+              npcBubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${reply.replace(/\n/g, '<br>')}`;
+              feed.scrollTop = feed.scrollHeight;
+              return;
+            }
+          } catch(e) {
+            console.warn("Roleplay AI call error:", e);
           }
         }
-        return "Según los códices de <strong>Age of Fantasy: Skirmish v3.6.0</strong>, si la situación táctica no está cubierta expresamente, los jugadores tiran 1D6: con 1-3 decide el jugador defensor y con 4-6 el atacante activo. ¿Deseas consultar sobre acciones Hold/Advance/Rush/Charge, chequeos de Moral al 50% o Fatiga en combate cuerpo a cuerpo?";
+
+        // Fallback temático en personaje
+        setTimeout(() => {
+          let fallback = "";
+          if (this.activeNpcKey === 'gunter') {
+            fallback = "*Hic*... ¡No me vengas con ésas, forastero! Si quieres que te cuente lo que vi la noche que Loky huyó en el carro, pon otra moneda sobre la mesa. Dicen que las ratas del Clan Scutrix tienen túneles que cruzan por debajo de la mismísima taberna.";
+          } else if (this.activeNpcKey === 'lothar') {
+            fallback = "¡Necio! Las palabras mundanas no acallarán la cólera de Sigmar. Mira hacia el cielo ceniciento: el cometa partió las murallas porque los corazones estaban podridos. ¡Preparaos para la purga!";
+          } else if (this.activeNpcKey === 'steinhardt') {
+            fallback = "Anoto debidamente su declaración en los pliegos del distrito. No obstante, le advierto que hasta que el Tribunal restablezca el orden en el Gran Puente, las reclamaciones sobre las cajas de caudales deberán esperar a la Ronda 02.";
+          } else if (this.activeNpcKey === 'loky') {
+            fallback = "¡Bah! Dicen que huí, pero yo lo llamo 'retirada estratégica con preservación de víveres'. Mientras los fanáticos se rompían las cabezas contra los esqueletos, yo aseguré tres barriles intactos. Si quieres un socio para la Ronda 02, habla con mis mulas.";
+          } else {
+            fallback = "Las crónicas registrarán vuestras palabras, capitán. En las ruinas de Mordheim cada paso se paga con sangre y cada esquirla de piedra bruja forja una leyenda o una tumba anónima.";
+          }
+          npcBubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${fallback}`;
+          feed.scrollTop = feed.scrollHeight;
+        }, 300);
       }
 
-      appendMessage(content, type, sender) {
-        const container = document.getElementById("chatMessages");
-        const msg = document.createElement("div");
-        msg.className = `msg ${type}`;
-        msg.innerHTML = `
-          <div class="msg-sender">${sender}</div>
-          <div>${content}</div>
-        `;
-        container.appendChild(msg);
-        container.scrollTop = container.scrollHeight;
-      }
-
-      // GM CONTROLS
-      setRound(roundNum) {
-        this.state.round = parseInt(roundNum);
-        this.saveState();
-      }
-
-      gmAddGoldToAll(amount) {
-        Object.values(this.state.commanders).forEach(c => c.gold += amount);
-        this.saveState();
-        alert(`Se han concedido +${amount} coronas de oro a todos los comandantes.`);
-      }
-
-      gmAwardVpToActive() {
-        if (this.state.commanders.david) {
-          this.state.commanders.david.vp += 1;
+      // 10. PANEL GM (DAVID)
+      updateGmRound() {
+        const val = parseInt(document.getElementById("gmRoundInput").value, 10);
+        if (val > 0) {
+          this.state.round = val;
+          document.getElementById("headerRoundTag").textContent = `RONDA 0${val} EN CURSO`;
           this.saveState();
-          alert("Punto de Victoria otorgado a David.");
+          alert(`🏆 Campaña actualizada a la Ronda 0${val}.`);
         }
       }
 
-      exportCampaignJson() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state, null, 2));
-        const dlAnchor = document.createElement('a');
-        dlAnchor.setAttribute("href", dataStr);
-        dlAnchor.setAttribute("download", `kardrakor_campaign_ronda_${this.state.round}.json`);
-        dlAnchor.click();
+      async saveGeminiKey() {
+        const input = document.getElementById("geminiApiKeyInput");
+        const key = input.value.trim();
+        const status = document.getElementById("geminiKeyStatus");
+
+        if (!key) {
+          alert("Introduce una clave válida de Gemini.");
+          return;
+        }
+
+        this.geminiApiKey = key;
+        if (supabase) {
+          try {
+            await supabase.from('kv_store').upsert({ key: GEMINI_CONFIG_KEY, value: { apiKey: key } });
+            status.textContent = "✅ Guardada en Supabase";
+            alert("🔑 Clave de Gemini guardada de forma segura en la base de datos de la nube. Sergio y Javi ya pueden interactuar con los bots.");
+          } catch(e) {
+            status.textContent = "⚠️ Error al guardar";
+          }
+        }
       }
 
-      resetCampaignData() {
-        if (confirm("¿Estás seguro de restaurar los valores iniciales oficiales de la Ronda 1?")) {
-          this.state = JSON.parse(JSON.stringify(INITIAL_DATA));
-          this.saveState();
+      rollD6Test() {
+        const res = Math.floor(Math.random() * 6) + 1;
+        const box = document.getElementById("gmDiceResult");
+        box.innerHTML = `🎲 Resultado del D6 Arbitral: <span style="font-size: 1.2rem; color: var(--faction-david);">${res}</span>`;
+      }
+
+      renderGmSuggestions() {
+        const list = document.getElementById("gmSuggestionsList");
+        if (!list) return;
+        list.innerHTML = "";
+
+        const sugs = this.state.suggestions || [];
+        if (sugs.length === 0) {
+          list.innerHTML = `<div style="font-size: 0.8rem; color: var(--ink-muted); font-style: italic;">No hay sugerencias registradas todavía.</div>`;
+          return;
         }
+
+        sugs.forEach(s => {
+          const item = document.createElement("div");
+          item.style = "background: #faf4e6; border: 1px solid var(--ink-black); padding: 0.6rem; font-size: 0.82rem;";
+          item.innerHTML = `
+            <div style="display: flex; justify-content: space-between; font-weight: 800; font-family: var(--font-title); font-size: 0.72rem; color: var(--faction-david); margin-bottom: 0.2rem;">
+              <span>${s.category} • ${s.author}</span>
+              <span>${s.date}</span>
+            </div>
+            <p style="color: var(--ink-dark); font-style: italic;">«${s.content}»</p>
+          `;
+          list.appendChild(item);
+        });
       }
     }
 
-    // Instanciar motor global
+    // Instanciación Global
     window.app = new WarRoomApp();
   </script>
 </body>
