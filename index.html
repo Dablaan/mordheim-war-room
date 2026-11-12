@@ -2258,19 +2258,83 @@
         }
       }
 
-      // MOTOR DE COMUNICACIÓN CON GOOGLE GEMINI (CON MULTI-MODEL CASCADING)
-      async callGemini(contentsPayload) {
-        if (!this.geminiApiKey) {
-          throw new Error("No hay ninguna clave de API configurada. Introduce tu clave en el Panel GM.");
+      // MOTOR DINÁMICO DE COMUNICACIÓN CON GOOGLE GEMINI (AUTO-DISCOVERY & LISTMODELS)
+      async getAvailableModels() {
+        if (!this.geminiApiKey) throw new Error("No hay clave de API configurada.");
+
+        for (const apiVer of ['v1beta', 'v1']) {
+          try {
+            const resp = await fetch(`https://generativelanguage.googleapis.com/${apiVer}/models?key=${this.geminiApiKey}`);
+            if (resp.ok) {
+              const data = await resp.json();
+              if (data.models && Array.isArray(data.models)) {
+                const usable = data.models.filter(m => 
+                  m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent")
+                );
+                if (usable.length > 0) {
+                  return { apiVer, models: usable };
+                }
+              }
+            } else {
+              const errData = await resp.json().catch(() => ({}));
+              console.warn(`ListModels ${apiVer} error:`, errData);
+            }
+          } catch(e) {
+            console.warn(`ListModels ${apiVer} network error:`, e);
+          }
+        }
+        return null;
+      }
+
+      pickBestModel(modelsList) {
+        const preferences = [
+          'gemini-1.5-flash-latest',
+          'gemini-1.5-flash',
+          'gemini-2.0-flash',
+          'gemini-1.5-pro-latest',
+          'gemini-1.5-pro',
+          'gemini-pro',
+          'flash'
+        ];
+
+        for (const pref of preferences) {
+          const match = modelsList.find(m => m.name.toLowerCase().includes(pref));
+          if (match) return match.name;
         }
 
-        // Modelos canónicos soportados en la API pública de Google (en orden de prioridad y cuota)
-        const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+        return modelsList[0].name;
+      }
+
+      async callGemini(contentsPayload) {
+        if (!this.geminiApiKey) {
+          throw new Error("No hay clave de Gemini configurada en el Panel GM.");
+        }
+
+        // Descubrir modelos autorizados de forma dinámica si no están en caché
+        if (!this.cachedModel) {
+          try {
+            const discovery = await this.getAvailableModels();
+            if (discovery && discovery.models.length > 0) {
+              this.cachedApiVer = discovery.apiVer;
+              this.cachedModel = this.pickBestModel(discovery.models);
+              console.log("Modelo de Gemini detectado automáticamente:", this.cachedModel, "vía", this.cachedApiVer);
+            }
+          } catch(e) {
+            console.warn("Fallo al listar modelos:", e);
+          }
+        }
+
+        const apiVer = this.cachedApiVer || 'v1beta';
+        const candidateModels = this.cachedModel 
+          ? [this.cachedModel, 'models/gemini-1.5-flash-latest', 'models/gemini-1.5-flash', 'models/gemini-2.0-flash', 'models/gemini-pro']
+          : ['models/gemini-1.5-flash-latest', 'models/gemini-1.5-flash', 'models/gemini-2.0-flash', 'models/gemini-pro'];
+
         let lastError = null;
 
-        for (const model of models) {
+        for (const modelPath of candidateModels) {
+          const cleanPath = modelPath.startsWith('models/') ? modelPath : `models/${modelPath}`;
           try {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`;
+            const endpoint = `https://generativelanguage.googleapis.com/${apiVer}/${cleanPath}:generateContent?key=${this.geminiApiKey}`;
             const resp = await fetch(endpoint, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -2280,20 +2344,19 @@
             if (resp.ok) {
               const data = await resp.json();
               if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                this.cachedModel = cleanPath;
                 return {
                   text: data.candidates[0].content.parts[0].text,
-                  model: model
+                  model: cleanPath.replace('models/', '')
                 };
               }
             } else {
               const errBody = await resp.json().catch(() => ({}));
-              const msg = errBody.error && errBody.error.message ? errBody.error.message : `HTTP ${resp.status} ${resp.statusText}`;
-              lastError = new Error(`[${model}] ${msg}`);
-              console.warn(`Intento con ${model} falló:`, lastError.message);
+              const msg = errBody.error && errBody.error.message ? errBody.error.message : `HTTP ${resp.status}`;
+              lastError = new Error(`[${cleanPath.replace('models/', '')}] ${msg}`);
             }
           } catch(err) {
             lastError = err;
-            console.warn(`Error de red con ${model}:`, err.message);
           }
         }
 
@@ -2313,160 +2376,60 @@
 
         this.geminiApiKey = key;
         localStorage.setItem(GEMINI_CONFIG_KEY, key);
+        this.cachedModel = null; // Reiniciar para forzar descubrimiento limpio
+
         if (out) {
           out.style.display = "block";
-          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Enviando ping de prueba a los servidores de Google Gemini...</em>`;
+          out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Consultando catálogo de modelos de Google autorizados para tu clave...</em>`;
         }
 
         try {
+          const discovery = await this.getAvailableModels();
+          if (!discovery || discovery.models.length === 0) {
+            throw new Error("Google rechazó la clave o no tiene modelos de 'generateContent' autorizados.");
+          }
+
+          const modelNames = discovery.models.map(m => m.name.replace('models/', '')).join(', ');
+          this.cachedApiVer = discovery.apiVer;
+          this.cachedModel = this.pickBestModel(discovery.models);
+
           const testPayload = [
-            { role: "user", parts: [{ text: "¡Saludos! Confirma en una sola frase breve y con estilo de cronista que la conexión con Mordheim War Room funciona perfectamente." }] }
+            { role: "user", parts: [{ text: "Confirma en una frase breve y con ambientación de Mordheim que la conexión está activa." }] }
           ];
           const result = await this.callGemini(testPayload);
+
           if (out) {
             out.innerHTML = `
-              <div style="color: #1b4d24; font-weight: 800; margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN EXITOSA CON GOOGLE GEMINI (${result.model})!
+              <div style="color: #1b4d24; font-weight: 800; font-size: 0.88rem; margin-bottom: 0.3rem;">
+                <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN VERIFICADA CON ÉXITO!
               </div>
-              <div style="font-style: italic; color: var(--ink-dark); line-height: 1.4;">
+              <div style="font-style: italic; color: var(--ink-dark); margin-bottom: 0.4rem; background: #fff; padding: 0.4rem 0.6rem; border: 1px solid #1b4d24; line-height: 1.35;">
                 «${result.text}»
               </div>
-              <div style="font-size: 0.72rem; color: #1b4d24; margin-top: 0.3rem; font-weight: 700;">
-                ✓ Los chats del Oráculo y de Contacto con el Heraldo responderán ahora con IA real en vivo.
+              <div style="font-size: 0.72rem; color: #1b4d24; font-weight: 700; margin-bottom: 0.2rem;">
+                ✓ Modelo seleccionado: <strong>${result.model}</strong> (${discovery.apiVer})
+              </div>
+              <div style="font-size: 0.7rem; color: var(--ink-muted); line-height: 1.3;">
+                Modelos disponibles en tu cuenta: ${modelNames}
               </div>
             `;
           }
-          if (status) status.innerHTML = `✅ Conectada y Verificada (${result.model})`;
+          if (status) status.innerHTML = `✅ Conectada (${result.model})`;
         } catch(err) {
           if (out) {
             out.innerHTML = `
               <div style="color: #7a1515; font-weight: 800; margin-bottom: 0.3rem;">
-                <i class="fa-solid fa-triangle-exclamation"></i> Error al conectar con Google Gemini:
+                <i class="fa-solid fa-triangle-exclamation"></i> Error al verificar con Google Gemini:
               </div>
               <div style="font-family: monospace; font-size: 0.76rem; color: #7a1515; background: #fae8e8; padding: 0.4rem; border: 1px solid #7a1515; margin-bottom: 0.4rem;">
                 ${err.message}
               </div>
               <div style="font-size: 0.72rem; color: var(--ink-muted); line-height: 1.35;">
-                Comprueba que tu clave comience por <code>AIzaSy...</code> y que en Google AI Studio / Google Cloud Console tengas habilitada la API <em>Generative Language API</em> sin restricciones de IP que la bloqueen.
+                Comprueba que tu clave en Google AI Studio (aistudio.google.com) esté habilitada y no tenga restricciones de origen que bloqueen GitHub Pages.
               </div>
             `;
           }
-          if (status) status.innerHTML = "⚠️ Fallo en la verificación de API";
-        }
-      }
-
-      async saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-        if (supabase) {
-          try {
-            await supabase.from('kv_store').upsert({ key: STORAGE_KEY, value: this.state });
-            document.getElementById("syncDot").className = "sync-dot";
-            document.getElementById("syncText").textContent = "Sincronizado en Supabase 24/7";
-          } catch(e) {
-            console.warn("Supabase save error:", e);
-          }
-        }
-      }
-
-      renderAll() {
-        this.renderScoreboard();
-        this.showGazette(2);
-        this.showMission(2);
-        this.renderMordheimMap();
-        this.renderDistrictDetails(this.selectedDistrictId);
-        this.renderFogOfWar();
-        this.renderAarFeed();
-        this.renderRoleplayGreeting();
-        this.renderGmSuggestions();
-      }
-
-      // CONTROLES DE ZOOM, PAN Y PANTALLA COMPLETA HD DEL MAPA
-      initMapControls() {
-        const zoomInBtn = document.getElementById("mapZoomIn");
-        const zoomOutBtn = document.getElementById("mapZoomOut");
-        const zoomResetBtn = document.getElementById("mapZoomReset");
-        const fsBtn = document.getElementById("mapFullscreenBtn");
-        const viewport = document.getElementById("tacticalMapViewport");
-        const stage = document.getElementById("tacticalMapStage");
-
-        if (zoomInBtn) zoomInBtn.onclick = () => this.zoomMap(0.3);
-        if (zoomOutBtn) zoomOutBtn.onclick = () => this.zoomMap(-0.3);
-        if (zoomResetBtn) zoomResetBtn.onclick = () => this.resetMapZoom();
-        if (fsBtn) fsBtn.onclick = () => this.toggleMapFullscreen();
-
-        // Drag / Pan cuando zoom > 1
-        if (viewport && stage) {
-          viewport.addEventListener('mousedown', (e) => {
-            if (this.mapZoom <= 1) return;
-            if (e.target.closest('.map-pin')) return;
-            this.isPanning = true;
-            this.panStartX = e.clientX - this.mapPanX * this.mapZoom;
-            this.panStartY = e.clientY - this.mapPanY * this.mapZoom;
-            viewport.style.cursor = 'grabbing';
-          });
-
-          window.addEventListener('mousemove', (e) => {
-            if (!this.isPanning) return;
-            this.mapPanX = (e.clientX - this.panStartX) / this.mapZoom;
-            this.mapPanY = (e.clientY - this.panStartY) / this.mapZoom;
-            this.applyMapTransform();
-          });
-
-          window.addEventListener('mouseup', () => {
-            if (this.isPanning) {
-              this.isPanning = false;
-              if (viewport) viewport.style.cursor = this.mapZoom > 1 ? 'grab' : 'default';
-            }
-          });
-        }
-
-        // Tecla Escape para salir de Fullscreen
-        window.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            const vp = document.getElementById("tacticalMapViewport");
-            if (vp && vp.classList.contains("fullscreen-mode")) {
-              this.toggleMapFullscreen();
-            }
-          }
-        });
-      }
-
-      zoomMap(delta) {
-        this.mapZoom = Math.max(1, Math.min(2.6, +(this.mapZoom + delta).toFixed(1)));
-        if (this.mapZoom === 1) {
-          this.mapPanX = 0;
-          this.mapPanY = 0;
-        }
-        const vp = document.getElementById("tacticalMapViewport");
-        if (vp) vp.style.cursor = this.mapZoom > 1 ? 'grab' : 'default';
-        this.applyMapTransform();
-      }
-
-      resetMapZoom() {
-        this.mapZoom = 1;
-        this.mapPanX = 0;
-        this.mapPanY = 0;
-        const vp = document.getElementById("tacticalMapViewport");
-        if (vp) vp.style.cursor = 'default';
-        this.applyMapTransform();
-      }
-
-      applyMapTransform() {
-        const stage = document.getElementById("tacticalMapStage");
-        if (!stage) return;
-        stage.style.transition = this.isPanning ? 'none' : 'transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1)';
-        stage.style.transform = `scale(${this.mapZoom}) translate(${this.mapPanX}px, ${this.mapPanY}px)`;
-      }
-
-      toggleMapFullscreen() {
-        const vp = document.getElementById("tacticalMapViewport");
-        const closeBar = document.getElementById("mapFsCloseBar");
-        if (!vp) return;
-        vp.classList.toggle("fullscreen-mode");
-        const isFs = vp.classList.contains("fullscreen-mode");
-        if (closeBar) closeBar.style.display = isFs ? 'flex' : 'none';
-        if (!isFs) {
-          this.resetMapZoom();
+          if (status) status.innerHTML = "⚠️ Fallo en la verificación";
         }
       }
 
