@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MORDHEIM: WAR ROOM — Gaceta Táctica &amp; Cuartel General de Campaña</title>
 
-  <!-- Google Fonts de Imprenta Antigua y Gótica -->
+  <!-- Google Fonts de Imprenta Antigua y Gótica de Alta Legibilidad -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=IM+Fell+English:ital@0;1&family=Pirata+One&family=MedievalSharp&family=Metamorphous&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Pirata+One&family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 
   <!-- FontAwesome 6 (Iconografía) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,12 +22,12 @@
       --bg-parchment-sheet: #f6eedb;
       --bg-parchment-dim: #ebdcb9;
       --bg-parchment-aged: #dfcb9f;
-      --bg-parchment-light: #fbf3df;
+      --bg-parchment-light: #fbf5e6;
       --line-sepia: #8b7355;
       --line-dark: #3a2e22;
-      --ink-black: #17130e;
-      --ink-dark: #29221b;
-      --ink-muted: #5e5245;
+      --ink-black: #15110d;
+      --ink-dark: #241c16;
+      --ink-muted: #524639;
 
       /* Facciones */
       --faction-david: #7a1515;
@@ -39,11 +39,11 @@
       --faction-neutral: #575249;
       --faction-neutral-bg: rgba(87, 82, 73, 0.12);
 
-      --font-gothic: 'Pirata One', 'MedievalSharp', fantasy, serif;
+      --font-masthead: 'UnifrakturMaguntia', cursive;
+      --font-gothic: 'Pirata One', 'Cinzel Decorative', fantasy, serif;
       --font-title: 'Cinzel', 'Times New Roman', serif;
-      --font-body: 'IM Fell English', Georgia, serif;
-      --font-press-title: 'Metamorphous', 'Cinzel', serif;
-      --font-press-body: 'IM Fell English', Georgia, serif;
+      --font-title-dec: 'Cinzel Decorative', 'Cinzel', serif;
+      --font-body: 'Georgia', 'Times New Roman', serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -80,7 +80,7 @@
 
     /* CABECERA DE IMPRENTA GÓTICA */
     .gazette-header {
-      padding: 1rem 1.4rem 0.8rem 1.4rem;
+      padding: 0.9rem 1.4rem 0.75rem 1.4rem;
       border-bottom: 3px double var(--ink-black);
       background: var(--bg-parchment-dim);
       display: flex;
@@ -90,7 +90,7 @@
       gap: 1rem;
     }
 
-    .header-branding { display: flex; align-items: center; gap: 1rem; }
+    .header-branding { display: flex; align-items: center; gap: 0.9rem; }
     .header-logo-icon {
       font-size: 2.2rem;
       color: var(--faction-david);
@@ -160,11 +160,6 @@
     .btn-action:active {
       transform: translate(1px, 1px);
       box-shadow: 1px 1px 0 var(--ink-black);
-    }
-    .btn-action.btn-danger {
-      background: #ebd2d2;
-      color: var(--faction-david);
-      border-color: var(--faction-david);
     }
 
     /* TIRA DE FOLIO / METADATOS DE IMPRENTA */
@@ -275,10 +270,6 @@
       border-color: var(--faction-david);
       background: #fae8e8;
     }
-    .tab-btn.gm-only.active {
-      background: var(--bg-parchment-sheet);
-      border-color: var(--ink-black);
-    }
 
     /* CONTENIDO DE LAS PESTAÑAS */
     .tab-pane {
@@ -289,7 +280,7 @@
     .tab-pane.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* PESTAÑA 0: LOGIN VIEW (GATEWAY) */
+    /* PESTAÑA 0: LOGIN VIEW */
     .login-container {
       max-width: 680px;
       margin: 1.5rem auto;
@@ -299,34 +290,10 @@
       box-shadow: 4px 4px 0 rgba(0,0,0,0.25);
       text-align: center;
     }
-    .login-crest {
-      font-size: 3rem;
-      color: var(--faction-david);
-      margin-bottom: 0.5rem;
-    }
-    .login-title {
-      font-family: var(--font-gothic);
-      font-size: 2.2rem;
-      color: var(--ink-black);
-      line-height: 1.1;
-      margin-bottom: 0.4rem;
-    }
-    .login-subtitle {
-      font-family: var(--font-title);
-      font-size: 0.8rem;
-      color: var(--ink-muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-    }
-
-    .login-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      text-align: left;
-    }
+    .login-crest { font-size: 3rem; color: var(--faction-david); margin-bottom: 0.5rem; }
+    .login-title { font-family: var(--font-gothic); font-size: 2.2rem; color: var(--ink-black); margin-bottom: 0.4rem; }
+    .login-subtitle { font-family: var(--font-title); font-size: 0.8rem; color: var(--ink-muted); text-transform: uppercase; margin-bottom: 1.5rem; }
+    .login-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; text-align: left; }
     @media (max-width: 600px) { .login-grid { grid-template-columns: 1fr; } }
 
     .login-user-card {
@@ -340,16 +307,8 @@
       gap: 0.8rem;
       transition: all 0.12s ease;
     }
-    .login-user-card:hover {
-      background: #ffffff;
-      transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 var(--ink-black);
-    }
-    .login-user-card.selected {
-      border-color: var(--faction-david);
-      background: #fbf2f2;
-      box-shadow: 3px 3px 0 var(--faction-david);
-    }
+    .login-user-card:hover { background: #fff; transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink-black); }
+    .login-user-card.selected { border-color: var(--faction-david); background: #fbf2f2; box-shadow: 3px 3px 0 var(--faction-david); }
     .login-avatar { font-size: 1.6rem; }
     .login-card-title { font-family: var(--font-title); font-size: 0.92rem; font-weight: 800; color: var(--ink-black); }
     .login-card-desc { font-size: 0.72rem; color: var(--ink-muted); font-style: italic; }
@@ -374,7 +333,9 @@
       margin: 0.6rem 0;
     }
 
-    /* PESTAÑA 1: EL HERALDO */
+    /* ═════════════════════════════════════════════════════════ */
+    /* PESTAÑA 1: EL HERALDO DE MORDHEIM (MASTHEAD Y PERIÓDICO) */
+    /* ═════════════════════════════════════════════════════════ */
     .herald-nav {
       display: flex;
       gap: 0.4rem;
@@ -382,28 +343,222 @@
       flex-wrap: wrap;
     }
     .border-woodcut-double {
-      border: 3px double #241d17;
-      background: #f4ecdc;
-      padding: 1.2rem;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
+      border: 3.5px double #241d17;
+      background: #fbf6ec;
+      padding: 1.4rem;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.18);
     }
+
+    /* CABECERA EXACTA DE CAPTURA 1 */
+    .heraldo-masthead {
+      text-align: center;
+      border-bottom: 3.5px double #231206;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+    .heraldo-ornament-line {
+      border-top: 2px solid #231206;
+      border-bottom: 1px solid #231206;
+      padding: 2px 0;
+      margin-bottom: 5px;
+      font-size: 8.5pt;
+      color: #231206;
+      letter-spacing: 8px;
+    }
+    .heraldo-badge-box {
+      display: inline-block;
+      font-family: var(--font-title-dec);
+      font-size: 11pt;
+      font-weight: 900;
+      letter-spacing: 5px;
+      color: #1a0802;
+      border: 1.5px solid #331505;
+      background-color: #ebd5ac;
+      padding: 2px 24px;
+      border-radius: 2px;
+      box-shadow: 1px 1px 0px #8b6849;
+      margin-bottom: 3px;
+    }
+    .heraldo-title-main {
+      font-family: var(--font-masthead);
+      font-size: 5rem;
+      line-height: 0.92;
+      margin: 0;
+      color: #120602;
+      text-shadow: 2px 2px 0px #c9ab86;
+      letter-spacing: 1px;
+    }
+    .heraldo-title-sub {
+      font-family: var(--font-masthead);
+      font-size: 2.4rem;
+      color: #3b1605;
+      margin: -4px 0 0 0;
+    }
+    .heraldo-divider-line {
+      border-bottom: 1px solid #331505;
+      width: 140px;
+      margin: 4px auto 6px auto;
+    }
+    .heraldo-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-title);
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-top: 1.5px solid #331505;
+      border-bottom: 1.5px solid #331505;
+      padding: 4px 12px;
+      margin-top: 5px;
+      background-color: #e5cf9f;
+      letter-spacing: 0.05em;
+    }
+
+    /* TITULARES */
+    .heraldo-headline-box {
+      text-align: center;
+      border-bottom: 2px solid #5a1212;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+    .heraldo-lead-title {
+      font-family: var(--font-title-dec);
+      font-size: 1.95rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #5c0f0f;
+      line-height: 1.15;
+      margin: 4px 0;
+      text-shadow: 1px 1px 0px #dbc19b;
+    }
+    .heraldo-sublead {
+      font-family: var(--font-title);
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #2b1103;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .heraldo-lead-p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-style: italic;
+      line-height: 1.45;
+      color: #2b1708;
+      padding: 6px 14px;
+      background-color: #ecdfc0;
+      border-left: 4px solid #6b1414;
+      border-right: 1px solid #7d5939;
+      text-align: justify;
+      margin: 0 auto;
+    }
+
+    /* CRÓNICA Y TEXTO DE ALTA LEGIBILIDAD (CORRIGIENDO CAPTURA 2) */
+    .gazette-body-text {
+      font-family: var(--font-body);
+      font-size: 1.02rem;
+      line-height: 1.62;
+      color: #17130e;
+      text-align: justify;
+    }
+    .gazette-body-text p {
+      margin-bottom: 12px;
+      text-indent: 14px;
+    }
+    .gazette-body-text p.no-indent { text-indent: 0; }
+
+    .drop-cap {
+      float: left;
+      font-family: var(--font-masthead);
+      font-size: 3.8rem;
+      line-height: 0.78;
+      padding-right: 8px;
+      padding-top: 4px;
+      color: #631212;
+    }
+
+    /* PIE DE XILOGRAFÍA NÍTIDO Y LEGIBLE */
     .woodcut-crop {
       width: 100%;
       height: auto;
-      max-height: 440px;
+      max-height: 380px;
       object-fit: cover;
-      filter: contrast(1.15) brightness(0.96) sepia(0.28);
+      filter: contrast(1.15) brightness(0.96) sepia(0.25);
       mix-blend-mode: multiply;
       display: block;
     }
-    .drop-cap {
-      float: left;
-      font-family: var(--font-gothic);
-      font-size: 3.4rem;
-      line-height: 0.8;
-      padding-right: 8px;
-      padding-top: 4px;
-      color: #611515;
+    .woodcut-caption-clean {
+      font-family: var(--font-title);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #17130e;
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1.35;
+      letter-spacing: 0.03em;
+      font-style: normal;
+    }
+
+    /* CAJA DE CITAS */
+    .box-press-quotes {
+      border: 2px double #4a1f0a;
+      background-color: #f7ede0;
+      padding: 10px 12px;
+      margin-top: 12px;
+      box-shadow: 2px 2px 0px #b08d66;
+    }
+    .quote-speaker-title {
+      font-family: var(--font-title);
+      font-weight: 900;
+      color: #4a1515;
+      font-size: 0.88rem;
+    }
+    .quote-speaker-text {
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      line-height: 1.4;
+      font-style: italic;
+      color: #241c16;
+      margin-bottom: 8px;
+    }
+
+    /* FALDON INFERIOR */
+    .bottom-features {
+      display: flex;
+      border: 2px solid #331505;
+      background-color: #ecd7ae;
+      margin-top: 14px;
+      font-size: 0.8rem;
+    }
+    .feat-header {
+      width: 130px;
+      background-color: #4a1515;
+      color: #f7ede0;
+      font-family: var(--font-title-dec);
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+    .feat-cell {
+      flex: 1;
+      padding: 6px 10px;
+      border-right: 1.5px solid #8c6443;
+      line-height: 1.3;
+      text-align: justify;
+    }
+    .feat-cell:last-child { border-right: none; }
+    .feat-cell b {
+      font-family: var(--font-title);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.76rem;
+      color: #541212;
     }
 
     /* PESTAÑA 2: MISIONES */
@@ -500,8 +655,6 @@
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
     }
-
-    /* Marcador elegante de mapa */
     .map-pin {
       cursor: pointer;
       transition: transform 0.15s ease, filter 0.15s ease;
@@ -750,7 +903,7 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- PESTAÑA 1: EL HERALDO DE MORDHEIM (FOLIO 1)             -->
+      <!-- PESTAÑA 1: EL HERALDO DE MORDHEIM (MASTHEAD RESTAURADA) -->
       <!-- ======================================================== -->
       <section class="tab-pane active" id="tab-gazette">
         <!-- Selector de Edición -->
@@ -767,39 +920,69 @@
         </div>
 
         <article class="border-woodcut-double">
-          <!-- Cabecera del Diario -->
-          <div style="text-align: center; border-bottom: 2px solid #28211b; padding-bottom: 8px; margin-bottom: 12px;">
-            <div style="font-family: var(--font-title); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #5a4b3d;" id="gazetteIssueMeta">
-              Número 2 (Extraordinaria) • Tras la Batalla en el Bastión Central
+          <!-- CABECERA OFICIAL EXACTA A LA CAPTURA 1 -->
+          <div class="heraldo-masthead">
+            <div class="heraldo-ornament-line">◆ ✠ ◆</div>
+            <div class="heraldo-badge-box">MORDHEIM</div>
+            <div>
+              <h1 class="heraldo-title-main">El Heraldo</h1>
+              <div class="heraldo-title-sub">de Mordheim</div>
             </div>
-            <h2 id="gazetteLeadTitle" style="font-family: var(--font-gothic); font-size: 2.5rem; line-height: 1.05; color: #1a1613; margin: 4px 0;">
-              ¡LA MASACRE Y LA FUGA DE LOKY!
-            </h2>
-            <div id="gazetteSublead" style="font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: #6a1a1a; letter-spacing: 0.08em; text-transform: uppercase;">
-              COBARDÍA HISTÓRICA EN LA ENCRUCIJADA
+            <div class="heraldo-divider-line"></div>
+            <div class="heraldo-meta-bar">
+              <span id="gazetteIssueMeta">Número 2 (Extraordinaria) • Tras la Batalla en el Bastión Central</span>
+              <span id="gazettePriceMeta">PRECIO: DOS PENIQUES</span>
             </div>
           </div>
 
-          <!-- Cuadrícula: Crónica + Xilografía -->
-          <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 16px; align-items: start;">
-            <!-- Crónica Izquierda -->
-            <div id="gazetteLeftCol" style="font-size: 0.95rem; text-align: justify; color: #1d1814;">
+          <!-- TITULARES DE LA EDICIÓN -->
+          <div class="heraldo-headline-box">
+            <h2 id="gazetteLeadTitle" class="heraldo-lead-title">
+              ¡LA MASACRE Y LA FUGA DE LOKY!
+            </h2>
+            <div id="gazetteSublead" class="heraldo-sublead">
+              COBARDÍA HISTÓRICA EN LA ENCRUCIJADA
+            </div>
+            <div id="gazetteLeadSummary" class="heraldo-lead-p">
               <!-- Inyectado por JS -->
             </div>
+          </div>
+
+          <!-- CUADRÍCULA: CRÓNICA + XILOGRAFÍA -->
+          <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; align-items: start;">
+            <!-- Crónica Izquierda -->
+            <div>
+              <div id="gazetteLeftCol" class="gazette-body-text">
+                <!-- Inyectado por JS -->
+              </div>
+            </div>
+
             <!-- Xilografía Derecha -->
             <div>
               <div style="border: 2px solid #221c17; background: var(--bg-parchment-light); padding: 4px; box-shadow: 3px 3px 0 rgba(0,0,0,0.2);">
                 <img id="gazetteMainImg" src="./assets/portada_edicion_02.jpg" alt="Grabado oficial" class="woodcut-crop" />
-                <p id="gazetteImgCaption" style="font-size: 0.78rem; text-align: center; font-style: italic; margin-top: 6px; font-weight: 700; color: #2d241c;">
+                <p id="gazetteImgCaption" class="woodcut-caption-clean">
                   Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.
                 </p>
               </div>
+
+              <!-- Enlace Oficial al PDF Compilado -->
               <div style="text-align: center; margin-top: 10px;">
-                <a id="gazettePdfLink" href="./assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf" target="_blank" class="btn-action">
+                <a id="gazettePdfLink" href="./assets/El_Heraldo_de_Mordheim_Edicion_02.pdf" target="_blank" class="btn-action">
                   <i class="fa-solid fa-file-pdf"></i> Abrir Edición Completa en PDF
                 </a>
               </div>
+
+              <!-- Caja de Declaraciones / Avisos -->
+              <div id="gazetteRightQuotesBox" class="box-press-quotes">
+                <!-- Inyectado por JS -->
+              </div>
             </div>
+          </div>
+
+          <!-- Faldón Inferior "En Este Número" -->
+          <div class="bottom-features" id="gazetteBottomFeatures">
+            <!-- Inyectado por JS -->
           </div>
         </article>
       </section>
@@ -1430,7 +1613,135 @@
       }
     };
 
-    // 5. NPCS LORE DE MORDHEIM
+    // 5. EDICIONES MAQUETADAS DE EL HERALDO DE MORDHEIM
+    const GAZETTE_EDITIONS = {
+      0: {
+        num: 0,
+        meta: "Número 0 (Fundacional) • La Caída del Cometa de Dos Colas",
+        price: "2 CORONAS DE COBRE",
+        title: "¡EL IMPACTO DEL COMETA Y LA CAÍDA DE MORDHEIM!",
+        sublead: "LA GRAN METRÓPOLIS CALCINADA POR LA ESTRELLA ERRANTE",
+        lead: "CRÓNICA DEL CATACLISMO: En la víspera del cambio de milenio, una lluvia de fuego cósmico y mineral oscuro pulverizó las cúpulas de la mayor capital imperial. El centro geográfico ha quedado hundido en un abismo ardiente conocido como El Pozo. Brotan cristales de Piedra Bruja y se decreta la veda marcial sobre la urbe.",
+        img: "./assets/portada_edicion_00.jpg",
+        caption: "Xilografía Fundacional: El cometa de dos colas precipitándose sobre las cúpulas de Mordheim.",
+        pdf: "./assets/El_Heraldo_de_Mordheim_Edicion_00.pdf",
+        text: `
+          <p class="no-indent"><span class="drop-cap">E</span>l juicio anunciado por los astrónomos no fue un augurio de prosperidad, sino la tumba de la mayor metrópolis imperial. El bólido de disformidad rasgó el cielo de invierno a velocidad implacable, estampándose contra el corazón palaciego de la ciudad.</p>
+          <p>La onda expansiva fundió granito, hierro y carne en un parpadeo. Las aguas profundas del río Stir hirvieron instantáneamente, cubriendo las calzadas bajo una niebla ponzoñosa que todavía hoy no se disipa. Del cráter de roca vítrea brotan esquirlas fosforescentes de <strong>Piedra Bruja (Wyrdstone)</strong>: la manifestación física más letal y codiciada de la magia primigenia.</p>
+          <p>Aunque los heraldos imperiales han clausurado las murallas exteriores bajo pena de muerte, tres expediciones armadas ya han plantado sus estandartes entre los cascotes: la <strong>Casa Sangre Carmesí</strong> de Lord David, los <strong>Ratmen del Clan Scutrix</strong> de Sergio, y los <strong>Hijos del Yunque</strong> de los enanos de Javi. ¡El destino de los nueve baluartes se decidirá con sangre y dados!</p>
+        `,
+        quotes: `
+          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-bottom: 1.5px solid #6b3512; padding-bottom: 4px; margin-bottom: 6px;">
+            📜 BANDO OFICIAL DEL TRIBUNAL ARBITRAL
+          </div>
+          <div style="font-size: 0.82rem; line-height: 1.35; color: #17130e;">
+            • <strong>Presupuesto de Banda:</strong> 300 pts en ArmyForge.<br/>
+            • <strong>Mesas de Encuentro:</strong> 90x90 cm (frente cerrado/criptas) en Cuartel David; 120x120 cm (avenidas exteriores) en Cuartel Sergio/Loky.<br/>
+            • <strong>Reglamento Oficial:</strong> Age of Fantasy: Skirmish v3.6.0.
+          </div>
+        `,
+        features: `
+          <div class="feat-header">EN ESTE NÚMERO</div>
+          <div class="feat-cell">
+            <b>☄️ EL POZO CENTRAL</b>
+            El epicentro del impacto cósmico donde brotan los mayores filones de piedra bruja.
+          </div>
+          <div class="feat-cell">
+            <b>⚔️ LOS NUEVE BALUARTES</b>
+            Distribución de los distritos estratégicos disputados desde La Roca de Sigmar hasta las Cloacas.
+          </div>
+          <div class="feat-cell">
+            <b>⚖️ CÓDICE DE COMBATE</b>
+            Tratado sobre tiradas de trauma, moral al 50% y supervivencia en las ruinas.
+          </div>
+        `
+      },
+      1: {
+        num: 1,
+        meta: "Número 1 • Apertura de la Campaña Urbana",
+        price: "DOS PENIQUES",
+        title: "EL DESPERTAR DE LA CIUDAD CONDENADA",
+        sublead: "TRES HUESTES CONVERGEN HACIA LAS RUINAS DE MORDHEIM",
+        lead: "DESPACHO DE VANGUARDIA: Las partidas de guerra cruzan los muros exteriores disputando cada losa y cada barricada de Mordheim. Los Hombres Rata fortifican los desagües del río Stir, los Vampiros profanan las Criptas y los Enanos despliegan sus cañones de avancarga.",
+        img: "./assets/portada_edicion_01.jpg",
+        caption: "Xilografía de Época: Tres huestes convergiendo en las ruinas de Mordheim.",
+        pdf: "./assets/El_Heraldo_de_Mordheim_Edicion_01.pdf",
+        text: `
+          <p class="no-indent"><span class="drop-cap">L</span>as campanas rotas de las abadías tañen con el viento ponzoñosa. En las sombras de los accesos fluviales, los exploradores de la <strong>Casa Sangre Carmesí</strong> han avanzado sin descanso, asegurando el perímetro de las <strong>Criptas de Sylvania</strong>.</p>
+          <p>Por su parte, los chillidos de los <strong>Ratmen del Clan Scutrix</strong> confirman su dominio de las cloacas bajas. Armados con mosquetes de chispa y veneno de disformidad, sus patrullas han tomado posiciones de emboscada sobre <strong>La Roca de Sigmar</strong>, esperando a que cualquier intruso asome el morro por el puente.</p>
+          <p>Los <strong>Hijos del Yunque</strong> han respondido con flema enana: <em>«Que vengan los monstruos o las ratas; nuestro plomo vuela recto y nuestras hachas no piden perdón»</em>. Los primeros 9 distritos quedan abiertos a sangre y fuego.</p>
+        `,
+        quotes: `
+          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-bottom: 1.5px solid #6b3512; padding-bottom: 4px; margin-bottom: 6px;">
+            🍻 SUSURROS EN 'EL CERDO DEGOLLADO'
+          </div>
+          <div class="quote-speaker-title">Gunter «Tres-Dedos»:</div>
+          <div class="quote-speaker-text">«*Hic*... Dicen que un carruaje fúnebre descargó ataúdes en los sótanos de la torre norte. Si tenéis apego al pescuezo, no paséis por la avenida de las criptas tras el ocaso.»</div>
+          <div class="quote-speaker-title">Mercenario Anónimo:</div>
+          <div class="quote-speaker-text">«Las ratas no buscan oro; se comen las piedras verdes que brillan en el fango. ¡Están poseídas por el delirio del cometa!»</div>
+        `,
+        features: `
+          <div class="feat-header">EN ESTE NÚMERO</div>
+          <div class="feat-cell">
+            <b>🛡️ LA ROCA DE SIGMAR</b>
+            El bastión insular en mitad del río Stir que controla los pasos de asedio fluvial.
+          </div>
+          <div class="feat-cell">
+            <b>⚙️ MAESTRÍA DEL ACERO</b>
+            Cómo los enanos descuentan equipo rúnico en la Forja de los Gremios.
+          </div>
+          <div class="feat-cell">
+            <b>🐀 INFILTRACIÓN MURINA</b>
+            Los accesos clandestinos de las cloacas que permiten desplegar tropas con Ambush.
+          </div>
+        `
+      },
+      2: {
+        num: 2,
+        meta: "Número 2 (Extraordinaria) • Tras la Batalla en el Bastión Central",
+        price: "DOS PENIQUES",
+        title: "¡LA MASACRE EN LA ENCRUCIJADA Y LA FUGA DE LOKY!",
+        sublead: "COBARDÍA HISTÓRICA TRAS EL CHOQUE EN EL BASTIÓN CENTRAL",
+        lead: "INFORME IMPARCIAL: Las avanzadas de la Casa Sangre Carmesí y del Clan Scutrix colisionaron frontalmente en el arrabal de La Encrucijada de Mordheim. Mientras Lord David decapitó en combate singular a Queek Coleccionista de Cabezas, la audacia de una ametralladora roedora aseguró el edificio clave en los últimos compases. Entretanto, el infame mercenario Loky protagonizó una cobarde huida a lomos de su carromato de mulas.",
+        img: "./assets/portada_edicion_02.jpg",
+        caption: "Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.",
+        pdf: "./assets/El_Heraldo_de_Mordheim_Edicion_02.pdf",
+        text: `
+          <p class="no-indent"><span class="drop-cap">E</span>l terreno de 90x90 cm amaneció anegado bajo una espesa niebla sulfurosa cuando ambas vanguardias entraron en alcance de tiro. Las huestes de la <strong>Casa Sangre Carmesí</strong> iniciaron las hostilidades ejecutando una maniobra envolvente por el flanco este antes de volcar todo su peso sobre el corazón del despliegue rival.</p>
+          <p>El choque alcanzó su clímax marcial cuando el <strong>Señor Vampiro</strong> cargó en solitario contra la escolta enemiga, trabándose en duelo singular con el caudillo <strong>Queek Coleccionista de Cabezas</strong>. La violencia de la acometida selló el destino del líder roedor, cuyo cuerpo fue decapitado de un tajo certero, desmoralizando a los mandos cercanos.</p>
+          <p>No obstante, la respuesta del <strong>Clan Scutrix</strong> demostró la letalidad de su armamento de disformidad. El francotirador <strong>Vasilik Hammster</strong> hostigó las líneas esqueléticas con disparos de precisión, al tiempo que el <strong>Vidente Gris Thanquol</strong> canalizaba los sortilegios de la Rata Cornuda. La dotación de la <strong>amerratadora</strong> barrió a la guardia esquelética, permitiendo a las tropas de choque sprintar por el fango y consolidar el control del Bastión central en el turno cuatro (3-1).</p>
+          <p>Pese a la victoria en las actas para el Clan Scutrix, los cronistas militares destacan una grave anomalía: durante gran parte de la refriega <strong>se omitieron los preceptivos chequeos de Liderazgo al 50%</strong> sobre las unidades roedoras tras la muerte de su jefe. Observadores independientes señalan que un resultado adverso habría provocado la desbandada masiva de medio ejército hacia las cloacas.</p>
+        `,
+        quotes: `
+          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-bottom: 1.5px solid #6b3512; padding-bottom: 4px; margin-bottom: 6px;">
+            🎤 DECLARACIONES EXCLUSIVAS A PIE DE FANGO
+          </div>
+          <div class="quote-speaker-title">🦇 Lord David (Casa Sangre Carmesí):</div>
+          <div class="quote-speaker-text">«El Señor Vampiro cumplió como un coloso decapitando a su líder en combate singular. Pero una ametralladora corre más que un muerto viviente y las trampas de los roedores les dieron el bastión. ¡Sospecho firmemente que Sergio sabía que se nos olvidaban los chequeos de moral! Medio clan habría huido a las cloacas.»</div>
+          <div class="quote-speaker-title">🐀 Caudillo Sergio (Clan Scutrix):</div>
+          <div class="quote-speaker-text">«Ha sido una victoria calculada. El tiro de Vasilik Hammster y la amerratadora hicieron el trabajo sucio. Mis alimañas veteranas... bueno, una fue desintegrada por el Nigromante y la otra salió por patas. ¡Y Queek no ha muerto! Sólo se marchó a una asamblea urgente en los colectores.»</div>
+          <div class="quote-speaker-title">🛡️ General Loky (Javi, Enanos de los Gremios):</div>
+          <div class="quote-speaker-text">«¡No disparéis, no salgo! Mi retirada en el carromato fue una maniobra táctica de preservación de víveres. Estoy en fase de meditación defensiva dentro de mi caparazón de tortuga.»</div>
+        `,
+        features: `
+          <div class="feat-header">EN ESTE NÚMERO</div>
+          <div class="feat-cell">
+            <b>⚔️ LA ENCRUCIJADA</b>
+            Duelo singular de líderes y el sprint agónico de la ametralladora roedora en turno 4.
+          </div>
+          <div class="feat-cell">
+            <b>🐢 EL CAPARAZÓN DE LOKY</b>
+            Tratado sobre técnicas de retiro enano en carromato ante la primera gota de lluvia.
+          </div>
+          <div class="feat-cell">
+            <b>📜 MANUAL DE MORAL</b>
+            Guía práctica para recordar chequeos de liderazgo al 50% a caudillos rata olvidadizos.
+          </div>
+        `
+      }
+    };
+
+    // 6. NPCS LORE DE MORDHEIM
     const NPCS = {
       gunter: {
         name: "Gunter «Tres-Dedos»",
@@ -1474,7 +1785,7 @@
       }
     };
 
-    // 6. CLASE PRINCIPAL WARROOM APP
+    // 7. CLASE PRINCIPAL WARROOM APP
     class WarRoomApp {
       constructor() {
         this.currentUser = null;
@@ -1532,7 +1843,6 @@
             }
           } catch(e) {}
         }
-        // Si no hay sesión, ir a pantalla de Login
         this.showTab('tab-login');
         this.updateUserChip();
       }
@@ -1548,7 +1858,6 @@
         err.style.display = 'none';
 
         if (userId === 'spectator') {
-          // Espectador entra directo sin PIN
           this.currentUser = USERS.spectator;
           localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
           this.onUserLoggedIn();
@@ -1583,7 +1892,6 @@
         document.getElementById("loginPinBox").style.display = 'none';
         this.updateUserChip();
         this.renderAll();
-        // Por defecto activar El Heraldo (Pestaña 1)
         this.showTab('tab-gazette');
       }
 
@@ -1641,7 +1949,6 @@
       }
 
       async loadCloudState() {
-        // Cargar estado de campaña
         if (supabase) {
           try {
             const { data, error } = await supabase
@@ -1658,7 +1965,6 @@
               await supabase.from('kv_store').upsert({ key: STORAGE_KEY, value: this.state });
             }
 
-            // Cargar API Key de Gemini
             const geminiRes = await supabase.from('kv_store').select('value').eq('key', GEMINI_CONFIG_KEY).maybeSingle();
             if (geminiRes.data && geminiRes.data.value && geminiRes.data.value.apiKey) {
               this.geminiApiKey = geminiRes.data.value.apiKey;
@@ -1756,69 +2062,22 @@
         const btn = document.getElementById(`btnGazette${editionNum}`);
         if (btn) btn.classList.add('active');
 
-        const meta = document.getElementById("gazetteIssueMeta");
-        const title = document.getElementById("gazetteLeadTitle");
-        const sublead = document.getElementById("gazetteSublead");
-        const leftCol = document.getElementById("gazetteLeftCol");
-        const img = document.getElementById("gazetteMainImg");
-        const caption = document.getElementById("gazetteImgCaption");
-        const pdfLink = document.getElementById("gazettePdfLink");
+        const ed = GAZETTE_EDITIONS[editionNum];
+        if (!ed) return;
 
-        if (editionNum === 0) {
-          meta.textContent = "Número 0 (Fundacional) • La Caída del Cometa de Dos Colas";
-          title.textContent = "¡EL IMPACTO DEL COMETA Y LA CAÍDA DE MORDHEIM!";
-          sublead.textContent = "LA GRAN METRÓPOLIS CALCINADA POR LA ESTRELLA ERRANTE";
-          img.src = "./assets/portada_edicion_00.jpg";
-          caption.textContent = "Xilografía Fundacional: El cometa de dos colas precipitándose sobre las cúpulas de Mordheim.";
-          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_00.pdf";
-          leftCol.innerHTML = `
-            <p style="margin-bottom: 10px;">
-              <span class="drop-cap">E</span>l juicio anunciado por los astrónomos no fue un símbolo de gloria, sino la tumba de la mayor metrópolis imperial. En la víspera del nuevo milenio, el bólido celeste de mineral oscuro atravesó las nubes y pulverizó los palacios, hundiendo el centro geográfico en un abismo titánico conocido como <strong>El Pozo</strong>.
-            </p>
-            <p style="margin-bottom: 10px;">
-              Una nube de ceniza sulfurosa y vapores mágicos asfixió a miles en sus lechos. De la roca vítrea brotan cristales de <strong>Piedra Bruja (Wyrdstone)</strong>: la manifestación física más letal y codiciada de la magia primigenia.
-            </p>
-            <p>
-              Las puertas de Mordheim han sido clausuradas por mandato marcial, pero las partidas de guerra ya convergen desde todas las fronteras dispuestas a desgarrarse por una sola esquirla de poder primordial.
-            </p>
-          `;
-        } else if (editionNum === 1) {
-          meta.textContent = "Número 1 • Apertura de la Campaña Urbana";
-          title.textContent = "EL DESPERTAR DE LA CIUDAD CONDENADA";
-          sublead.textContent = "TRES HUESTES CONVERGEN HACIA LAS RUINAS";
-          img.src = "./assets/portada_edicion_01.jpg";
-          caption.textContent = "Xilografía de Época: Tres huestes convergiendo en las ruinas de Mordheim.";
-          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_01.pdf";
-          leftCol.innerHTML = `
-            <p style="margin-bottom: 10px;">
-              <span class="drop-cap">L</span>a Ciudad Condenada ha abierto sus fauces. Tras meses de niebla ponzoñosa, los accesos a la metrópolis son disputados con furia sanguinaria. Tres señores de la guerra pugnan por el dominio del empedrado.
-            </p>
-            <p style="margin-bottom: 10px;">
-              Los espías confirman que los <strong>Ratmen del Clan Scutrix</strong> han emergido de las cloacas para fortificarse en los accesos al río, mientras que los <strong>Vampiric Undead de la Casa Sangre Carmesí</strong> profanan los mausoleos de la nobleza con artes nigrománticas.
-            </p>
-            <p>
-              Por su parte, los <strong>Dwarf Guilds de los Hijos del Yunque</strong> han jurado ante sus ancestros que cada caja fuerte enana expoliada será cobrada con sangre y fuego de plomo.
-            </p>
-          `;
-        } else {
-          meta.textContent = "Número 2 (Extraordinaria) • Tras la Batalla en el Bastión Central";
-          title.textContent = "¡LA MASACRE Y LA FUGA DE LOKY!";
-          sublead.textContent = "COBARDÍA HISTÓRICA EN LA ENCRUCIJADA";
-          img.src = "./assets/portada_edicion_02.jpg";
-          caption.textContent = "Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.";
-          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf";
-          leftCol.innerHTML = `
-            <p style="margin-bottom: 10px;">
-              <span class="drop-cap">¡E</span>scándalo en los arrabales de Mordheim! Los mensajeros del Heraldo confirman la masacre en la Encrucijada. Mientras las garras vampíricas de Lord David decapitaban al campeón Queek del Clan Scutrix, el infame mercenario Loky abandonó el frente a todo galope.
-            </p>
-            <p style="margin-bottom: 10px;">
-              A pesar de la cobardía de sus cuadros auxiliares, las ratas lograron asentar su dominio táctico sobre el Bastión Central, consolidando <strong>La Roca</strong> como bastión del Clan Scutrix (3 VP).
-            </p>
-            <p>
-              La hueste no-muerta se ha replegado hacia <strong>Las Criptas de Sylvania</strong> jurando venganza nocturna, mientras los enanos completan sus plegarias y afilan los picos rúnicos para la Ronda 02.
-            </p>
-          `;
-        }
+        document.getElementById("gazetteIssueMeta").textContent = ed.meta;
+        document.getElementById("gazettePriceMeta").textContent = `PRECIO: ${ed.price}`;
+        document.getElementById("gazetteLeadTitle").textContent = ed.title;
+        document.getElementById("gazetteSublead").textContent = ed.sublead;
+        document.getElementById("gazetteLeadSummary").innerHTML = `<strong>INFORME OFICIAL:</strong> ${ed.lead}`;
+        document.getElementById("gazetteLeftCol").innerHTML = ed.text;
+
+        const img = document.getElementById("gazetteMainImg");
+        img.src = ed.img;
+        document.getElementById("gazetteImgCaption").textContent = ed.caption;
+        document.getElementById("gazettePdfLink").href = ed.pdf;
+        document.getElementById("gazetteRightQuotesBox").innerHTML = ed.quotes;
+        document.getElementById("gazetteBottomFeatures").innerHTML = ed.features;
       }
 
       showMission(roundNum) {
@@ -1954,7 +2213,7 @@
         `;
       }
 
-      // 7. PARTES DE GUERRA (AARs)
+      // PARTES DE GUERRA (AARs)
       submitAar(e) {
         e.preventDefault();
         const author = this.currentUser ? this.currentUser.name : "Comandante Anónimo";
@@ -2000,7 +2259,7 @@
         });
       }
 
-      // 8. EL ORÁCULO DEL METAJUEGO
+      // EL ORÁCULO DEL METAJUEGO
       askOraclePreset(type) {
         const input = document.getElementById("oracleQueryInput");
         if (type === 'acciones') input.value = "¿Cuáles son las 4 acciones de activación en Skirmish v3.6.0?";
@@ -2017,7 +2276,6 @@
         if (!query) return;
 
         const feed = document.getElementById("oracleChatFeed");
-        // Bubble del usuario
         const userBubble = document.createElement("div");
         userBubble.className = "chat-bubble user";
         userBubble.innerHTML = `<strong>${this.currentUser ? this.currentUser.name : 'Comandante'}:</strong> ${query}`;
@@ -2025,14 +2283,12 @@
         input.value = "";
         feed.scrollTop = feed.scrollHeight;
 
-        // Bubble de pensando
         const botBubble = document.createElement("div");
         botBubble.className = "chat-bubble bot";
         botBubble.innerHTML = `<em>Consultando los grimorios arcanos...</em>`;
         feed.appendChild(botBubble);
         feed.scrollTop = feed.scrollHeight;
 
-        // Intentar IA si hay clave guardada
         if (this.geminiApiKey) {
           try {
             const prompt = `Eres el Oráculo Arcano de Mordheim para el sistema de juego OnePageRules: Age of Fantasy Skirmish v3.6.0.
@@ -2065,7 +2321,6 @@ Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador:
           }
         }
 
-        // Fallback Base de Conocimiento Local
         setTimeout(() => {
           let ans = "No he hallado un veredicto exacto en los pergaminos inmediatos. Consulta el manual oficial de AoFS v3.6.0 o remite tu duda al Árbitro David en el Panel GM.";
           const q = query.toLowerCase();
@@ -2105,7 +2360,6 @@ Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador:
         this.state.suggestions.unshift(newSug);
         document.getElementById("sugContent").value = "";
 
-        // Guardar en Supabase
         if (supabase) {
           try {
             await supabase.from('kv_store').upsert({ key: SUGGESTIONS_KEY, value: this.state.suggestions });
@@ -2116,7 +2370,7 @@ Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador:
         alert("📜 Sugerencia sellada y remitida al Buzón del Tribunal.");
       }
 
-      // 9. CONTACTO CON EL HERALDO (NPCS & ROLEPLAY)
+      // CONTACTO CON EL HERALDO (NPCS)
       selectNpc(npcKey) {
         this.activeNpcKey = npcKey;
         document.querySelectorAll('.npc-card-btn').forEach(b => b.classList.remove('active'));
@@ -2165,7 +2419,6 @@ Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador:
         feed.appendChild(npcBubble);
         feed.scrollTop = feed.scrollHeight;
 
-        // Si hay clave Gemini, llamar a la IA
         if (this.geminiApiKey) {
           try {
             const fullPrompt = `${npc.systemPrompt}
@@ -2193,7 +2446,6 @@ Responde en perfecto personaje, manteniendo tu tono y referencias a los sucesos 
           }
         }
 
-        // Fallback temático en personaje
         setTimeout(() => {
           let fallback = "";
           if (this.activeNpcKey === 'gunter') {
@@ -2212,7 +2464,7 @@ Responde en perfecto personaje, manteniendo tu tono y referencias a los sucesos 
         }, 300);
       }
 
-      // 10. PANEL GM (DAVID)
+      // PANEL GM (DAVID)
       updateGmRound() {
         const val = parseInt(document.getElementById("gmRoundInput").value, 10);
         if (val > 0) {
