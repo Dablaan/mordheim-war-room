@@ -1380,34 +1380,25 @@
       <!-- ======================================================== -->
       <section class="tab-pane" id="tab-oracle">
         <div class="oracle-layout">
-          <!-- Columna Izquierda: Asistente de Reglas & Metajuego -->
+          <!-- Columna Izquierda: Asistente de Reglas & Metajuego (Consultorio Libre) -->
           <div class="panel-box">
             <h3 style="font-family: var(--font-gothic); font-size: 1.5rem; margin-bottom: 0.4rem;">
-              <i class="fa-solid fa-balance-scale"></i> Consultorio de Reglas &amp; Metajuego
+              <i class="fa-solid fa-balance-scale"></i> Consultorio Arbitral &amp; Metajuego
             </h3>
             <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 0.8rem;">
-              Pregunta cualquier duda sobre <em>Age of Fantasy: Skirmish v3.6.0</em>, creación de bandas con ArmyForge o escenografía 3D disponible.
+              Conversa libremente con el Oráculo sobre cualquier duda de reglas de <em>Age of Fantasy: Skirmish v3.6.0</em>, escenografía disponible, medidas de mesa o metajuego de campaña.
             </p>
 
             <div class="chat-box-feed" id="oracleChatFeed">
               <div class="chat-bubble bot">
-                <strong>Oráculo Arcano:</strong> ¡Saludos, comandante! Estoy versado en las reglas oficiales de AoFS v3.6.0, en el catálogo de escenografía 3MF de nuestra campaña y en el balance de bandas. ¿Qué requieres esclarecer?
+                <strong>Oráculo Arcano:</strong> ¡Saludos, comandante! Soy el custodio de las crónicas y reglas de Mordheim. Pregúntame lo que necesites de forma natural: acciones, chequeos de moral, cobertura, escenografía 3MF o dimensiones de mesa. ¿En qué puedo asistirte?
               </div>
             </div>
 
-            <!-- Accesos rápidos -->
-            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
-              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('acciones')">Acciones v3.6.0</button>
-              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('fatiga')">Fatiga Melé</button>
-              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('moral')">Chequeo 50%</button>
-              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('escenografia')">Escenografía 3D</button>
-              <button class="btn-action" style="font-size: 0.68rem; padding: 0.25rem 0.5rem;" onclick="app.askOraclePreset('armyforge')">ArmyForge Bandas</button>
-            </div>
-
-            <div style="display: flex; gap: 0.5rem;">
-              <input type="text" id="oracleQueryInput" class="form-control" placeholder="Escribe tu consulta arbitral..." onkeyup="if(event.key==='Enter') app.sendOracleQuery()"/>
-              <button class="btn-action" onclick="app.sendOracleQuery()">
-                <i class="fa-solid fa-paper-plane"></i>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+              <input type="text" id="oracleQueryInput" class="form-control" placeholder="Formula cualquier duda sobre reglas, escenografía o campaña..." onkeyup="if(event.key==='Enter') app.sendOracleQuery()"/>
+              <button class="btn-action" onclick="app.sendOracleQuery()" style="display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap;">
+                <i class="fa-solid fa-paper-plane"></i> Consultar
               </button>
             </div>
           </div>
@@ -2024,6 +2015,7 @@
         this.isPanning = false;
         this.panStartX = 0;
         this.panStartY = 0;
+        this.oracleHistory = [];
         this.init();
       }
 
@@ -2622,17 +2614,7 @@
         });
       }
 
-      // EL ORÁCULO DEL METAJUEGO
-      askOraclePreset(type) {
-        const input = document.getElementById("oracleQueryInput");
-        if (type === 'acciones') input.value = "¿Cuáles son las 4 acciones de activación en Skirmish v3.6.0?";
-        if (type === 'fatiga') input.value = "¿Cómo funciona exactamente la fatiga en combate cuerpo a cuerpo?";
-        if (type === 'moral') input.value = "¿Cuándo se chequea pánico al 50% de la banda?";
-        if (type === 'escenografia') input.value = "¿Qué escenografía 3MF tenemos y qué cobertura da?";
-        if (type === 'armyforge') input.value = "¿Cómo configurar la banda en ArmyForge para 300 puntos?";
-        this.sendOracleQuery();
-      }
-
+      // EL ORÁCULO DEL METAJUEGO (CONSULTORIO LIBRE Y CONVERSACIONAL)
       async sendOracleQuery() {
         const input = document.getElementById("oracleQueryInput");
         const query = input.value.trim();
@@ -2641,7 +2623,8 @@
         const feed = document.getElementById("oracleChatFeed");
         const userBubble = document.createElement("div");
         userBubble.className = "chat-bubble user";
-        userBubble.innerHTML = `<strong>${this.currentUser ? this.currentUser.name : 'Comandante'}:</strong> ${query}`;
+        const authorName = this.currentUser ? this.currentUser.name : 'Comandante';
+        userBubble.innerHTML = `<strong>${authorName}:</strong> ${query}`;
         feed.appendChild(userBubble);
         input.value = "";
         feed.scrollTop = feed.scrollHeight;
@@ -2652,29 +2635,68 @@
         feed.appendChild(botBubble);
         feed.scrollTop = feed.scrollHeight;
 
+        // Mantener memoria de conversación de la sesión
+        if (!this.oracleHistory) this.oracleHistory = [];
+        this.oracleHistory.push({
+          role: "user",
+          parts: [{ text: `${authorName}: ${query}` }]
+        });
+
         if (this.geminiApiKey) {
           try {
-            const prompt = `Eres el Oráculo Arcano de Mordheim para el sistema de juego OnePageRules: Age of Fantasy Skirmish v3.6.0.
-Conoces el reglamento oficial:
-- Activación de una acción por turno: Hold (dispara completo), Advance (mueve 6 pulg. y dispara), Rush (mueve 12 pulg.), Charge (mueve 12 pulg. a contacto peana con peana para melé).
-- Fatiga en melé: tras atacar, la unidad queda Fatigada hasta final de ronda (si vuelve a combatir solo impacta a 6s naturales).
-- Moral al 50%: chequear Calidad. Fallo por disparo causa Shaken (acobardada). Fallo en melé tras perder el asalto causa Rout (baja definitiva).
-- Cobertura da +1 a Defensa contra disparos. Trepar vertical hasta 3 pulg. gratis.
-- Escenografía 3MF disponible: Mansión en ruinas (Building 4, 2 plantas), Ruinas Ulvheim (Placas 6 y 17 modulares), Casas derruidas 2 y 3, Muros caídos, Pilas de cajas y barriles (cobertura baja), Bosque tenebroso.
-- Límites de banda: 300 pts en ArmyForge.
-Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador: "${query}"`;
+            const systemPrompt = `Eres el Oráculo Arcano de Mordheim, un árbitro sabio, ecuánime y veterano en wargames de miniaturas para la campaña jugada por David, Sergio y Javi.
+El sistema de juego oficial de la campaña es OnePageRules: Age of Fantasy Skirmish v3.6.0 (AoFS).
+
+Tu labor en este Consultorio es responder y conversar de forma totalmente libre, natural, fluida y amena, tal como un árbitro experimentado charlando con los jugadores en la mesa de juego.
+
+Conocimiento canónico que dominas con exactitud:
+1. REGLAMENTO AoFS v3.6.0:
+   - 4 Acciones al activar una unidad:
+     * Hold: Permanece quieta y realiza disparo completo a rango.
+     * Advance: Mueve hasta 6 pulgadas y puede disparar.
+     * Rush: Mueve hasta 12 pulgadas a toda prisa (sin disparo ni asalto).
+     * Charge: Mueve hasta 12 pulgadas buscando contacto peana con peana para asaltar en melé.
+   - Fatiga en Combate Cuerpo a Cuerpo: Tras resolver sus ataques en un combate, la unidad queda 'Fatigada' durante toda la ronda restante. Si es atacada de nuevo o vuelve a luchar esa ronda, solo impactará con 6s naturales.
+   - Chequeos de Moral al 50%: Se chequea la Calidad (Quality) al caer al 50% o menos de las miniaturas de la banda.
+     * Si falla por daño de proyectiles/magia: Queda 'Shaken' (aturdida/acobardada, no ataca ni mueve voluntariamente).
+     * Si falla tras perder un combate cuerpo a cuerpo: 'Rout' (la miniatura se desbanda y es retirada como baja definitiva).
+   - Cobertura y Terreno: La cobertura otorga +1 a la Defensa contra proyectiles. Cualquier miniatura puede trepar verticalmente hasta 3 pulgadas gratis en su movimiento.
+2. MESAS DE JUEGO DE LA CAMPAÑA:
+   - Casa de David: 90 x 90 cm (entorno urbano denso, pasadizos estrechos, claustrofóbico, criptas).
+   - Casa de Sergio / Javi (Loky): 120 x 120 cm (grandes avenidas, plazas amplias y maniobra exterior).
+3. PUNTOS DE BANDA:
+   - 600 puntos por defecto en ArmyForge (o lo fijado por el Árbitro David en la Orden de Batalla).
+4. ESCENOGRAFÍA 3MF DISPONIBLE:
+   - Mansión Señorial (Building 4, dos plantas, bloquea visión).
+   - Ruinas Ulvheim (Placas 6 y 17 modulares con parapetos y ventanas).
+   - Casas Derruidas 2 y 3 (terreno difícil, cobertura media).
+   - Muros y tapias caídas.
+   - Cajas y barriles (cobertura baja +1 Def).
+   - Bosque tenebroso (-2 pulg. al avance).
+5. BUZÓN DE SUGERENCIAS:
+   - Los jugadores disponen del Buzón de Sugerencias contiguo para registrar peticiones de impresión 3D, reglas de la casa o escenarios nuevos que revisa David como GM.
+
+INSTRUCCIONES DE RESPUESTA:
+- Habla de tú a tú con el comandante de forma natural, amigable, concisa y empática.
+- Razona las jugadas y aclara las dudas como un colega en la mesa de juego.
+- Sin formatos artificiales ni botones prefijados; responde a lo que se te pregunte con total libertad.`;
+
+            const contentsPayload = [
+              { role: "user", parts: [{ text: systemPrompt + "\n\n¡Comencemos el consultorio!" }] },
+              { role: "model", parts: [{ text: "Entendido. Soy el Oráculo Arcano de Mordheim. Responderé a todas vuestras consultas sobre AoFS v3.6.0, mesas y escenografía con total naturalidad y cercanía arbitral." }] },
+              ...this.oracleHistory.slice(-8)
+            ];
 
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-              })
+              body: JSON.stringify({ contents: contentsPayload })
             });
 
             if (resp.ok) {
               const data = await resp.json();
               const reply = data.candidates[0].content.parts[0].text;
+              this.oracleHistory.push({ role: "model", parts: [{ text: reply }] });
               botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${reply.replace(/\n/g, '<br>')}`;
               feed.scrollTop = feed.scrollHeight;
               return;
@@ -2685,21 +2707,24 @@ Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador:
         }
 
         setTimeout(() => {
-          let ans = "No he hallado un veredicto exacto en los pergaminos inmediatos. Consulta el manual oficial de AoFS v3.6.0 o remite tu duda al Árbitro David en el Panel GM.";
+          let ans = "No dispongo de conexión arcana en este instante, pero te aclaro lo fundamental: en AoFS v3.6.0 las activaciones son alternadas, cada miniatura elige entre Hold, Advance (6\"), Rush (12\") o Charge (12\"), la fatiga en melé penaliza a 6s para impactar en ataques subsiguientes, y los chequeos de moral al 50% definen si quedas Shaken o eres baja (Rout). ¡Pregúntame cualquier detalle concreto!";
           const q = query.toLowerCase();
 
-          if (q.includes("accion") || q.includes("hold") || q.includes("rush") || q.includes("charge")) {
-            ans = "<strong>Acciones en AoFS v3.6.0:</strong> Al activar una unidad eliges una acción:<br>• <strong>Hold:</strong> Quieto y dispara.<br>• <strong>Advance:</strong> Mueve 6 pulg. y dispara.<br>• <strong>Rush:</strong> Mueve 12 pulg. (sin disparo ni carga).<br>• <strong>Charge:</strong> Mueve 12 pulg. a contacto peana para combate cuerpo a cuerpo.";
-          } else if (q.includes("fatiga") || q.includes("cac") || q.includes("cuerpo a cuerpo")) {
-            ans = "<strong>Fatiga en Melé:</strong> Tras resolver sus ataques cuerpo a cuerpo, la unidad queda <em>Fatigada</em> hasta el final de la ronda completa. Si vuelve a combatir mientras esté fatigada, solo impactará con 6s naturales.";
-          } else if (q.includes("moral") || q.includes("50") || q.includes("panico") || q.includes("shaken") || q.includes("rout")) {
-            ans = "<strong>Chequeo de Moral al 50%:</strong> Cuando la banda queda al 50% o menos de miniaturas/vida, chequea Calidad:<br>• Fallo por disparo = <strong>Shaken (Acobardada)</strong>: no ataca ni mueve voluntariamente.<br>• Fallo tras perder un combate = <strong>Rout (Huida)</strong>: la miniatura es retirada como baja.";
-          } else if (q.includes("escenografia") || q.includes("3mf") || q.includes("imprimir") || q.includes("terreno")) {
-            ans = "<strong>Escenografía 3MF de Campaña:</strong><br>• <strong>Building 4:</strong> Mansión gótica de 2 plantas. Bloquea línea de visión y da altura.<br>• <strong>Ruinas Ulvheim (Placas 6 y 17):</strong> Muros con ventanas que otorgan +1 a cobertura.<br>• <strong>Cajas y Barriles:</strong> Cobertura baja.<br>• <strong>Bosque:</strong> Terreno difícil (-2 pulg. al avance).";
-          } else if (q.includes("armyforge") || q.includes("lista") || q.includes("puntos") || q.includes("crear")) {
-            ans = "<strong>Creación con ArmyForge:</strong> En la web de OPR ArmyForge selecciona <em>Age of Fantasy: Skirmish</em>. El presupuesto oficial de campaña es de <strong>300 puntos</strong> por banda, con un máximo de 1 Héroe y respetando el coste de equipo rúnico y magia.";
+          if (q.includes("accion") || q.includes("hold") || q.includes("rush") || q.includes("charge") || q.includes("mover")) {
+            ans = "Al activar una miniatura eliges una de estas 4 acciones: <strong>Hold</strong> (disparas quieto), <strong>Advance</strong> (mueves 6 pulg. y puedes disparar), <strong>Rush</strong> (mueves 12 pulg. sin disparar) o <strong>Charge</strong> (mueves 12 pulg. buscando peana con peana para entrar en combate cuerpo a cuerpo).";
+          } else if (q.includes("fatiga") || q.includes("cac") || q.includes("cuerpo a cuerpo") || q.includes("pele")) {
+            ans = "La regla de fatiga es muy sencilla pero clave: una vez que una miniatura lucha en combate cuerpo a cuerpo queda <em>Fatigada</em> hasta el final de esa ronda de juego. Si en esa misma ronda vuelve a combatir, solo impactará con 6s naturales en sus tiradas de ataque.";
+          } else if (q.includes("moral") || q.includes("50") || q.includes("panico") || q.includes("shaken") || q.includes("rout") || q.includes("huir")) {
+            ans = "El chequeo de moral se efectúa cuando tu banda queda reducida al 50% o menos de sus miniaturas originales. Tiras un dado contra tu Calidad (Quality): si fallas por fuego enemigo quedas <strong>Shaken</strong> (aturdida); si fallas habiendo perdido un asalto cuerpo a cuerpo sufres <strong>Rout</strong> (huye despavorida y se retira como baja).";
+          } else if (q.includes("mesa") || q.includes("medida") || q.includes("tamaño") || q.includes("casa")) {
+            ans = "Las medidas pactadas para la campaña son: en <strong>casa de David</strong> jugamos en mesa de <strong>90 x 90 cm</strong> (ideal para escaramuzas urbanas cerradas y criptas), y en <strong>casa de Sergio o Javi (Loky)</strong> jugamos en mesa de <strong>120 x 120 cm</strong> (para avenidas amplias y maniobra).";
+          } else if (q.includes("punto") || q.includes("armyforge") || q.includes("coste") || q.includes("lista")) {
+            ans = "El presupuesto base establecido por el Árbitro David es de <strong>600 puntos</strong> por banda en ArmyForge (AoFS v3.6.0), configurables según los objetivos y la orden de batalla de cada ronda.";
+          } else if (q.includes("escenografia") || q.includes("3mf") || q.includes("imprimir") || q.includes("edificio") || q.includes("ruina")) {
+            ans = "Tenemos en el catálogo 3MF la Mansión Señorial Building 4 (2 plantas, bloquea visión), las Ruinas de Ulvheim placas 6 y 17 (muros con arcos para cobertura +1), casas derruidas, muros caídos, pilas de cajas/barriles y bosque tenebroso. Si queréis imprimir piezas nuevas, dejadlo anotado en el Buzón de la derecha.";
           }
 
+          this.oracleHistory.push({ role: "model", parts: [{ text: ans }] });
           botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${ans}`;
           feed.scrollTop = feed.scrollHeight;
         }, 300);
