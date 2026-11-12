@@ -2265,11 +2265,11 @@
       }
 
       getAvailableModelList() {
-        // Modelos confirmados en la cuenta de David, ordenados por velocidad y disponibilidad
+        // Modelo prioritario directo: Gemini 3.5 Flash (ultrarrápido, estable y sin picos 503)
         return [
-          'gemini-3.8-flash',
           'gemini-3.5-flash',
           'gemini-3.7-flash',
+          'gemini-3.8-flash',
           'gemini-2.5-flash',
           'gemini-flash-latest'
         ];
@@ -2389,7 +2389,7 @@
 
         if (successResult) {
           if (out) {
-            const isBackup = successResult.model !== 'gemini-3.8-flash';
+            const isBackup = successResult.model !== 'gemini-3.5-flash';
             out.innerHTML = `
               <div style="color: #1b4d24; font-weight: 800; font-size: 0.92rem; margin-bottom: 0.3rem;">
                 <i class="fa-solid fa-circle-check"></i> ¡CONEXIÓN CON GOOGLE GEMINI VERIFICADA CON ÉXITO!
@@ -2398,7 +2398,7 @@
                 «${successResult.text}»
               </div>
               <div style="font-size: 0.76rem; color: #1b4d24; font-weight: 700;">
-                ✓ Modelo activo operativo: <strong>${successResult.model}</strong> ${isBackup ? '(Gemini 3.8 tenía pico de saturación temporal en Google; conmutado automáticamente sin interrupciones)' : ''}.
+                ✓ Modelo activo operativo: <strong>${successResult.model}</strong> ${isBackup ? '(Conmutado automáticamente al modelo de respaldo)' : '(Prioritario directo: Gemini 3.5 Flash)'}.
               </div>
               <div style="font-size: 0.72rem; color: var(--ink-dark); margin-top: 0.3rem;">
                 Tanto <strong>5. El Oráculo</strong> como <strong>6. Contacto con el Heraldo</strong> responderán ahora con IA en vivo en tiempo real.
