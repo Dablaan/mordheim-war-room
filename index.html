@@ -786,13 +786,13 @@
             <div id="districtDetailNum" style="font-size: 0.75rem; color: var(--ink-black); font-family: var(--font-title); font-weight: 800;">DISTRITO I</div>
             <div class="district-badge badge-sergio" id="districtDetailBadge">Control: Sergio</div>
           </div>
-          <h3 class="title-gothic" id="districtDetailName" style="font-size: 1.3rem; color: var(--ink-black);">La Puerta del Abismo</h3>
+          <h3 class="title-gothic" id="districtDetailName" style="font-size: 1.3rem; color: var(--ink-black);">La Roca de Sigmar</h3>
           <div class="perk-box">
             <div class="perk-title"><i class="fa-solid fa-scroll"></i> Privilegio Táctico del Distrito:</div>
-            <div class="perk-desc" id="districtDetailPerk">«Vigilancia Exterior: Permite desplegar 1 unidad con Scout.»</div>
+            <div class="perk-desc" id="districtDetailPerk">«Vigilancia Sacra: Permite desplegar 1 unidad con Scout.»</div>
           </div>
           <div style="font-size: 0.9rem; color: var(--ink-muted); font-family: var(--font-body); line-height: 1.45;">
-            <strong style="color: var(--ink-black); font-family: var(--font-title);">Historial de Asedio:</strong> Baluarte reclamado en la Ronda 01. Los vigías del Clan Scutrix patrullan las almenas corroídas con mosquetes y veneno.
+            <strong style="color: var(--ink-black); font-family: var(--font-title);">Historial de Asedio:</strong> Baluarte reclamado en la Ronda 01. Los vigías del Clan Scutrix patrullan los accesos al río con mosquetes y veneno de disformidad.
           </div>
           <!-- CONTROLES GM RÁPIDOS -->
           <div class="gm-control-box" id="districtGmControls">
@@ -955,9 +955,10 @@
     <!-- PESTAÑA 4: HEMEROTECA EL HERALDO (DISEÑO MORDHEIM TOWN CRYER AUTÉNTICO)    -->
     <!-- ========================================================================== -->
     <section class="tab-pane" id="tab-gazette">
-      <div style="display: flex; justify-content: center; gap: 0.6rem; margin-bottom: 1.2rem;">
-        <button class="tab-btn active" id="btnGazette1" onclick="app.showGazette(1)">Edición 01</button>
-        <button class="tab-btn" id="btnGazette2" onclick="app.showGazette(2)">Edición 02 (Extraordinaria)</button>
+      <div style="display: flex; justify-content: center; gap: 0.6rem; margin-bottom: 1.2rem; flex-wrap: wrap;">
+        <button class="tab-btn" id="btnGazette0" onclick="app.showGazette(0)">Edición 00 (Fundacional)</button>
+        <button class="tab-btn" id="btnGazette1" onclick="app.showGazette(1)">Edición 01</button>
+        <button class="tab-btn active" id="btnGazette2" onclick="app.showGazette(2)">Edición 02 (Extraordinaria)</button>
       </div>
 
       <!-- PERIÓDICO RETRO IMPRENTA MORDHEIM -->
@@ -974,7 +975,7 @@
           <div style="display: flex; justify-content: center; margin-bottom: 4px;">
             <div style="padding: 2px 14px; border: 1px solid #3e3428; background: #ecdcb3; box-shadow: inset 0 0 6px rgba(0,0,0,0.1);">
               <span style="font-family: var(--font-gothic); font-size: 13px; font-weight: 900; letter-spacing: 0.35em; color: #241e17; text-transform: uppercase;">
-                K A R - D R A K O R
+                M O R D H E I M
               </span>
             </div>
           </div>
@@ -988,7 +989,7 @@
           <div style="display: flex; align-items: center; justify-content: center; margin-top: -6px; margin-bottom: 8px;">
             <div style="height: 1px; width: 60px; background: #3d3226;"></div>
             <p style="font-family: var(--font-header-title); font-size: 2.2rem; padding: 0 14px; font-style: italic; color: #231d17;">
-              de las Cenizas
+              de Mordheim
             </p>
             <div style="height: 1px; width: 60px; background: #3d3226;"></div>
           </div>
@@ -1324,25 +1325,25 @@
         {
           id: 1,
           numRoman: "I",
-          name: "La Puerta del Abismo",
+          name: "La Roca de Sigmar",
           owner: "sergio",
-          perk: "Vigilancia Exterior: Permite desplegar 1 unidad con la regla Scout en cualquier escenario.",
+          perk: "Vigilancia Sacra: Permite desplegar 1 unidad con la regla Scout en cualquier escenario.",
           x: 70, y: 70,
-          icon: "fa-door-open"
+          icon: "fa-church"
         },
         {
           id: 2,
           numRoman: "II",
-          name: "El Mercado de las Sombras",
+          name: "El Cruce del Degollador",
           owner: "neutral",
-          perk: "Rutas Comerciales: +20 pts de oro al finalizar cada ronda.",
+          perk: "Mercado de Contrabando: La banda recibe +20 coronas de oro al finalizar cada ronda.",
           x: 250, y: 70,
           icon: "fa-coins"
         },
         {
           id: 3,
           numRoman: "III",
-          name: "La Fragua Rúnica",
+          name: "La Forja de los Gremios",
           owner: "neutral",
           perk: "Maestría del Acero: Descuento permanente de 5 pts en cualquier mejora de arma.",
           x: 430, y: 70,
@@ -1351,7 +1352,7 @@
         {
           id: 4,
           numRoman: "IV",
-          name: "Las Catacumbas Reales",
+          name: "Las Criptas de Sylvania",
           owner: "david",
           perk: "Aura de Pavor: Una vez por partida, puedes forzar a una unidad enemiga a repetir un chequeo de moral superado.",
           x: 70, y: 210,
@@ -1360,19 +1361,19 @@
         {
           id: 9,
           numRoman: "IX",
-          name: "El Trono Hendido",
+          name: "El Pozo (The Pit)",
           owner: "neutral",
-          perk: "Dominio Supremo: +2 VP de campaña por ronda que se mantenga bajo control.",
+          perk: "Dominio de la Piedra Bruja: Concede +2 VP de campaña por ronda que se mantenga bajo control.",
           x: 250, y: 210,
-          icon: "fa-crown",
+          icon: "fa-meteor",
           isCentral: true
         },
         {
           id: 5,
           numRoman: "V",
-          name: "El Puente de los Juramentos",
+          name: "El Gran Puente del Río Stir",
           owner: "neutral",
-          perk: "Posición Táctica: Elige automáticamente quién despliega 1º o 2º en sus batallas.",
+          perk: "Paso Estratégico: Elige automáticamente quién despliega 1º o 2º en sus batallas.",
           x: 430, y: 210,
           icon: "fa-archway"
         },
@@ -1381,25 +1382,25 @@
           numRoman: "VI",
           name: "La Torre del Alquimista",
           owner: "neutral",
-          perk: "Viales Restauradores: +1 a tiradas de recuperación de heridas y supervivencia post-batalla.",
+          perk: "Elixires de Disformidad: +1 a tiradas de recuperación de heridas y supervivencia post-batalla.",
           x: 70, y: 350,
           icon: "fa-flask-vial"
         },
         {
           id: 7,
           numRoman: "VII",
-          name: "La Fosa de los Despojos",
+          name: "El Foso de los Escombros",
           owner: "neutral",
-          perk: "Carroñeo Constante: Tira 1D6 tras cada batalla: con 4+ encuentras equipo gratis valorado en 15 pts.",
+          perk: "Carroñeo de Ruinas: Tira 1D6 tras cada batalla: con 4+ encuentras equipo gratis valorado en 15 pts.",
           x: 250, y: 350,
           icon: "fa-box-open"
         },
         {
           id: 8,
           numRoman: "VIII",
-          name: "El Nido del Pozo Negro",
+          name: "El Laberinto de las Cloacas",
           owner: "neutral",
-          perk: "Infiltración: Permite a 1 unidad desplegar mediante la regla Ambush.",
+          perk: "Infiltración Murina: Permite a 1 unidad desplegar mediante la regla Ambush.",
           x: 430, y: 350,
           icon: "fa-spider"
         }
@@ -1547,7 +1548,7 @@
         this.renderDistrictDetails(this.selectedDistrictId);
         this.renderFogOfWar();
         this.renderAarFeed();
-        this.showGazette(1);
+        this.showGazette(2);
       }
 
       renderUserBadge() {
@@ -1841,6 +1842,7 @@
 
       // HEMEROTECA EL HERALDO (TEXTOS E ILUSTRACIONES EXACTAS DE LA CAMPAÑA)
       showGazette(editionNum) {
+        const b0 = document.getElementById("btnGazette0");
         const b1 = document.getElementById("btnGazette1");
         const b2 = document.getElementById("btnGazette2");
         const meta = document.getElementById("gazetteIssueMeta");
@@ -1852,31 +1854,54 @@
         const caption = document.getElementById("gazetteImgCaption");
         const pdfLink = document.getElementById("gazettePdfLink");
 
-        if (editionNum === 1) {
-          b1.classList.add("active");
-          b2.classList.remove("active");
-          meta.innerHTML = `<span>Número 1</span> • <span>Apertura de la Gran Falla</span>`;
-          title.textContent = "EL DESPERTAR DEL COLMILLO DE HIERRO";
-          sublead.textContent = "CUATROCIENTOS AÑOS DE SILENCIO ROTOS";
-          deck.textContent = "Tres partidas de guerra convergen sobre las ruinas de Kar-Drakor ante el llamado de la piedra arcana";
+        if (b0) b0.classList.remove("active");
+        if (b1) b1.classList.remove("active");
+        if (b2) b2.classList.remove("active");
+
+        if (editionNum === 0) {
+          if (b0) b0.classList.add("active");
+          meta.innerHTML = `<span>Número 0 (Fundacional)</span> • <span>La Caída del Cometa de Dos Colas</span>`;
+          title.textContent = "¡EL IMPACTO DEL COMETA Y LA CAÍDA DE MORDHEIM!";
+          sublead.textContent = "LA GRAN METRÓPOLIS CALCINADA POR LA ESTRELLA ERRANTE";
+          deck.textContent = "Una lluvia de fuego cósmico y piedra bruja quiebra las cúpulas. Se decreta la veda imperial";
+          img.src = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_00.png";
+          caption.textContent = "Xilografía Fundacional: El cometa de disformidad pulverizando el corazón de la gran urbe.";
+          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_00.pdf";
+
+          leftCol.innerHTML = `
+            <p style="margin-bottom: 10px;">
+              <span class="drop-cap">E</span>l juicio anunciado por los astrónomos no fue un símbolo de gloria, sino la tumba de la mayor metrópolis imperial. En la víspera del nuevo milenio, el bólido celeste de mineral oscuro atravesó las nubes y pulverizó los palacios, hundiendo el centro geográfico en un abismo titánico conocido como <strong>El Pozo</strong>.
+            </p>
+            <p style="margin-bottom: 10px;">
+              Una nube de ceniza sulfurosa y vapores mágicos asfixió a miles en sus lechos. De la roca vítrea brotan cristales de <strong>Piedra Bruja (Wyrdstone)</strong>: la manifestación física más letal y codiciada de la magia primigenia.
+            </p>
+            <p>
+              Las puertas de Mordheim han sido clausuradas por mandato marcial, pero las partidas de guerra ya convergen desde todas las fronteras dispuestas a desgarrarse por una sola esquirla de poder primordial.
+            </p>
+          `;
+        } else if (editionNum === 1) {
+          if (b1) b1.classList.add("active");
+          meta.innerHTML = `<span>Número 1</span> • <span>Apertura de la Campaña Urbana</span>`;
+          title.textContent = "EL DESPERTAR DE LA CIUDAD CONDENADA";
+          sublead.textContent = "TRES HUESTES CONVERGEN HACIA LAS RUINAS";
+          deck.textContent = "Las partidas de guerra cruzan los muros exteriores disputando cada losa y cada barricada de Mordheim";
           img.src = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_01.png";
-          caption.textContent = "Xilografía: Avanzadillas de la Casa Carmesí y del Clan Scutrix inspeccionando la Puerta del Abismo.";
+          caption.textContent = "Xilografía: Avanzadillas de la Casa Carmesí y del Clan Scutrix inspeccionando los baluartes del río.";
           pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_01.pdf";
 
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
-              <span class="drop-cap">L</span>a fortaleza quebrada de Kar-Drakor ha despertado. Tras cuatro siglos de olvido sepulcral, los portones colosales de la Puerta del Abismo crujieron bajo el influjo del cataclismo. Tres señores de la guerra disputan cada losa de granito enano.
+              <span class="drop-cap">L</span>a Ciudad Condenada ha abierto sus fauces. Tras meses de niebla ponzoñosa, los accesos a la metrópolis son disputados con furia sanguinaria. Tres señores de la guerra pugnan por el dominio del empedrado.
             </p>
             <p style="margin-bottom: 10px;">
-              Los espías de la fortaleza confirman que el <strong>Clan Scutrix</strong> ha movilizado a sus alimañas murinas atraídas por el azufre negro, mientras que la <strong>Casa Sangre Carmesí</strong> ha hecho votos ante los túmulos para profanar el suelo con artes nigrománticas.
+              Los espías confirman que los <strong>Ratmen del Clan Scutrix</strong> han emergido de las cloacas para fortificarse en los accesos al río, mientras que los <strong>Vampiric Undead de la Casa Sangre Carmesí</strong> profanan los mausoleos de la nobleza con artes nigrománticas.
             </p>
             <p>
-              Por su parte, los <strong>Hijos del Yunque</strong> han abierto el Gran Libro de Agravios, jurando que cada piedra ancestral usurpada será pagada con fuego de plomo y gromril bendito. ¡Que los dados rueden y el acero decida el destino de los nueve baluartes!
+              Por su parte, los <strong>Dwarf Guilds de los Hijos del Yunque</strong> han jurado ante sus ancestros que cada caja fuerte enana expoliada será cobrada con sangre y fuego de plomo. ¡Que los dados rueden y el acero decida el destino de los nueve baluartes!
             </p>
           `;
         } else {
-          b2.classList.add("active");
-          b1.classList.remove("active");
+          if (b2) b2.classList.add("active");
           meta.innerHTML = `<span>Número 2 (Extraordinaria)</span> • <span>Tras la Batalla en el Bastión Central</span>`;
           title.textContent = "¡LA MASACRE Y LA FUGA DE LOKY!";
           sublead.textContent = "COBARDÍA HISTÓRICA EN LA ENCRUCIJADA";
@@ -1887,13 +1912,13 @@
 
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
-              <span class="drop-cap">¡E</span>scándalo en los arrabales de Kar-Drakor! Los mensajeros del Heraldo confirman la masacre en la Encrucijada. Mientras las garras vampíricas de Lord David decapitaban al campeón Queek del Clan Scutrix, el infame mercenario Loky abandonó el frente a todo galope.
+              <span class="drop-cap">¡E</span>scándalo en los arrabales de Mordheim! Los mensajeros del Heraldo confirman la masacre en la Encrucijada. Mientras las garras vampíricas de Lord David decapitaban al campeón Queek del Clan Scutrix, el infame mercenario Loky abandonó el frente a todo galope.
             </p>
             <p style="margin-bottom: 10px;">
-              A pesar de la cobardía de sus cuadros auxiliares, las ratas lograron asentar su dominio táctico sobre el Bastión Central, consolidando la <strong>Puerta del Abismo</strong> como bastión del Clan Scutrix (3 VP).
+              A pesar de la cobardía de sus cuadros auxiliares, las ratas lograron asentar su dominio táctico sobre el Bastión Central, consolidando <strong>La Roca</strong> como bastión del Clan Scutrix (3 VP).
             </p>
             <p>
-              La hueste no-muerta se ha replegado hacia las <strong>Catacumbas Reales</strong> jurando venganza nocturna, mientras los enanos completan sus plegarias y afilan los picos rúnicos para la Ronda 02.
+              La hueste no-muerta se ha replegado hacia <strong>Las Criptas de Sylvania</strong> jurando venganza nocturna, mientras los enanos completan sus plegarias y afilan los picos rúnicos para la Ronda 02.
             </p>
           `;
         }
