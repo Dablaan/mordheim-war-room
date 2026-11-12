@@ -2272,7 +2272,7 @@
         }
 
         // Modelos soportados en orden de prioridad
-        const models = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-pro'];
+        const models = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-flash-latest'];
         let lastError = null;
 
         for (const model of models) {
@@ -2347,9 +2347,9 @@
           out.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <em>Enviando ping de prueba a los servidores de Google Gemini...</em>`;
         }
 
-        // Realizar prueba directa con gemini-1.5-flash
+        // Realizar prueba directa con gemini-3.8-flash
         try {
-          const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+          const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${key}`;
           const resp = await fetch(testUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2370,11 +2370,11 @@
                   «${reply.trim()}»
                 </div>
                 <div style="font-size: 0.74rem; color: #1b4d24; font-weight: 700;">
-                  ✓ Modelo activo: <strong>gemini-1.5-flash</strong>. Los chats del Oráculo y Contacto con el Heraldo responderán ahora con IA real en vivo.
+                  ✓ Modelo activo: <strong>gemini-3.8-flash</strong>. Los chats del Oráculo y Contacto con el Heraldo responderán ahora con IA real en vivo.
                 </div>
               `;
             }
-            if (status) status.innerHTML = "✅ IA Conectada y Verificada (gemini-1.5-flash)";
+            if (status) status.innerHTML = "✅ IA Conectada y Verificada (gemini-3.8-flash)";
             return;
           }
 
