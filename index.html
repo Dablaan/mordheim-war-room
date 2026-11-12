@@ -1457,60 +1457,47 @@
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--ink-black); padding-bottom: 0.5rem; margin-bottom: 0.8rem;">
             <div>
               <h3 style="font-family: var(--font-gothic); font-size: 1.8rem; margin: 0;">
-                <i class="fa-solid fa-comments"></i> Las Voces de la Ciudad Condenada
+                <i class="fa-solid fa-comments"></i> Contacto con el Heraldo: Las Calles de Mordheim
               </h3>
               <p style="font-size: 0.8rem; color: var(--ink-muted);">
-                Interactúa con los supervivientes, fanáticos y granujas que merodean por Mordheim.
+                Conversación libre con los habitantes de la ciudad. Cada jornada te atiende un testigo o informante distinto para mantener la coherencia narrativa.
               </p>
             </div>
           </div>
 
-          <!-- Selector de Personajes -->
-          <div class="npc-selector-bar">
-            <button class="npc-card-btn active" id="btnNpcGunter" onclick="app.selectNpc('gunter')">
-              <span>🍺</span> Gunter «Tres-Dedos» (Tabernero)
-            </button>
-            <button class="npc-card-btn" id="btnNpcLothar" onclick="app.selectNpc('lothar')">
-              <span>🕯️</span> Padre Lothar (Flagelante)
-            </button>
-            <button class="npc-card-btn" id="btnNpcSteinhardt" onclick="app.selectNpc('steinhardt')">
-              <span>📜</span> Burgomaestre Von Steinhardt
-            </button>
-            <button class="npc-card-btn" id="btnNpcLoky" onclick="app.selectNpc('loky')">
-              <span>🗡️</span> Loky el Desertor (Fugitivo R01)
-            </button>
-            <button class="npc-card-btn" id="btnNpcCronista" onclick="app.selectNpc('cronista')">
-              <span>✒️</span> El Cronista Mayor
-            </button>
-          </div>
-
-          <!-- Perfil del Personaje Activo -->
-          <div style="background: #faf4e6; border: 1.5px solid var(--ink-black); padding: 0.75rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.8rem;">
-            <span id="activeNpcAvatar" style="font-size: 2rem;">🍺</span>
-            <div>
-              <div id="activeNpcName" style="font-family: var(--font-title); font-weight: 800; font-size: 0.95rem; color: var(--ink-black);">Gunter «Tres-Dedos»</div>
-              <div id="activeNpcDesc" style="font-size: 0.8rem; color: var(--ink-muted); font-style: italic;">Tuerto, desdentado y con un delantal sucio. Conoce todos los chismes de los arrabales.</div>
+          <!-- Encabezado del Personaje de la Jornada -->
+          <div style="background: #faf4e6; border: 2px solid var(--ink-black); padding: 0.85rem 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 1rem; box-shadow: 2px 2px 0 rgba(0,0,0,0.1);">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: #ede1c7; border: 2px solid var(--line-sepia); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;" id="activeNpcAvatar">
+              🍺
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.2rem;">
+                <span id="activeNpcName" style="font-family: var(--font-title); font-weight: 800; font-size: 1.05rem; color: var(--ink-black);">Gunter «Tres-Dedos»</span>
+                <span id="npcDayTag" style="font-size: 0.68rem; font-weight: 800; font-family: var(--font-title); background: #ede1c7; border: 1px solid var(--line-sepia); padding: 0.15rem 0.5rem; text-transform: uppercase; color: var(--faction-david);">
+                  INFORMADOR DE HOY
+                </span>
+              </div>
+              <div id="activeNpcDesc" style="font-size: 0.82rem; color: var(--ink-muted); font-style: italic; line-height: 1.35;">
+                Tuerto, desdentado y con un delantal sucio. Conoce todos los chismes de los arrabales.
+              </div>
             </div>
           </div>
 
           <!-- Feed del Chat con el Personaje -->
-          <div class="chat-box-feed" id="roleplayChatFeed" style="height: 340px;">
+          <div class="chat-box-feed" id="roleplayChatFeed" style="height: 360px;">
             <!-- Inyectado por JS -->
           </div>
 
-          <!-- Entrada de Mensaje -->
-          <div style="display: flex; gap: 0.5rem;">
-            <input type="text" id="roleplayInput" class="form-control" placeholder="Escribe tu réplica o pregunta al personaje..." onkeyup="if(event.key==='Enter') app.sendRoleplayMessage()"/>
-            <button class="btn-action" onclick="app.sendRoleplayMessage()">
-              <i class="fa-solid fa-paper-plane"></i> Hablar
+          <!-- Entrada Libre de Mensaje -->
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+            <input type="text" id="roleplayInput" class="form-control" placeholder="Escribe tu mensaje o pregunta a las calles de Mordheim..." onkeyup="if(event.key==='Enter') app.sendRoleplayMessage()"/>
+            <button class="btn-action" onclick="app.sendRoleplayMessage()" style="display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap;">
+              <i class="fa-solid fa-paper-plane"></i> Enviar Mensaje
             </button>
           </div>
         </div>
       </section>
 
-      <!-- ======================================================== -->
-      <!-- PESTAÑA 7: PANEL GM DE DAVID (FOLIO 7)                   -->
-      <!-- ======================================================== -->
       <section class="tab-pane" id="tab-gm">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
           <!-- Ajustes de Campaña -->
@@ -1978,7 +1965,8 @@
         this.currentUser = null;
         this.selectedDistrictId = 1;
         this.currentMissionId = 2;
-        this.activeNpcKey = 'gunter';
+        this.activeNpcKey = this.getDayNpcKey();
+        this.roleplayHistory = [];
         this.geminiApiKey = '';
         this.state = {
           round: 2,
@@ -2759,20 +2747,67 @@ INSTRUCCIONES DE RESPUESTA:
       }
 
       // CONTACTO CON EL HERALDO (NPCS)
-      selectNpc(npcKey) {
-        this.activeNpcKey = npcKey;
-        document.querySelectorAll('.npc-card-btn').forEach(b => b.classList.remove('active'));
-        const btn = document.getElementById(`btnNpc${npcKey.charAt(0).toUpperCase() + npcKey.slice(1)}`);
-        if (btn) btn.classList.add('active');
+      getDayNpcKey() {
+        const day = new Date().getDay(); // 0: Dom, 1: Lun, 2: Mar, 3: Mie, 4: Jue, 5: Vie, 6: Sab
+        const schedule = [
+          'lothar',     // Domingo (Día del Señor Sigmar, flagelante en las ruinas)
+          'cronista',   // Lunes (El Cronista de El Heraldo y los anales)
+          'gunter',     // Martes (Gunter y la cerveza en El Cerdo Degollado)
+          'loky',       // Miércoles (Loky el desertor y sus trapicheos)
+          'steinhardt', // Jueves (El Burgomaestre y las actas imperiales)
+          'gunter',     // Viernes (Noche de taberna y conspiraciones)
+          'loky'        // Sábado (Maniobras furtivas de fin de semana)
+        ];
+        return schedule[day] || 'gunter';
+      }
 
-        const npc = NPCS[npcKey];
+      getDayNpcLabel() {
+        const days = [
+          "DOMINGO DE PURGA • PADRE LOTHAR",
+          "LUNES EDITORIAL • EL CRONISTA",
+          "MARTES DE TABERNA • GUNTER",
+          "MIÉRCOLES DEL BRIBÓN • LOKY",
+          "JUEVES DE AUDIENCIA • BURGOMAESTRE",
+          "VIERNES DE RUMORES • GUNTER",
+          "SÁBADO DE INCURSIÓN • LOKY"
+        ];
+        return days[new Date().getDay()] || "INFORMADOR DE HOY";
+      }
+
+      detectNpcFromQuery(query) {
+        const q = query.toLowerCase();
+        // Si la pregunta va dirigida expresamente a un personaje o a su tema específico:
+        if (q.includes("loky") || q.includes("desert") || q.includes("mula") || q.includes("huida") || q.includes("fuga") || q.includes("bribon")) {
+          return 'loky';
+        }
+        if (q.includes("lothar") || q.includes("padre") || q.includes("cura") || q.includes("flagelan") || q.includes("sigmar") || q.includes("herej") || q.includes("penitenc") || q.includes("pecad") || q.includes("purga")) {
+          return 'lothar';
+        }
+        if (q.includes("burgomaestre") || q.includes("steinhardt") || q.includes("magistrado") || q.includes("alcalde") || q.includes("catastro") || q.includes("fiscal") || q.includes("ley") || q.includes("registro")) {
+          return 'steinhardt';
+        }
+        if (q.includes("cronista") || q.includes("periodico") || q.includes("heraldo") || q.includes("edicion") || q.includes("prensa") || q.includes("noticia") || q.includes("redactor")) {
+          return 'cronista';
+        }
+        if (q.includes("gunter") || q.includes("taberna") || q.includes("cerveza") || q.includes("trago") || q.includes("tabernero") || q.includes("pinta") || q.includes("degollado")) {
+          return 'gunter';
+        }
+        // Si no se pide un personaje en particular, se mantiene el personaje activo/del día
+        return this.activeNpcKey;
+      }
+
+      updateRoleplayHeader() {
+        const npc = NPCS[this.activeNpcKey];
         if (!npc) return;
+        const avatar = document.getElementById("activeNpcAvatar");
+        const name = document.getElementById("activeNpcName");
+        const desc = document.getElementById("activeNpcDesc");
+        const tag = document.getElementById("npcDayTag");
 
-        document.getElementById("activeNpcAvatar").textContent = npc.avatar;
-        document.getElementById("activeNpcName").textContent = npc.name;
-        document.getElementById("activeNpcDesc").textContent = npc.desc;
-
-        this.renderRoleplayGreeting();
+        if (avatar) avatar.textContent = npc.avatar;
+        if (name) name.textContent = npc.name;
+        if (desc) desc.textContent = `${npc.role}. ${npc.desc}`;
+        if (tag) tag.textContent = this.getDayNpcLabel();
       }
 
       renderRoleplayGreeting() {
@@ -2780,11 +2815,18 @@ INSTRUCCIONES DE RESPUESTA:
         if (!feed) return;
         feed.innerHTML = "";
 
+        this.updateRoleplayHeader();
+
         const npc = NPCS[this.activeNpcKey];
         const bubble = document.createElement("div");
         bubble.className = "chat-bubble npc";
         bubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${npc.greeting}`;
         feed.appendChild(bubble);
+
+        // Iniciar historial de la sesión
+        this.roleplayHistory = [
+          { role: "model", parts: [{ text: `${npc.name}: ${npc.greeting}` }] }
+        ];
       }
 
       async sendRoleplayMessage() {
@@ -2795,10 +2837,26 @@ INSTRUCCIONES DE RESPUESTA:
         const feed = document.getElementById("roleplayChatFeed");
         const userBubble = document.createElement("div");
         userBubble.className = "chat-bubble user";
-        userBubble.innerHTML = `<strong>${this.currentUser ? this.currentUser.name : 'Tú'}:</strong> ${msg}`;
+        const senderName = this.currentUser ? this.currentUser.name : 'Tú';
+        userBubble.innerHTML = `<strong>${senderName}:</strong> ${msg}`;
         feed.appendChild(userBubble);
         input.value = "";
         feed.scrollTop = feed.scrollHeight;
+
+        // Comprobar si la pregunta hace que intervenga un personaje específico
+        const targetNpcKey = this.detectNpcFromQuery(msg);
+        let npcChanged = false;
+        if (targetNpcKey !== this.activeNpcKey) {
+          this.activeNpcKey = targetNpcKey;
+          this.updateRoleplayHeader();
+          npcChanged = true;
+
+          const transitionNotice = document.createElement("div");
+          transitionNotice.style = "text-align: center; font-size: 0.75rem; color: var(--ink-muted); font-style: italic; margin: 0.5rem 0; padding: 0.3rem; background: #ede1c7; border: 1px dashed var(--line-sepia);";
+          const newNpc = NPCS[this.activeNpcKey];
+          transitionNotice.innerHTML = `✦ ${newNpc.avatar} <strong>${newNpc.name}</strong> acude a tu llamada e interviene en la conversación... ✦`;
+          feed.appendChild(transitionNotice);
+        }
 
         const npc = NPCS[this.activeNpcKey];
         const npcBubble = document.createElement("div");
@@ -2807,24 +2865,35 @@ INSTRUCCIONES DE RESPUESTA:
         feed.appendChild(npcBubble);
         feed.scrollTop = feed.scrollHeight;
 
+        if (!this.roleplayHistory) this.roleplayHistory = [];
+        this.roleplayHistory.push({
+          role: "user",
+          parts: [{ text: `${senderName}: ${msg}` }]
+        });
+
         if (this.geminiApiKey) {
           try {
-            const fullPrompt = `${npc.systemPrompt}
-Estás hablando con: ${this.currentUser ? this.currentUser.name : 'un comandante forastero'}.
-Mensaje que te acaba de decir: "${msg}".
-Responde en perfecto personaje, manteniendo tu tono y referencias a los sucesos de Mordheim y la fuga de Loky.`;
+            const systemPrompt = `${npc.systemPrompt}
+Estás en una conversación libre, continua e inmersiva con ${senderName} en las ruinas de Mordheim.
+Mantén de forma estricta y genuina tu personalidad, vocabulario, modismos, tics (si eres borracho hipo *hic*, si eres sacerdote fervor y penitencia, si eres Loky sarcasmo y defensa de tu huida táctica, si eres magistrado burocracia imperial, si eres cronista prosa histórica).
+No salgas jamás del personaje ni uses fórmulas genéricas de IA. Responde de forma viva, natural y reactiva a lo que te dicen.`;
+
+            const contentsPayload = [
+              { role: "user", parts: [{ text: systemPrompt + "\n\n¡Comienza el diálogo en Mordheim!" }] },
+              { role: "model", parts: [{ text: `Entendido. Hablo como ${npc.name}: "${npc.greeting}"` }] },
+              ...this.roleplayHistory.slice(-8)
+            ];
 
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: fullPrompt }] }]
-              })
+              body: JSON.stringify({ contents: contentsPayload })
             });
 
             if (resp.ok) {
               const data = await resp.json();
               const reply = data.candidates[0].content.parts[0].text;
+              this.roleplayHistory.push({ role: "model", parts: [{ text: reply }] });
               npcBubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${reply.replace(/\n/g, '<br>')}`;
               feed.scrollTop = feed.scrollHeight;
               return;
@@ -2847,6 +2916,7 @@ Responde en perfecto personaje, manteniendo tu tono y referencias a los sucesos 
           } else {
             fallback = "Las crónicas registrarán vuestras palabras, capitán. En las ruinas de Mordheim cada paso se paga con sangre y cada esquirla de piedra bruja forja una leyenda o una tumba anónima.";
           }
+          this.roleplayHistory.push({ role: "model", parts: [{ text: fallback }] });
           npcBubble.innerHTML = `<strong>${npc.avatar} ${npc.name}:</strong> ${fallback}`;
           feed.scrollTop = feed.scrollHeight;
         }, 300);
