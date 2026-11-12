@@ -957,6 +957,77 @@
     .sync-status { display: flex; align-items: center; gap: 0.4rem; font-weight: 800; }
     .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #2b8a3e; box-shadow: 0 0 5px #2b8a3e; }
     .sync-dot.offline { background: #d97706; box-shadow: none; }
+  
+    /* BLINDAJE ESTRICTO DE ACCESO (GATE OVERLAY) */
+    .login-gate-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999999;
+      background: radial-gradient(circle at center, #2e241b 0%, #0d0a08 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .login-gate-modal {
+      width: 100%;
+      max-width: 620px;
+      border: 3.5px double var(--ink-black);
+      background: #faf4e6;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 6px 6px 0 var(--ink-black);
+      text-align: center;
+    }
+    .lore-chapter-box {
+      background: #faf4e6;
+      border: 2px solid var(--ink-black);
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+    }
+    .lore-chapter-title {
+      font-family: var(--font-gothic);
+      font-size: 1.45rem;
+      color: var(--faction-david);
+      border-bottom: 1.5px solid var(--line-sepia);
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .lore-p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--ink-dark);
+      margin-bottom: 0.8rem;
+      text-align: justify;
+    }
+    .npc-contact-chip {
+      background: #ede1c7;
+      border: 1.5px solid var(--line-sepia);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.78rem;
+      font-family: var(--font-title);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+    .npc-contact-chip:hover {
+      background: #dfceaa;
+      border-color: var(--ink-black);
+      transform: translateY(-1px);
+    }
+    .npc-contact-chip.active {
+      background: var(--faction-david);
+      color: #fff;
+      border-color: var(--ink-black);
+    }
+
   </style>
 </head>
 <body>
@@ -1019,7 +1090,7 @@
         <i class="fa-solid fa-balance-scale"></i> 5. El Oráculo
       </button>
       <button class="tab-btn" data-tab="tab-roleplay">
-        <i class="fa-solid fa-comments"></i> 6. Contacto con el Heraldo
+        <i class="fa-solid fa-book-skull"></i> 6. Lore & Bajos Fondos
       </button>
       <button class="tab-btn gm-only" data-tab="tab-gm" id="tabGmBtn">
         <i class="fa-solid fa-crown"></i> 7. Panel GM
@@ -1027,66 +1098,6 @@
     </nav>
 
     <main class="war-main">
-
-      <!-- ======================================================== -->
-      <!-- PESTAÑA 0: LOGIN DE ENTRADA (GUARDIA DE MORDHEIM)       -->
-      <!-- ======================================================== -->
-      <section class="tab-pane" id="tab-login">
-        <div class="login-container">
-          <div class="login-crest"><i class="fa-solid fa-shield-halved"></i></div>
-          <h2 class="login-title">Puesto de Control de la Guardia</h2>
-          <p class="login-subtitle">Selecciona tu credencial e introduce tu clave de acceso secreta</p>
-
-          <div class="login-grid">
-            <!-- David -->
-            <div class="login-user-card" data-user="david" onclick="app.selectLoginUser('david', this)">
-              <span class="login-avatar">🧛</span>
-              <div>
-                <div class="login-card-title">David (Árbitro GM)</div>
-                <div class="login-card-desc">Lord Carmesí • Acceso Privado con PIN</div>
-              </div>
-            </div>
-            <!-- Sergio -->
-            <div class="login-user-card" data-user="sergio" onclick="app.selectLoginUser('sergio', this)">
-              <span class="login-avatar">🐀</span>
-              <div>
-                <div class="login-card-title">Sergio</div>
-                <div class="login-card-desc">Señor del Clan Scutrix • Acceso Privado con PIN</div>
-              </div>
-            </div>
-            <!-- Javi -->
-            <div class="login-user-card" data-user="javi" onclick="app.selectLoginUser('javi', this)">
-              <span class="login-avatar">⚒️</span>
-              <div>
-                <div class="login-card-title">Javi</div>
-                <div class="login-card-desc">Patriarca Hijos del Yunque • Acceso Privado con PIN</div>
-              </div>
-            </div>
-            <!-- Espectador -->
-            <div class="login-user-card" data-user="spectator" onclick="app.selectLoginUser('spectator', this)">
-              <span class="login-avatar">👁️</span>
-              <div>
-                <div class="login-card-title">Espectador Neutral</div>
-                <div class="login-card-desc">Acceso libre de visitante (Solo lectura)</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cuadro de PIN -->
-          <div class="login-pin-box" id="loginPinBox">
-            <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.85rem;" id="loginPinPrompt">Introduce tu PIN</div>
-            <input type="password" id="loginPinInput" class="login-pin-input" maxlength="4" placeholder="****" onkeyup="if(event.key==='Enter') app.submitPin()"/>
-            <div>
-              <button class="btn-action" onclick="app.submitPin()" style="padding: 0.5rem 1.4rem;">
-                <i class="fa-solid fa-key"></i> Entrar a la Sala
-              </button>
-            </div>
-            <div id="loginPinError" style="font-size: 0.76rem; color: var(--faction-david); font-weight: 800; margin-top: 0.5rem; display: none;">
-              PIN incorrecto. Consulta con el Árbitro.
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- ======================================================== -->
       <!-- PESTAÑA 1: EL HERALDO DE MORDHEIM (MASTHEAD RESTAURADA) -->
@@ -1152,12 +1163,7 @@
                 </p>
               </div>
 
-              <!-- Enlace Oficial al PDF Compilado -->
-              <div style="text-align: center; margin-top: 10px;">
-                <a id="gazettePdfLink" href="./assets/El_Heraldo_de_Mordheim_Edicion_02.pdf" target="_blank" class="btn-action">
-                  <i class="fa-solid fa-file-pdf"></i> Abrir Edición Completa en PDF
-                </a>
-              </div>
+
 
               <!-- Caja de Declaraciones / Avisos -->
               <div id="gazetteRightQuotesBox" class="box-press-quotes">
@@ -1246,7 +1252,47 @@
             </div>
           </div>
 
-          <!-- Columna Derecha: Órdenes Secretas (Niebla de Guerra) -->
+          
+        <!-- VALIDADOR Y MAQUETADOR DE LISTAS DE ARMY FORGE CON IA -->
+        <div class="panel-box" style="margin-top: 1.4rem; border: 2.5px solid var(--ink-black); background: #faf4e6;">
+          <div style="background: #2a221a; color: #ede1c7; padding: 0.65rem 0.9rem; margin: -1.2rem -1.2rem 1.1rem -1.2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <h3 style="font-family: var(--font-gothic); font-size: 1.45rem; margin: 0; color: #ede1c7;">
+              <i class="fa-solid fa-scroll"></i> Validador &amp; Códice de Banda (Army Forge &rarr; Mordheim)
+            </h3>
+            <span style="font-size: 0.72rem; font-family: var(--font-title); font-weight: 800; background: var(--faction-david); color: #fff; padding: 0.2rem 0.6rem; border-radius: 2px;">
+              LÍMITE: 600 PTS • AOF: SKIRMISH v3.6.0
+            </span>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--ink-dark); margin-bottom: 0.8rem; line-height: 1.45;">
+            Pega aquí el texto exportado de tu lista desde <strong>Army Forge (OnePageRules)</strong>. El Gran Escriba de Mordheim (IA) comprobará los puntos, la legalidad de los héroes y el equipo, transcribiéndola a un <strong>Códice Iluminado</strong> listo para el fragor de la batalla.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <textarea id="armyForgeInput" rows="5" class="form-control" style="font-family: monospace; font-size: 0.82rem;" placeholder="Pega aquí el texto exportado de Army Forge... (Ejemplo: ++ Vampiric Undead [AOF: Skirmish 600pts] ++ ...)"></textarea>
+            
+            <div style="display: flex; gap: 0.6rem; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button class="btn-action" onclick="app.validateAndFormatArmyList()" id="btnValidateArmy" style="background: var(--faction-david); color: #fff; font-weight: 800; padding: 0.55rem 1.3rem;">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Validar &amp; Transcribir Banda con IA
+                </button>
+                <button class="btn-action" onclick="app.loadArmyForgeSample()" style="background: #ede1c7; color: var(--ink-black); font-size: 0.76rem; padding: 0.55rem 0.8rem;">
+                  <i class="fa-solid fa-file-lines"></i> Cargar Ejemplo de Banda
+                </button>
+              </div>
+              <span style="font-size: 0.74rem; color: var(--ink-muted); font-style: italic;">
+                ⚡ Procesamiento instantáneo en &lt; 0.8s con Gemini 3.5 Flash Lite
+              </span>
+            </div>
+          </div>
+
+          <!-- Contenedor del Códice Validado -->
+          <div id="armyForgeResultBox" style="display: none; margin-top: 1.2rem; border-top: 1.5px dashed var(--line-sepia); padding-top: 1rem;">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+<!-- Columna Derecha: Órdenes Secretas (Niebla de Guerra) -->
           <div>
             <div class="confidential-seal">
               <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.82rem; color: var(--faction-david); margin-bottom: 0.4rem;">
@@ -1468,20 +1514,153 @@
       <!-- ======================================================== -->
       <!-- PESTAÑA 6: CONTACTO CON EL HERALDO (NPCS & ROLEPLAY)     -->
       <!-- ======================================================== -->
+            <!-- ======================================================== -->
+      <!-- PESTAÑA 6: LORE COMPLETO & BAJOS FONDOS DE MORDHEIM       -->
+      <!-- ======================================================== -->
       <section class="tab-pane" id="tab-roleplay">
-        <div class="panel-box">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--ink-black); padding-bottom: 0.5rem; margin-bottom: 0.8rem;">
+        <!-- Selector de Sub-vista: Lore vs Contactos -->
+        <div class="herald-nav" style="margin-bottom: 1.2rem;">
+          <button class="btn-action active" id="btnSubLoreArchive" onclick="app.switchLoreView('archive')">
+            <i class="fa-solid fa-book-skull"></i> 📖 Archivo de la Ciudad Condenada (Lore Completo)
+          </button>
+          <button class="btn-action" id="btnSubLoreContacts" onclick="app.switchLoreView('contacts')">
+            <i class="fa-solid fa-comments"></i> 🕵️ Bajos Fondos: Red de Contactos (IA en Vivo)
+          </button>
+        </div>
+
+        <!-- VISTA 1: ARCHIVO Y LORE COMPLETO -->
+        <div id="loreArchiveView" class="panel-box">
+          <div style="border-bottom: 2.5px solid var(--ink-black); padding-bottom: 0.6rem; margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+              <h2 style="font-family: var(--font-gothic); font-size: 2.2rem; margin: 0; color: var(--ink-black);">
+                Crónicas de la Ciudad Condenada
+              </h2>
+              <div style="font-family: var(--font-title); font-size: 0.8rem; color: var(--faction-david); font-weight: 800; text-transform: uppercase;">
+                Compendio Histórico, Facciones, Geografía y Piedra Bruja
+              </div>
+            </div>
+            <span style="font-family: var(--font-title); font-size: 0.72rem; background: #ede1c7; border: 1.5px solid var(--line-sepia); padding: 0.2rem 0.6rem; font-weight: 800;">
+              AÑO IMPERIAL 1599
+            </span>
+          </div>
+
+          <!-- Capítulo I: La Caída del Cometa -->
+          <div class="lore-chapter-box">
+            <div class="lore-chapter-title">
+              <span>☄️ Capítulo I: La Noche del Fuego Negro y la Caída de Mordheim</span>
+            </div>
+            <p class="lore-p">
+              En las postrimerías del año 1599 del Calendario Imperial, <strong>Mordheim</strong> no era una tumba silenciosa sino la metrópolis más fastuosa y orgullosa de Ostermark. Sus mercaderes comerciaban con sedas de Catai y armas de Nuln, mientras sus gobernantes rivalizaban con la mismísima Altdorf en banquetes desmedidos. Sin embargo, bajo la opulencia florecía la corrupción moral, la codicia y el olvido de los dioses ancestrales.
+            </p>
+            <p class="lore-p">
+              Los astrónomos imperiales divisaron en el firmamento el <strong>Cometa de Dos Colas</strong>, el antiguo emblema sagrado de Sigmar. Fanáticos y clérigos anunciaron la llegada del nuevo milenio como una era dorada, congregando a decenas de miles de almas en las grandes avenidas. Pero el augurio resultó ser la espada de la cólera divina: a medianoche, el astro errante rasgó la bóveda celeste y se estrelló contra el corazón palaciego de la ciudad.
+            </p>
+            <p class="lore-p">
+              La detonación calcinó distritos enteros en una fracción de segundo. El río Stir se evaporó en una niebla sulfurosa y en el epicentro quedó abierta una sima abrasada hasta las entrañas de la tierra: <strong>El Pozo (The Pit)</strong>. Mordheim murió aquella noche para renacer como la <em>Ciudad de los Condenados</em>.
+            </p>
+          </div>
+
+          <!-- Capítulo II: La Piedra Bruja -->
+          <div class="lore-chapter-box">
+            <div class="lore-chapter-title">
+              <span>💎 Capítulo II: La Piedra Bruja (Wyrdstone) — El Oro del Diablo</span>
+            </div>
+            <p class="lore-p">
+              Del lecho calcinado del cráter y de las grietas en las calzadas brotaron extrañas esquirlas de mineral oscuro que irradiaban una pulsación verdosa fosforescente: <strong>Piedra Bruja (Wyrdstone)</strong>. Para el ojo profano es una roca; para los iniciados en las artes arcanas, es la manifestación física más pura y concentrada de la magia del Caos.
+            </p>
+            <p class="lore-p">
+              Su contacto prolongado deforma la carne con mutaciones espantosas y carcome el juicio de los hombres. No obstante, alquimistas de Nuln, nigromantes de Sylvania y los clanes de Skaven pagan fortunas en oro por una sola esquirla: es capaz de transmutar el hierro en oro puro, prolongar la vida artificialmente o desatar hechicerías capaces de doblegar reinos enteros. Así comenzó la implacable fiebre de la Piedra Bruja.
+            </p>
+          </div>
+
+          <!-- Capítulo III: Las Tres Facciones en Conflicto -->
+          <div class="lore-chapter-box">
+            <div class="lore-chapter-title">
+              <span>⚔️ Capítulo III: Las Tres Partidas de Guerra de Kar-Drakor</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+              <!-- David -->
+              <div style="background: #fbf2f2; border: 1.5px solid var(--faction-david); padding: 0.9rem;">
+                <h4 style="font-family: var(--font-title); color: var(--faction-david); margin-top: 0; font-size: 0.95rem; border-bottom: 1px solid var(--faction-david); padding-bottom: 0.3rem;">
+                  🧛 Casa Sangre Carmesí (Lord David)
+                </h4>
+                <p style="font-size: 0.84rem; line-height: 1.45; color: var(--ink-dark); margin: 0;">
+                  Nobles vampíricos y nigromantes exiliados de Sylvania. Consideran a los vivos como simple ganado y avanzan con disciplinadas falanges de esqueletos y zombis que no conocen el miedo ni la fatiga. Su meta: saquear los antiguos mausoleos de la nobleza para desenterrar grimorios arcanos y gobernar las sombras perpetuas.
+                </p>
+              </div>
+
+              <!-- Sergio -->
+              <div style="background: #f1f8f2; border: 1.5px solid var(--faction-sergio); padding: 0.9rem;">
+                <h4 style="font-family: var(--font-title); color: var(--faction-sergio); margin-top: 0; font-size: 0.95rem; border-bottom: 1px solid var(--faction-sergio); padding-bottom: 0.3rem;">
+                  🐀 Clan Scutrix (Señor de la Plaga Sergio)
+                </h4>
+                <p style="font-size: 0.84rem; line-height: 1.45; color: var(--ink-dark); margin: 0;">
+                  Roedores humanoides del Imperio Subterráneo. Su devoción por la Gran Rata Cornuda solo es igualada por su adicción fanática a la piedra bruja, que consumen y refinan en artilugios infernales: mosquetes jezzail, bombas de gas corrosivo y la temida amerratadora. Su doctrina: número, veneno, emboscada y cobardía oportuna.
+                </p>
+              </div>
+
+              <!-- Javi -->
+              <div style="background: #fcf6ed; border: 1.5px solid var(--faction-javi); padding: 0.9rem;">
+                <h4 style="font-family: var(--font-title); color: var(--faction-javi); margin-top: 0; font-size: 0.95rem; border-bottom: 1px solid var(--faction-javi); padding-bottom: 0.3rem;">
+                  ⚒️ Hijos del Yunque (Patriarca Javi / Loky)
+                </h4>
+                <p style="font-size: 0.84rem; line-height: 1.45; color: var(--ink-dark); margin: 0;">
+                  Veteranos de los gremios mineros de las montañas del Fin del Mundo. Jamás olvidan un agravio ni perdonan una deuda de sangre. Sus guerreros marchan protegidos por pesadas armaduras rúnicas de gromril y mosquetes de precisión. Sin embargo, su legendaria rectitud a menudo choca con las triquiñuelas de su infame mercenario Loky y sus carromatos de evasión.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capítulo IV: Los Nueve Distritos y la Supervivencia -->
+          <div class="lore-chapter-box" style="margin-bottom: 0;">
+            <div class="lore-chapter-title">
+              <span>🏛️ Capítulo IV: Anatomía de la Ruina &amp; Códice de Escaramuza</span>
+            </div>
+            <p class="lore-p">
+              Desde las alturas inexpugnables de <strong>La Roca de Sigmar</strong> hasta la podredumbre del <strong>Paso del Río Stir</strong> y las criptas del <strong>Templo de Morr</strong>, cada distrito encierra ventajas tácticas permanentes para la facción que logre fortificarlo.
+            </p>
+            <p class="lore-p">
+              Las batallas se rigen bajo el severo códice de <strong>Age of Fantasy: Skirmish v3.6.0</strong>: partidas a 600 puntos donde cada baja cuenta. Cuando una banda pierde el 50% de sus tropas originales, el pánico se apodera de sus filas y cada guerrero debe chequear Liderazgo para no huir en estampida hacia la niebla.
+            </p>
+          </div>
+        </div>
+
+        <!-- VISTA 2: BAJOS FONDOS & RED DE CONTACTOS (IA) -->
+        <div id="loreContactsView" class="panel-box" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--ink-black); padding-bottom: 0.5rem; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
             <div>
               <h3 style="font-family: var(--font-gothic); font-size: 1.8rem; margin: 0;">
-                <i class="fa-solid fa-comments"></i> Contacto con el Heraldo: Las Calles de Mordheim
+                <i class="fa-solid fa-comments"></i> Red de Contactos &amp; Bajos Fondos
               </h3>
-              <p style="font-size: 0.8rem; color: var(--ink-muted);">
-                Conversación libre con los habitantes de la ciudad. Cada jornada te atiende un testigo o informante distinto para mantener la coherencia narrativa.
+              <p style="font-size: 0.8rem; color: var(--ink-muted); margin: 0.2rem 0 0 0;">
+                Interactúa libremente con informantes, mercaderes de piedra bruja, armeros y mercenarios.
               </p>
             </div>
           </div>
 
-          <!-- Encabezado del Personaje de la Jornada -->
+          <!-- Selector de Personajes de Contacto -->
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.9rem;">
+            <div class="npc-contact-chip active" id="chipNpc_gunter" onclick="app.selectNpcDirect('gunter')">
+              🍺 Gunter (Rumores)
+            </div>
+            <div class="npc-contact-chip" id="chipNpc_elise" onclick="app.selectNpcDirect('elise')">
+              💎 Elbricht (Piedra Bruja)
+            </div>
+            <div class="npc-contact-chip" id="chipNpc_borek" onclick="app.selectNpcDirect('borek')">
+              ⚒️ Borek (Armas)
+            </div>
+            <div class="npc-contact-chip" id="chipNpc_loky" onclick="app.selectNpcDirect('loky')">
+              🗡️ Loky (Fugitivo)
+            </div>
+            <div class="npc-contact-chip" id="chipNpc_lothar" onclick="app.selectNpcDirect('lothar')">
+              🕯️ Padre Lothar (Fanático)
+            </div>
+            <div class="npc-contact-chip" id="chipNpc_cronista" onclick="app.selectNpcDirect('cronista')">
+              ✒️ El Cronista Mayor
+            </div>
+          </div>
+
+          <!-- Encabezado del Personaje Activo -->
           <div style="background: #faf4e6; border: 2px solid var(--ink-black); padding: 0.85rem 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 1rem; box-shadow: 2px 2px 0 rgba(0,0,0,0.1);">
             <div style="width: 52px; height: 52px; border-radius: 50%; background: #ede1c7; border: 2px solid var(--line-sepia); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;" id="activeNpcAvatar">
               🍺
@@ -1490,7 +1669,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.2rem;">
                 <span id="activeNpcName" style="font-family: var(--font-title); font-weight: 800; font-size: 1.05rem; color: var(--ink-black);">Gunter «Tres-Dedos»</span>
                 <span id="npcDayTag" style="font-size: 0.68rem; font-weight: 800; font-family: var(--font-title); background: #ede1c7; border: 1px solid var(--line-sepia); padding: 0.15rem 0.5rem; text-transform: uppercase; color: var(--faction-david);">
-                  INFORMADOR DE HOY
+                  CONTACTO ACTIVO
                 </span>
               </div>
               <div id="activeNpcDesc" style="font-size: 0.82rem; color: var(--ink-muted); font-style: italic; line-height: 1.35;">
@@ -1506,9 +1685,9 @@
 
           <!-- Entrada Libre de Mensaje -->
           <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
-            <input type="text" id="roleplayInput" class="form-control" placeholder="Escribe tu mensaje o pregunta a las calles de Mordheim..." onkeyup="if(event.key==='Enter') app.sendRoleplayMessage()"/>
+            <input type="text" id="roleplayInput" class="form-control" placeholder="Escribe tu mensaje a este personaje de Mordheim..." onkeyup="if(event.key==='Enter') app.sendRoleplayMessage()"/>
             <button class="btn-action" onclick="app.sendRoleplayMessage()" style="display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap;">
-              <i class="fa-solid fa-paper-plane"></i> Enviar Mensaje
+              <i class="fa-solid fa-paper-plane"></i> Enviar
             </button>
           </div>
         </div>
@@ -1970,11 +2149,27 @@
     const NPCS = {
       gunter: {
         name: "Gunter «Tres-Dedos»",
-        role: "Tabernero de Las Rocas",
+        role: "Tabernero de 'El Cerdo Degollado' • Rumores y Soplos",
         avatar: "🍺",
         desc: "Tuerto, desdentado y con un delantal manchado de cerveza y sangre seca. Conoce todos los chismes que se cuecen en los arrabales.",
         systemPrompt: "Eres Gunter 'Tres-Dedos', tabernero borracho y cínico de la taberna 'El Cerdo Degollado' en los arrabales de Mordheim (OPR Skirmish). Hablas con hipo (*hic*), jerga castiza y picaresca medieval, quejándote de que nadie paga la cerveza y vendiendo cotilleos de la fuga de Loky, las ratas de Scutrix y los vampiros. Respuestas sabrosas de 2 a 3 párrafos.",
         greeting: "¡*Hic*! Pasa, forastero... pero si no traes monedas o esquirlas de piedra verde para pagar la pinta de cerveza de nabos, date la vuelta. ¿Qué quieres saber de las ruinas?"
+      },
+      elise: {
+        name: "Elbricht el Usurero",
+        role: "Mercado Negro & Tasador de Piedra Bruja",
+        avatar: "💎",
+        desc: "Comerciante siniestro envuelto en pieles apolilladas. Lleva balanzas de precisión y guantes gruesos de plomo para manipular el mineral sin mutar.",
+        systemPrompt: "Eres Elbricht el Usurero, el principal contrabandista y tasador de Piedra Bruja (Wyrdstone) en los bajos fondos de Mordheim. Eres codicioso, desconfiado y frío como el granito. Conoces al dedillo el precio del gramo de mineral verde, compras reliquias saqueadas a precio de saldo y adviertes de las mutaciones si no se maneja con cuidado. Respuestas comerciales de 2 párrafos.",
+        greeting: "Baja la voz y enséñame lo que llevas en la faltriquera. Si son esquirlas de Piedra Bruja genuinas, tengo oro de sobra... pero si pretendes colarme escoria de río, mis matones te arrojarán al pozo. ¿Vienes a tasar o a comprar?"
+      },
+      borek: {
+        name: "Borek Cabeza-Hierro",
+        role: "Maestro Armero Clandestino & Forja de Pólvora",
+        avatar: "⚒️",
+        desc: "Enano montaraz expulsado de su clan por experimentar con pólvora prohibida. Su barba chamuscada atestigua incontables detonaciones.",
+        systemPrompt: "Eres Borek Cabeza-Hierro, maestro armero enano renegado que opera un taller secreto entre las ruinas. Eres brusco, experto en balística y forja. Sabes exactamente qué arma penetra armadura (AP), cómo funcionan los mosquetes y la munición pesada en Age of Fantasy: Skirmish v3.6.0. Respuestas técnicas y gruñonas de 2 párrafos.",
+        greeting: "¿Traes piezas que templar o buscas plomo del bueno? En estas calles el pellejo te lo salvan un buen filo y un mosquete bien cebado. Dime qué llevas y te diré si perforará las corazas enemigas."
       },
       lothar: {
         name: "Padre Lothar",
@@ -2061,34 +2256,44 @@
       async init() {
         this.setupNavigation();
         this.initMapControls();
+        this.showGazette(2);
+        this.showMission(2);
+        this.renderRoleplayGreeting();
         await this.loadCloudState();
         this.syncDistrictDefinitions();
+        this.loadPlayerRoster();
         this.checkSavedSession();
       }
 
       checkSavedSession() {
         const saved = localStorage.getItem("mordheim_warroom_user");
+        const gate = document.getElementById("loginGateOverlay");
+
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
-            if (USERS[parsed.id]) {
+            if (parsed && parsed.id && USERS[parsed.id] && parsed.id !== 'spectator') {
               this.currentUser = USERS[parsed.id];
+              if (gate) gate.style.display = 'none';
               this.onUserLoggedIn();
               return;
             }
           } catch(e) {}
         }
-        this.showTab('tab-login');
+
+        // Si no hay usuario autorizado autenticado, bloquear pantalla completa con el Gate
+        this.currentUser = null;
+        if (gate) gate.style.display = 'flex';
         this.updateUserChip();
       }
 
       selectLoginUser(userId, el) {
         this.loginSelectedUser = userId;
-        document.querySelectorAll('.login-user-card').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('#loginGateOverlay .login-user-card').forEach(c => c.classList.remove('selected'));
         if (el) {
           el.classList.add('selected');
         } else {
-          const card = document.querySelector(`.login-user-card[data-user="${userId}"]`);
+          const card = document.querySelector(`#loginGateOverlay .login-user-card[data-user="${userId}"]`);
           if (card) card.classList.add('selected');
         }
 
@@ -2097,19 +2302,15 @@
         const err = document.getElementById("loginPinError");
         if (err) err.style.display = 'none';
 
-        if (userId === 'spectator') {
-          this.currentUser = USERS.spectator;
-          localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
-          this.onUserLoggedIn();
-        } else {
-          if (box) box.style.display = 'block';
-          if (prompt) prompt.innerHTML = `Introduce el PIN secreto de <strong>${USERS[userId].name}</strong>:`;
-          const input = document.getElementById("loginPinInput");
-          if (input) {
-            input.value = '';
-            input.placeholder = '****';
-            input.focus();
-          }
+        if (box) box.style.display = 'block';
+        if (prompt && USERS[userId]) {
+          prompt.innerHTML = `Introduce la clave secreta de <strong>${USERS[userId].name}</strong>:`;
+        }
+        const input = document.getElementById("loginPinInput");
+        if (input) {
+          input.value = '';
+          input.placeholder = '****';
+          input.focus();
         }
       }
 
@@ -2136,24 +2337,39 @@
         if (!this.loginSelectedUser) return;
         const input = document.getElementById("loginPinInput");
         const err = document.getElementById("loginPinError");
-        const expected = USERS[this.loginSelectedUser].pin;
+        const val = input ? input.value.trim() : "";
 
-        if (input.value === expected) {
-          err.style.display = 'none';
+        let isMatch = false;
+        if (this.loginSelectedUser === 'david' && val === '1348') isMatch = true;
+        else if (this.loginSelectedUser === 'sergio' && val === '6995') isMatch = true;
+        else if (this.loginSelectedUser === 'javi' && (val === '4091' || val === '7788')) isMatch = true;
+
+        if (isMatch) {
+          if (err) err.style.display = 'none';
           this.currentUser = USERS[this.loginSelectedUser];
           localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
           this.onUserLoggedIn();
         } else {
-          err.style.display = 'block';
-          input.value = '';
-          input.focus();
+          if (err) err.style.display = 'block';
+          if (input) {
+            input.value = '';
+            input.focus();
+          }
         }
       }
 
       onUserLoggedIn() {
-        document.getElementById("loginPinBox").style.display = 'none';
+        const gate = document.getElementById("loginGateOverlay");
+        if (gate) gate.style.display = 'none';
+        const box = document.getElementById("loginPinBox");
+        if (box) box.style.display = 'none';
+
         this.updateUserChip();
         this.renderAll();
+        this.showGazette(2);
+        this.showMission(2);
+        this.renderRoleplayGreeting();
+        this.loadPlayerRoster();
         this.showTab('tab-gazette');
       }
 
@@ -2161,7 +2377,12 @@
         localStorage.removeItem("mordheim_warroom_user");
         this.currentUser = null;
         this.updateUserChip();
-        this.showTab('tab-login');
+        const gate = document.getElementById("loginGateOverlay");
+        if (gate) gate.style.display = 'flex';
+        const box = document.getElementById("loginPinBox");
+        if (box) box.style.display = 'none';
+        const input = document.getElementById("loginPinInput");
+        if (input) input.value = '';
       }
 
       updateUserChip() {
@@ -2434,6 +2655,229 @@
           `;
         }
         if (status) status.innerHTML = "⚠️ Sobrecarga temporal en Google";
+      }
+
+      
+      // SUB-VISTAS DE LORE & BAJOS FONDOS
+      switchLoreView(view) {
+        const arch = document.getElementById("loreArchiveView");
+        const cont = document.getElementById("loreContactsView");
+        const btnArch = document.getElementById("btnSubLoreArchive");
+        const btnCont = document.getElementById("btnSubLoreContacts");
+
+        if (view === 'archive') {
+          if (arch) arch.style.display = 'block';
+          if (cont) cont.style.display = 'none';
+          if (btnArch) btnArch.classList.add('active');
+          if (btnCont) btnCont.classList.remove('active');
+        } else {
+          if (arch) arch.style.display = 'none';
+          if (cont) cont.style.display = 'block';
+          if (btnArch) btnArch.classList.remove('active');
+          if (btnCont) btnCont.classList.add('active');
+        }
+      }
+
+      selectNpcDirect(npcKey) {
+        if (!NPCS[npcKey]) return;
+        this.activeNpcKey = npcKey;
+        document.querySelectorAll('.npc-contact-chip').forEach(c => c.classList.remove('active'));
+        const chip = document.getElementById(`chipNpc_${npcKey}`);
+        if (chip) chip.classList.add('active');
+
+        this.updateRoleplayHeader();
+        this.renderRoleplayGreeting();
+      }
+
+      // VALIDADOR & MAQUETADOR DE ARMY FORGE CON IA
+      loadArmyForgeSample() {
+        const input = document.getElementById("armyForgeInput");
+        if (!input) return;
+
+        let sample = "";
+        const u = this.currentUser ? this.currentUser.id : "david";
+
+        if (u === "david") {
+          sample = `++ Vampiric Undead [AOF: Skirmish 595pts] ++
+Vampire Lord [1] Q3+ D3+ | 145pts | Hero, Tough(3), Fast, Undead
+1x Master Blade (A4, AP(1))
+
+Necromancer [1] Q4+ D5+ | 90pts | Hero, Tough(3), Undead, Caster(2)
+1x Arcane Staff (A2)
+
+Skeleton Warriors [5] Q5+ D5+ | 115pts | Undead
+5x Hand Weapon & Shield (A1, Shield)
+
+Grave Guard [3] Q4+ D4+ | 125pts | Undead, Furious
+3x Great Weapons (A2, AP(2))
+
+Dire Wolves [3] Q4+ D5+ | 120pts | Fast, Strider, Undead
+3x Claws & Fangs (A2)`;
+        } else if (u === "sergio") {
+          sample = `++ Ratmen Clans [AOF: Skirmish 590pts] ++
+Rat Warlord [1] Q4+ D4+ | 110pts | Hero, Tough(3), Furious
+1x Halberd (A3, AP(1))
+
+Grey Seer [1] Q4+ D5+ | 95pts | Hero, Tough(3), Caster(2)
+1x Warp Staff (A2)
+
+Ratling Gunner Team [1] Q4+ D4+ | 120pts | Relentless
+1x Ratling Rotary Gun (24", A6, AP(1))
+
+Clan Warriors [5] Q5+ D5+ | 95pts | Spear & Shield
+5x Spears (A1, Phalanx)
+
+Warp Jezzail Snipers [2] Q4+ D5+ | 100pts | Sniper
+2x Warp Jezzail Rifles (30", A1, AP(2), Deadly(3))
+
+Giant Rats [5] Q5+ D6+ | 70pts | Fast, Scout
+5x Bites (A1)`;
+        } else {
+          sample = `++ Dwarf Guilds [AOF: Skirmish 600pts] ++
+Dwarf Thane [1] Q3+ D3+ | 140pts | Hero, Tough(3), Relentless
+1x Rune Axe & Shield (A3, AP(1), Shield)
+
+Runic Blacksmith [1] Q3+ D3+ | 110pts | Hero, Tough(3), Caster(1)
+1x Runic Hammer (A3)
+
+Dwarf Ironbreakers [3] Q3+ D3+ | 150pts | Shield Wall, Fearless
+3x Axes & Heavy Shields (A2)
+
+Dwarf Thunderers [3] Q4+ D4+ | 120pts | Relentless
+3x Dwarf Rifles (24", A1, AP(1))
+
+Dwarf Miners [2] Q4+ D4+ | 80pts | Ambush, Strider
+2x Heavy Picks (A2, AP(2))`;
+        }
+
+        input.value = sample;
+      }
+
+      async validateAndFormatArmyList() {
+        const input = document.getElementById("armyForgeInput");
+        const out = document.getElementById("armyForgeResultBox");
+        const btn = document.getElementById("btnValidateArmy");
+        const text = input ? input.value.trim() : "";
+
+        if (!text) {
+          alert("Pega primero el texto exportado de tu lista de Army Forge en el cuadro.");
+          if (input) input.focus();
+          return;
+        }
+
+        if (out) {
+          out.style.display = "block";
+          out.innerHTML = `<div style="text-align: center; padding: 1.5rem; font-style: italic; color: var(--ink-dark);"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br><strong>El Gran Escriba de Mordheim está examinando los códices de batalla...</strong><br><small style="color: var(--ink-muted);">Validando puntos (máx. 600 pts), legalidad de héroes y reglas en AOF: Skirmish v3.6.0</small></div>`;
+        }
+
+        if (btn) btn.disabled = true;
+
+        const commanderName = this.currentUser ? this.currentUser.name : "Comandante";
+        const prompt = `Eres el Maestro de Armas y Gran Escriba Oficial de Mordheim para el reglamento One Page Rules (Age of Fantasy: Skirmish v3.6.0).
+El comandante ${commanderName} te presenta la siguiente lista exportada de Army Forge para la Ronda 02 de la campaña (Límite estricto de puntos: 600 pts):
+
+"""
+${text}
+"""
+
+Tu tarea marcial:
+1. Comprobar la suma de puntos total y verificar si es LEGAL (≤ 600 pts) o si excede el presupuesto permitido.
+2. Comprobar la composición de héroes y unidades según AOF Skirmish v3.6.0 (máx 3 héroes a 600 pts, armas legales).
+3. Transcribir la lista en un pergamino de batalla solemne y visual en código HTML limpio (SIN etiquetas <html>, <head> ni <body>):
+   - Cabecera: Nombre de la Banda, Facción, Puntos Totales Calculados, y Estado (✅ LISTA LEGAL (≤600 pts) o ⚠️ ILEGAL).
+   - Tabla estilizada o cuadrícula con las unidades: Nombre, Miniaturas, Calidad (Q), Defensa (D), Armamento y Ataques (Alcance, Ataques, AP, etc.), Reglas Especiales resumidas (Undead, Fast, Shield Wall, Sniper, Tough, etc.) y Coste en Puntos.
+   - Breve recordatorio de las 2 o 3 reglas clave de mesa para recordar durante la partida.
+   - Dictamen Marcial del Árbitro (1 o 2 frases solemnes con atmósfera de Mordheim).
+Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bordes #221c17, texto #17130e).`;
+
+        try {
+          const resp = await this.callGemini([{ parts: [{ text: prompt }] }]);
+          if (out && resp && resp.text) {
+            let renderedHtml = resp.text.replace(/```html|```/g, '').trim();
+            out.innerHTML = `
+              <div style="background: #faf4e6; border: 2px solid var(--ink-black); padding: 1.2rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15);">
+                ${renderedHtml}
+                <div style="margin-top: 1.2rem; text-align: right; border-top: 1px dashed var(--line-sepia); padding-top: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                  <span style="font-size: 0.74rem; color: #1b4d24; font-weight: 800;">
+                    ✓ Verificado con modelo ${resp.model}
+                  </span>
+                  <button class="btn-action" onclick="app.saveCurrentRoster()" style="background: #1b4d24; color: #fff; font-weight: 800;">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar Lista Activa de la Banda
+                  </button>
+                </div>
+              </div>
+            `;
+            this.lastValidatedRosterHtml = renderedHtml;
+            this.lastValidatedRosterRaw = text;
+          }
+        } catch(err) {
+          if (out) {
+            out.innerHTML = `
+              <div style="background: #fae8e8; border: 1.5px solid #7a1515; padding: 1rem; color: #7a1515; font-size: 0.85rem;">
+                <strong>⚠️ Error en el Escribano Imperial:</strong> ${err.message}<br>
+                <small>Verifica tu conexión en el Panel GM o revisa el formato del texto de Army Forge.</small>
+              </div>
+            `;
+          }
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      }
+
+      saveCurrentRoster() {
+        if (!this.lastValidatedRosterHtml || !this.currentUser) return;
+        const key = `mordheim_roster_${this.currentUser.id}`;
+        const payload = {
+          html: this.lastValidatedRosterHtml,
+          raw: this.lastValidatedRosterRaw,
+          updatedAt: new Date().toISOString()
+        };
+        localStorage.setItem(key, JSON.stringify(payload));
+
+        if (supabase) {
+          supabase.from('kv_store').upsert({
+            key: key,
+            value: payload,
+            updated_at: new Date().toISOString()
+          }).then(() => console.log("Roster synced to cloud"));
+        }
+
+        alert("📜 ¡Lista de banda guardada con éxito! Aparecerá automáticamente maquetada en tu Sala de Misiones.");
+      }
+
+      async loadPlayerRoster() {
+        if (!this.currentUser) return;
+        const key = `mordheim_roster_${this.currentUser.id}`;
+        let rosterData = null;
+
+        const local = localStorage.getItem(key);
+        if (local) {
+          try { rosterData = JSON.parse(local); } catch(e) {}
+        }
+
+        if (!rosterData && supabase) {
+          try {
+            const res = await supabase.from('kv_store').select('value').eq('key', key).maybeSingle();
+            if (res.data && res.data.value) rosterData = res.data.value;
+          } catch(e) {}
+        }
+
+        if (rosterData && rosterData.html) {
+          const out = document.getElementById("armyForgeResultBox");
+          const input = document.getElementById("armyForgeInput");
+          if (input && rosterData.raw) input.value = rosterData.raw;
+          if (out) {
+            out.style.display = "block";
+            out.innerHTML = `
+              <div style="background: #faf4e6; border: 2px solid var(--ink-black); padding: 1.2rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15);">
+                <div style="font-family: var(--font-title); font-size: 0.74rem; font-weight: 800; color: var(--faction-david); text-transform: uppercase; margin-bottom: 0.5rem;">
+                  📜 TU LISTA ACTIVA GUARDADA (ÚLTIMA REVISIÓN)
+                </div>
+                ${rosterData.html}
+              </div>
+            `;
+          }
+        }
       }
 
       renderScoreboard() {
