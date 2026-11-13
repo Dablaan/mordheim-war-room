@@ -1799,7 +1799,7 @@
     // 1. CONFIGURACIÓN SUPABASE & MEMORIA
     const SUPABASE_URL = "https://gwryzkejvymurjnyfwpu.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw";
-    const STORAGE_KEY = "mordheim_entrenamientos_v1";
+    const STORAGE_KEY = "mordheim_entrenamientos_600c_v1";
     const SUGGESTIONS_KEY = "mordheim_sugerencias";
     const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
     const DEFAULT_GEMINI_API_KEY = (function(){ try { return atob("QVEuQWI4Uk42SXJ2Q3RFQkpPNGRRaEUtU29VYTE3bGZGdDZKSzczVTlGbEdaTU9sdkRRQXc="); } catch(e){ return ""; } })();
@@ -2199,8 +2199,8 @@
         this.state = {
           round: 1,
           commanders: {
-            david: { vp: 0, gold: 300 },
-            sergio: { vp: 0, gold: 300 }
+            david: { vp: 0, gold: 600 },
+            sergio: { vp: 0, gold: 600 }
           },
           districts: JSON.parse(JSON.stringify(DISTRICTS)),
           aars: [],
