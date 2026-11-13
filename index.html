@@ -1062,7 +1062,7 @@
     <div class="gazette-folio-strip">
       <span><i class="fa-solid fa-landmark"></i> ARCHIVOS DEL TRIBUNAL DE GUERRA</span>
       <span>AÑO DE LAS SOMBRAS 1599 • IMPRENTA DE LA CIUDAD CONDENADA</span>
-      <span id="headerRoundTag">RONDA 01 EN CURSO</span>
+      <span id="headerRoundTag">FASE DE ENTRENAMIENTO • ESCARAMUZA 01</span>
     </div>
 
     <!-- MARCADOR DE CAMPAÑA (TRES FACCIONES) -->
@@ -1105,13 +1105,13 @@
       <section class="tab-pane active" id="tab-gazette">
         <!-- Selector de Edición -->
         <div class="herald-nav">
-          <button class="btn-action" id="btnGazette0" onclick="app.showGazette(0)">
+          <button class="btn-action active" id="btnGazette0" onclick="app.showGazette(0)">
             <i class="fa-solid fa-meteor"></i> Edición 00 (Fundacional)
           </button>
           <button class="btn-action" id="btnGazette1" onclick="app.showGazette(1)">
             <i class="fa-solid fa-shield"></i> Edición 01 (Apertura)
           </button>
-          <button class="btn-action active" id="btnGazette2" onclick="app.showGazette(2)">
+          <button class="btn-action" id="btnGazette2" onclick="app.showGazette(2)">
             <i class="fa-solid fa-skull"></i> Edición 02 (Última: ¡La Fuga de Loky!)
           </button>
         </div>
@@ -1186,7 +1186,7 @@
         <!-- Selector de Misiones -->
         <div class="mission-nav-bar">
           <button class="btn-action active" id="btnMission1" onclick="app.showMission(1)">
-            <i class="fa-solid fa-flag-checkered"></i> Ronda 01: La Sangre en El Cruce del Degollador (Activa)
+            <i class="fa-solid fa-flag-checkered"></i> Escaramuza 01 (Entrenamiento): El Cruce del Degollador
           </button>
         </div>
 
@@ -1799,7 +1799,7 @@
     // 1. CONFIGURACIÓN SUPABASE & MEMORIA
     const SUPABASE_URL = "https://gwryzkejvymurjnyfwpu.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw";
-    const STORAGE_KEY = "mordheim_warroom_sombra_cometa_v1";
+    const STORAGE_KEY = "mordheim_entrenamientos_v1";
     const SUGGESTIONS_KEY = "mordheim_sugerencias";
     const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
     const DEFAULT_GEMINI_API_KEY = (function(){ try { return atob("QVEuQWI4Uk42SXJ2Q3RFQkpPNGRRaEUtU29VYTE3bGZGdDZKSzczVTlGbEdaTU9sdkRRQXc="); } catch(e){ return ""; } })();
@@ -1981,20 +1981,20 @@
     const MISSIONS_DATA = {
       1: {
         id: 1,
-        title: "Ronda 01: La Sangre en El Cruce del Degollador",
+        title: "Escaramuza 01 (Entrenamiento): Sangre en El Cruce del Degollador",
         factions: "Casa Sangre Carmesí (David) vs Clan Scutrix (Sergio)",
-        badge: "CONVOCATORIA ACTIVA (ENCUENTRO 01)",
+        badge: "ESCARAMUZA DE ENTRENAMIENTO",
         badgeStyle: "background: #fbf2f2; color: #7a1515; border: 1.5px solid #7a1515;",
         rulebook: "Age of Fantasy: Skirmish v3.6.0 (OPR)",
         points: "600 pts",
         turns: "4 Rondas",
         tableSize: "90 x 90 cm (Casa de David)",
-        lore: "Primer encuentro oficial de campaña en el Distrito II: El Cruce del Degollador (Mesa de 90x90 cm en Casa de David). La encrucijada de adoquín resquebrajado, que desciende hacia los colectores del río Stir, ha sido elegida por los vampiros de la Casa Sangre Carmesí y la horda de ratmen del Clan Scutrix como el punto de colisión inicial. Callejuelas angostas, criptas encharcadas y muros ruinosos configuran un teatro de combate cerrado asfixiante.",
+        lore: "Batalla inaugural de entrenamiento en el Distrito II: El Cruce del Degollador (Mesa de 90x90 cm en Casa de David). Este encuentro preliminar servirá para que ambos comandantes rueden sus listas de banda de 600 puntos, pongan a prueba las mecánicas de disparo, combate y chequeos de moral al 50%, y dominen el reporte de partes de guerra y validación de listas en la WebApp.",
         objectives: [
-          "Misión Oficial: Asegurar el Terreno (Seize Ground - Pág. 22 / Pág. 51 AoFS v3.6.0): 4 Marcadores de Objetivo colocados en el centro de los 4 cuadrantes urbanos (+1 VP por cada objetivo bajo control al final de la Ronda 4).",
+          "Misión Oficial: Asegurar el Terreno (Seize Ground - Pág. 22 / Pág. 51 AoFS v3.6.0): 4 Marcadores de Objetivo colocados en el centro de los 4 cuadrantes de 45x45 cm (+1 VP por cada objetivo bajo control al final de la Ronda 4).",
           "Despliegue Asalto por el Flanco (Pág. 51): Despliegue en cuadrantes diagonales opuestos a 9 pulgadas del centro de entrada (David en Cuadrante Noroeste / Criptas de Morr; Sergio en Cuadrante Sureste / Colectores de la Falla).",
-          "Escenografía 3MF Justificada: La Casona Señorial ('Ruin house 3') y el Bastión Cuadrado ('building4') bloquean el centro de mesa impidiendo líneas de tiro rasantes directas; la Torre de Tres Plantas ('Ruin_house_2') domina el flanco sureste como nido de tiradores de chispa; la Catedral de Ulvheim y la Nave de Templo ('ruineV3N3B') vertebran el baluarte noroeste (+1 Def Cobertura); esquinas en L y cajas/barriles protegen las avenidas intermedias.",
-          "Victoria de Campaña: Quien controle más marcadores al finalizar la 4ª ronda captura el Distrito II (+2 VP y +60 pts de botín para la tesorería de su banda)."
+          "Escenografía Oficial de Mesa: La 'Alcaldía' y el 'Septo_2plantas' bloquean el centro de mesa impidiendo líneas de visión directas rasantes; la 'Torre_cuadrada_3plantas' domina el flanco sureste como nido vertical de tiradores (163 mm); la 'Casa_señorial' y la 'Iglesia-ruinas' protegen el flanco noroeste (+1 Def Cobertura); el 'Septo_esquinas', el 'Arbol marchito' y los 5 elementos divisibles de 'Barriles_cajas' ofrecen parapetos bajos en los callejones.",
+          "Objetivo de Entrenamiento: Ambos comandantes deben probar el Validador de Army Forge en esta pantalla antes de desplegar y remitir su parte de guerra al terminar para asentar el flujo completo de campaña."
         ]
       }
     };
@@ -2220,7 +2220,7 @@
       async init() {
         this.setupNavigation();
         this.initMapControls();
-        this.showGazette(2);
+        this.showGazette(0);
         this.showMission(1);
         this.renderRoleplayGreeting();
         await this.loadCloudState();
@@ -2230,24 +2230,23 @@
       }
 
       checkSavedSession() {
-        const saved = localStorage.getItem("mordheim_warroom_user");
-        const gate = document.getElementById("loginGateOverlay");
-
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (parsed && parsed.id && USERS[parsed.id] && parsed.id !== 'spectator') {
-              this.currentUser = USERS[parsed.id];
-              if (gate) gate.style.display = 'none';
-              this.onUserLoggedIn();
-              return;
-            }
-          } catch(e) {}
-        }
-
-        // Si no hay usuario autorizado autenticado, bloquear pantalla completa con el Gate
+        // NUNCA auto-loguear: Cada vez que se entra o recarga, se exige el PIN del jugador
+        localStorage.removeItem("mordheim_warroom_user");
+        sessionStorage.removeItem("mordheim_warroom_user");
         this.currentUser = null;
+
+        const gate = document.getElementById("loginGateOverlay");
         if (gate) gate.style.display = 'flex';
+
+        const pinBox = document.getElementById("loginPinBox");
+        if (pinBox) pinBox.style.display = 'none';
+
+        const pinInput = document.getElementById("loginPinInput");
+        if (pinInput) pinInput.value = '';
+
+        document.querySelectorAll('#loginGateOverlay .login-user-card').forEach(c => c.classList.remove('selected'));
+        this.loginSelectedUser = null;
+
         this.updateUserChip();
       }
 
@@ -2284,7 +2283,7 @@
         const pin = input ? input.value.trim() : "";
         if (pin === "1348") {
           this.currentUser = USERS.david;
-          localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
+          sessionStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
           this.updateUserChip();
           this.renderAll();
           if (err) err.style.display = "none";
@@ -2310,7 +2309,7 @@
         if (isMatch) {
           if (err) err.style.display = 'none';
           this.currentUser = USERS[this.loginSelectedUser];
-          localStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
+          sessionStorage.setItem("mordheim_warroom_user", JSON.stringify(this.currentUser));
           this.onUserLoggedIn();
         } else {
           if (err) err.style.display = 'block';
@@ -2329,7 +2328,7 @@
 
         this.updateUserChip();
         this.renderAll();
-        this.showGazette(2);
+        this.showGazette(0);
         this.showMission(1);
         this.renderRoleplayGreeting();
         this.loadPlayerRoster();
