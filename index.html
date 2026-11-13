@@ -1573,7 +1573,7 @@
           <!-- Capítulo III: Las Tres Facciones en Conflicto -->
           <div class="lore-chapter-box">
             <div class="lore-chapter-title">
-              <span>⚔️ Capítulo III: Las Tres Partidas de Guerra de Kar-Drakor</span>
+              <span>⚔️ Capítulo III: Las Partidas de Guerra en Mordheim: La Sombra del Cometa</span>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
               <!-- David -->
@@ -1799,7 +1799,7 @@
     // 1. CONFIGURACIÓN SUPABASE & MEMORIA
     const SUPABASE_URL = "https://gwryzkejvymurjnyfwpu.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw";
-    const STORAGE_KEY = "kardrakor_warroom_v2";
+    const STORAGE_KEY = "mordheim_warroom_sombra_cometa_v1";
     const SUGGESTIONS_KEY = "mordheim_sugerencias";
     const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
     const DEFAULT_GEMINI_API_KEY = (function(){ try { return atob("QVEuQWI4Uk42SXJ2Q3RFQkpPNGRRaEUtU29VYTE3bGZGdDZKSzczVTlGbEdaTU9sdkRRQXc="); } catch(e){ return ""; } })();
@@ -2798,7 +2798,7 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
 
       saveCurrentRoster() {
         if (!this.lastValidatedRosterHtml || !this.currentUser) return;
-        const key = `mordheim_roster_${this.currentUser.id}`;
+        const key = `mordheim_roster_${this.currentUser.id}_v3`;
         const payload = {
           html: this.lastValidatedRosterHtml,
           raw: this.lastValidatedRosterRaw,
@@ -2817,9 +2817,9 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
         alert("📜 ¡Lista de banda guardada con éxito! Aparecerá automáticamente maquetada en tu Sala de Misiones.");
       }
 
-      async loadPlayerRoster() {
+            async loadPlayerRoster() {
         if (!this.currentUser) return;
-        const key = `mordheim_roster_${this.currentUser.id}`;
+        const key = `mordheim_roster_${this.currentUser.id}_v3`;
         let rosterData = null;
 
         const local = localStorage.getItem(key);
@@ -2834,20 +2834,27 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
           } catch(e) {}
         }
 
+        const out = document.getElementById("armyForgeResultBox");
+        const input = document.getElementById("armyForgeInput");
+
         if (rosterData && rosterData.html) {
-          const out = document.getElementById("armyForgeResultBox");
-          const input = document.getElementById("armyForgeInput");
           if (input && rosterData.raw) input.value = rosterData.raw;
           if (out) {
             out.style.display = "block";
             out.innerHTML = `
               <div style="background: #faf4e6; border: 2px solid var(--ink-black); padding: 1.2rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15);">
                 <div style="font-family: var(--font-title); font-size: 0.74rem; font-weight: 800; color: var(--faction-david); text-transform: uppercase; margin-bottom: 0.5rem;">
-                  📜 TU LISTA ACTIVA GUARDADA (ÚLTIMA REVISIÓN)
+                  📜 TU LISTA ACTIVA GUARDADA (600 PTS)
                 </div>
                 ${rosterData.html}
               </div>
             `;
+          }
+        } else {
+          if (input) input.value = '';
+          if (out) {
+            out.style.display = 'none';
+            out.innerHTML = '';
           }
         }
       }
