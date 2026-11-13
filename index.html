@@ -1161,13 +1161,13 @@
       <section class="tab-pane active" id="tab-gazette">
         <!-- Selector de Edición -->
         <div class="herald-nav">
-          <button class="btn-action active" id="btnGazette0" onclick="app.showGazette(0)">
+          <button class="btn-action" id="btnGazette0" onclick="app.showGazette(0)">
             <i class="fa-solid fa-meteor"></i> Edición 00 (Fundacional)
           </button>
           <button class="btn-action" id="btnGazette1" onclick="app.showGazette(1)">
             <i class="fa-solid fa-shield"></i> Edición 01 (Apertura)
           </button>
-          <button class="btn-action" id="btnGazette2" onclick="app.showGazette(2)">
+          <button class="btn-action active" id="btnGazette2" onclick="app.showGazette(2)">
             <i class="fa-solid fa-skull"></i> Edición 02 (Última: ¡La Fuga de Loky!)
           </button>
         </div>
@@ -1251,10 +1251,10 @@
           <div class="panel-box">
             <div class="panel-title-strip">
               <h3 class="panel-title" id="missionTitleDisplay" style="font-family: var(--font-gothic); font-size: 1.6rem;">
-                Ronda 02: La Caza de la Piedra Bruja en las Ruinas
+                Escaramuza 01 (Entrenamiento): Sangre en El Cruce del Degollador
               </h3>
-              <span class="rank-tag" id="missionStatusBadge" style="background: var(--faction-sergio-bg); color: var(--faction-sergio); border: 1.5px solid var(--faction-sergio); padding: 0.2rem 0.6rem; font-weight: 800; font-family: var(--font-title); font-size: 0.72rem;">
-                RONDA EN CURSO
+              <span class="rank-tag" id="missionStatusBadge" style="background: #fbf2f2; color: #7a1515; border: 1.5px solid #7a1515; padding: 0.2rem 0.6rem; font-weight: 800; font-family: var(--font-title); font-size: 0.72rem;">
+                ESCARAMUZA DE ENTRENAMIENTO
               </span>
             </div>
 
@@ -2276,8 +2276,8 @@
       async init() {
         this.setupNavigation();
         this.initMapControls();
-        this.showGazette(0);
-        this.showMission(1);
+        this.showGazette();
+        this.showMission();
         this.renderRoleplayGreeting();
         await this.loadCloudState();
         this.syncDistrictDefinitions();
@@ -2384,8 +2384,8 @@
 
         this.updateUserChip();
         this.renderAll();
-        this.showGazette(0);
-        this.showMission(1);
+        this.showGazette();
+        this.showMission();
         this.renderRoleplayGreeting();
         this.loadPlayerRoster();
         this.showTab('tab-gazette');
@@ -2449,6 +2449,12 @@
 
         const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
         if (btn) btn.classList.add('active');
+
+        if (tabId === 'tab-gazette') {
+          this.showGazette(this.currentGazetteEdition);
+        } else if (tabId === 'tab-mission') {
+          this.showMission(this.currentMissionId);
+        }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -3021,7 +3027,22 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
         });
       }
 
+      getLatestGazetteEdition() {
+        const keys = Object.keys(GAZETTE_EDITIONS).map(Number).sort((a, b) => b - a);
+        return keys.length > 0 ? keys[0] : 0;
+      }
+
+      getLatestMissionId() {
+        const keys = Object.keys(MISSIONS_DATA).map(Number).sort((a, b) => b - a);
+        return keys.length > 0 ? keys[0] : 1;
+      }
+
       showGazette(editionNum) {
+        if (editionNum === undefined || editionNum === null) {
+          editionNum = this.getLatestGazetteEdition();
+        }
+        this.currentGazetteEdition = editionNum;
+
         document.querySelectorAll('.herald-nav .btn-action').forEach(b => b.classList.remove('active'));
         const btn = document.getElementById(`btnGazette${editionNum}`);
         if (btn) btn.classList.add('active');
@@ -3029,22 +3050,39 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
         const ed = GAZETTE_EDITIONS[editionNum];
         if (!ed) return;
 
-        document.getElementById("gazetteIssueMeta").textContent = ed.meta;
-        document.getElementById("gazettePriceMeta").textContent = `PRECIO: ${ed.price}`;
-        document.getElementById("gazetteLeadTitle").textContent = ed.title;
-        document.getElementById("gazetteSublead").textContent = ed.sublead;
-        document.getElementById("gazetteLeadSummary").innerHTML = `<strong>INFORME OFICIAL:</strong> ${ed.lead}`;
-        document.getElementById("gazetteLeftCol").innerHTML = ed.text;
+        const setElText = (id, txt) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = txt != null ? txt : '';
+        };
+        const setElHtml = (id, html) => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = html != null ? html : '';
+        };
+
+        setElText("gazetteIssueMeta", ed.meta);
+        setElText("gazettePriceMeta", `PRECIO: ${ed.price}`);
+        setElText("gazetteLeadTitle", ed.title);
+        setElText("gazetteSublead", ed.sublead);
+        setElHtml("gazetteLeadSummary", ed.lead ? `<strong>INFORME OFICIAL:</strong> ${ed.lead}` : '');
+        setElHtml("gazetteLeftCol", ed.text);
 
         const img = document.getElementById("gazetteMainImg");
-        img.src = ed.img;
-        document.getElementById("gazetteImgCaption").textContent = ed.caption;
-        document.getElementById("gazettePdfLink").href = ed.pdf;
-        document.getElementById("gazetteRightQuotesBox").innerHTML = ed.quotes;
-        document.getElementById("gazetteBottomFeatures").innerHTML = ed.features;
+        if (img && ed.img) img.src = ed.img;
+        setElText("gazetteImgCaption", ed.caption);
+
+        const pdfLink = document.getElementById("gazettePdfLink");
+        if (pdfLink && ed.pdf) pdfLink.href = ed.pdf;
+
+        setElHtml("gazetteRightQuotesBox", ed.quotes);
+        setElHtml("gazetteBottomFeatures", ed.features);
       }
 
       showMission(roundNum) {
+        if (roundNum === undefined || roundNum === null) {
+          roundNum = this.getLatestMissionId();
+        }
+        this.currentMissionId = roundNum;
+
         document.querySelectorAll('.mission-nav-bar .btn-action').forEach(b => b.classList.remove('active'));
         const btn = document.getElementById(`btnMission${roundNum}`);
         if (btn) btn.classList.add('active');
@@ -3052,25 +3090,36 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
         const m = MISSIONS_DATA[roundNum];
         if (!m) return;
 
-        document.getElementById("missionTitleDisplay").textContent = m.title;
-        const badge = document.getElementById("missionStatusBadge");
-        badge.textContent = m.badge;
-        badge.style = m.badgeStyle;
+        const setElText = (id, txt) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = txt != null ? txt : '';
+        };
 
-        document.getElementById("missionFactions").textContent = m.factions;
-        document.getElementById("missionRulebook").textContent = m.rulebook;
-        document.getElementById("missionPoints").textContent = m.points;
-        document.getElementById("missionTurns").textContent = m.turns;
-        document.getElementById("missionTableSize").textContent = m.tableSize;
-        document.getElementById("missionLoreText").textContent = m.lore;
+        setElText("missionTitleDisplay", m.title);
+        const badge = document.getElementById("missionStatusBadge");
+        if (badge) {
+          badge.textContent = m.badge || '';
+          if (m.badgeStyle) badge.style = m.badgeStyle;
+        }
+
+        setElText("missionFactions", m.factions);
+        setElText("missionRulebook", m.rulebook);
+        setElText("missionPoints", m.points);
+        setElText("missionTurns", m.turns);
+        setElText("missionTableSize", m.tableSize);
+        setElText("missionLoreText", m.lore);
 
         const ul = document.getElementById("missionObjectivesList");
-        ul.innerHTML = "";
-        m.objectives.forEach(obj => {
-          const li = document.createElement("li");
-          li.textContent = obj;
-          ul.appendChild(li);
-        });
+        if (ul) {
+          ul.innerHTML = "";
+          if (Array.isArray(m.objectives)) {
+            m.objectives.forEach(obj => {
+              const li = document.createElement("li");
+              li.textContent = obj;
+              ul.appendChild(li);
+            });
+          }
+        }
       }
 
       syncDistrictDefinitions() {
