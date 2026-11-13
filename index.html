@@ -1032,6 +1032,62 @@
 </head>
 <body>
 
+  <!-- ======================================================== -->
+  <!-- BLINDAJE ESTRICTO DE ACCESO: LOGIN GATE OVERLAY         -->
+  <!-- ======================================================== -->
+  <div id="loginGateOverlay" class="login-gate-overlay">
+    <div class="login-gate-modal">
+      <div style="font-size: 2.8rem; color: var(--faction-david); margin-bottom: 0.3rem;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h1 style="font-family: var(--font-gothic); font-size: 2.3rem; margin: 0 0 0.3rem 0; color: var(--ink-black); letter-spacing: 1px;">
+        MORDHEIM: LA SOMBRA DEL COMETA
+      </h1>
+      <div style="font-family: var(--font-title); font-size: 0.78rem; color: var(--faction-david); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;">
+        «ACCESO RESTRINGIDO EXCLUSIVAMENTE A COMANDANTES AUTORIZADOS»
+      </div>
+      <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 1.4rem; line-height: 1.4; font-style: italic;">
+        Identifícate con tu credencial e introduce tu clave secreta de 4 dígitos para acceder al Cuartel General.
+      </p>
+
+      <div class="login-grid" style="grid-template-columns: 1fr; gap: 0.8rem; margin-bottom: 1.2rem; max-width: 380px; margin-left: auto; margin-right: auto;">
+        <!-- David -->
+        <div class="login-user-card" data-user="david" onclick="app.selectLoginUser('david', this)">
+          <span class="login-avatar" style="font-size: 2rem;">🧛</span>
+          <div style="text-align: left;">
+            <div class="login-card-title" style="font-size: 1rem;">David (Árbitro GM)</div>
+            <div class="login-card-desc">Lord Carmesí • Casa Sangre Carmesí</div>
+          </div>
+        </div>
+        <!-- Sergio -->
+        <div class="login-user-card" data-user="sergio" onclick="app.selectLoginUser('sergio', this)">
+          <span class="login-avatar" style="font-size: 2rem;">🐀</span>
+          <div style="text-align: left;">
+            <div class="login-card-title" style="font-size: 1rem;">Sergio</div>
+            <div class="login-card-desc">Señor del Clan Scutrix • Hombres Rata</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuadro de PIN -->
+      <div class="login-pin-box" id="loginPinBox" style="display: none; background: #ede1c7; border: 2px solid var(--line-sepia); padding: 1.2rem; margin-top: 0.6rem; max-width: 380px; margin-left: auto; margin-right: auto;">
+        <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.88rem; margin-bottom: 0.5rem;" id="loginPinPrompt">
+          Introduce tu clave secreta:
+        </div>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; max-width: 280px; margin: 0 auto;">
+          <input type="password" id="loginPinInput" class="login-pin-input" maxlength="4" placeholder="****" style="text-align: center; font-size: 1.3rem; letter-spacing: 6px; width: 140px; padding: 0.4rem;" onkeyup="if(event.key==='Enter') app.submitPin()"/>
+          <button class="btn-action" onclick="app.submitPin()" style="padding: 0.5rem 1.2rem; font-weight: 800;">
+            <i class="fa-solid fa-key"></i> Entrar
+          </button>
+        </div>
+        <div id="loginPinError" style="font-size: 0.78rem; color: var(--faction-david); font-weight: 800; margin-top: 0.6rem; display: none;">
+          ⚠️ Clave secreta incorrecta. Consulta con el Árbitro.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="gazette-wrapper">
 
     <!-- CABECERA PRINCIPAL -->
@@ -2754,7 +2810,63 @@ ${text}
 Tu tarea marcial:
 1. Comprobar la suma de puntos total y verificar si es LEGAL (≤ 600 pts) o si excede el presupuesto permitido.
 2. Comprobar la composición de héroes y unidades según AOF Skirmish v3.6.0 (máx 3 héroes a 600 pts, armas legales).
-3. Transcribir la lista en un pergamino de batalla solemne y visual en código HTML limpio (SIN etiquetas <html>, <head> ni <body>):
+3. Transcribir la lista en un pergamino de batalla solemne y visual en código HTML limpio (SIN etiquetas <html>, <head> ni <body>
+
+  <!-- ======================================================== -->
+  <!-- BLINDAJE ESTRICTO DE ACCESO: LOGIN GATE OVERLAY         -->
+  <!-- ======================================================== -->
+  <div id="loginGateOverlay" class="login-gate-overlay">
+    <div class="login-gate-modal">
+      <div style="font-size: 2.8rem; color: var(--faction-david); margin-bottom: 0.3rem;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h1 style="font-family: var(--font-gothic); font-size: 2.3rem; margin: 0 0 0.3rem 0; color: var(--ink-black); letter-spacing: 1px;">
+        MORDHEIM: LA SOMBRA DEL COMETA
+      </h1>
+      <div style="font-family: var(--font-title); font-size: 0.78rem; color: var(--faction-david); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;">
+        «ACCESO RESTRINGIDO EXCLUSIVAMENTE A COMANDANTES AUTORIZADOS»
+      </div>
+      <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 1.4rem; line-height: 1.4; font-style: italic;">
+        Identifícate con tu credencial e introduce tu clave secreta de 4 dígitos para acceder al Cuartel General.
+      </p>
+
+      <div class="login-grid" style="grid-template-columns: 1fr; gap: 0.8rem; margin-bottom: 1.2rem; max-width: 380px; margin-left: auto; margin-right: auto;">
+        <!-- David -->
+        <div class="login-user-card" data-user="david" onclick="app.selectLoginUser('david', this)">
+          <span class="login-avatar" style="font-size: 2rem;">🧛</span>
+          <div style="text-align: left;">
+            <div class="login-card-title" style="font-size: 1rem;">David (Árbitro GM)</div>
+            <div class="login-card-desc">Lord Carmesí • Casa Sangre Carmesí</div>
+          </div>
+        </div>
+        <!-- Sergio -->
+        <div class="login-user-card" data-user="sergio" onclick="app.selectLoginUser('sergio', this)">
+          <span class="login-avatar" style="font-size: 2rem;">🐀</span>
+          <div style="text-align: left;">
+            <div class="login-card-title" style="font-size: 1rem;">Sergio</div>
+            <div class="login-card-desc">Señor del Clan Scutrix • Hombres Rata</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuadro de PIN -->
+      <div class="login-pin-box" id="loginPinBox" style="display: none; background: #ede1c7; border: 2px solid var(--line-sepia); padding: 1.2rem; margin-top: 0.6rem; max-width: 380px; margin-left: auto; margin-right: auto;">
+        <div style="font-family: var(--font-title); font-weight: 800; font-size: 0.88rem; margin-bottom: 0.5rem;" id="loginPinPrompt">
+          Introduce tu clave secreta:
+        </div>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; max-width: 280px; margin: 0 auto;">
+          <input type="password" id="loginPinInput" class="login-pin-input" maxlength="4" placeholder="****" style="text-align: center; font-size: 1.3rem; letter-spacing: 6px; width: 140px; padding: 0.4rem;" onkeyup="if(event.key==='Enter') app.submitPin()"/>
+          <button class="btn-action" onclick="app.submitPin()" style="padding: 0.5rem 1.2rem; font-weight: 800;">
+            <i class="fa-solid fa-key"></i> Entrar
+          </button>
+        </div>
+        <div id="loginPinError" style="font-size: 0.78rem; color: var(--faction-david); font-weight: 800; margin-top: 0.6rem; display: none;">
+          ⚠️ Clave secreta incorrecta. Consulta con el Árbitro.
+        </div>
+      </div>
+    </div>
+  </div>
+):
    - Cabecera: Nombre de la Banda, Facción, Puntos Totales Calculados, y Estado (✅ LISTA LEGAL (≤600 pts) o ⚠️ ILEGAL).
    - Tabla estilizada o cuadrícula con las unidades: Nombre, Miniaturas, Calidad (Q), Defensa (D), Armamento y Ataques (Alcance, Ataques, AP, etc.), Reglas Especiales resumidas (Undead, Fast, Shield Wall, Sniper, Tough, etc.) y Coste en Puntos.
    - Breve recordatorio de las 2 o 3 reglas clave de mesa para recordar durante la partida.
