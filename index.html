@@ -49,8 +49,12 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      touch-action: pan-x pan-y;
+      touch-action: pan-y;
       -webkit-text-size-adjust: 100%;
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      position: relative;
     }
 
     button, a, select, input, textarea, .btn-action, .tab-btn {
@@ -67,13 +71,19 @@
       font-size: 15px;
       line-height: 1.5;
       min-height: 100vh;
-      padding: 0.6rem 0.6rem 2.5rem 0.6rem;
+      padding: 1.2rem 1rem 3.5rem 1rem;
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+      width: 100% !important;
     }
 
     /* CONTENEDOR CENTRAL DE LA GACETA */
     .gazette-wrapper {
       max-width: 1220px;
+      width: 100%;
+      box-sizing: border-box;
       margin: 0 auto;
+      overflow-x: hidden;
       background: var(--bg-parchment-sheet);
       background-image:
         radial-gradient(#d8c49a 0.8px, transparent 0.8px),
@@ -553,6 +563,22 @@
       padding: 6px;
       font-size: 0.85rem;
       letter-spacing: 1px;
+    }
+    .feat-cell {
+      flex: 1;
+      min-width: 0;
+      padding: 6px 10px;
+      border-left: 1px solid #331505;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      color: #17130e;
+      box-sizing: border-box;
+    }
+    .feat-cell b {
+      display: block;
+      font-family: var(--font-title);
+      color: #4a1515;
+      margin-bottom: 2px;
     }
     .feature-item {
       flex: 1;
@@ -1172,23 +1198,37 @@
 
       /* 2. Contenedor y márgenes de pantalla */
       body {
-        padding: 0.2rem 0.2rem 2.2rem 0.2rem;
+        padding: 0.35rem max(0.35rem, env(safe-area-inset-right)) max(2.5rem, env(safe-area-inset-bottom)) max(0.35rem, env(safe-area-inset-left));
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
       }
       .gazette-wrapper {
         border-width: 2px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
       }
       .tab-pane {
-        padding: 0.65rem 0.45rem;
+        padding: 0.65rem 0.5rem;
+        box-sizing: border-box;
+        width: 100%;
+        overflow-x: hidden;
       }
       .panel-box {
-        padding: 0.75rem 0.55rem;
+        padding: 0.85rem 0.65rem;
+        box-sizing: border-box;
+        width: 100%;
       }
 
       /* 3. Cabecera principal y Metadatos */
       .gazette-header {
-        padding: 0.6rem 0.65rem;
+        padding: 0.65rem 0.75rem;
         gap: 0.5rem;
+        box-sizing: border-box;
+        width: 100%;
       }
       .header-branding {
         gap: 0.45rem;
@@ -1210,12 +1250,13 @@
         justify-content: space-between;
         align-items: center;
         gap: 0.35rem;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
+        box-sizing: border-box;
       }
       .header-actions .btn-action,
       .identity-chip {
-        font-size: 0.68rem;
-        padding: 0.3rem 0.45rem;
+        font-size: 0.7rem;
+        padding: 0.35rem 0.5rem;
         white-space: nowrap;
       }
 
@@ -1223,21 +1264,27 @@
       .gazette-folio-strip {
         flex-direction: column;
         text-align: center;
-        gap: 2px;
-        padding: 0.35rem 0.5rem;
-        font-size: 0.65rem;
+        gap: 3px;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.66rem;
+        box-sizing: border-box;
+        width: 100%;
       }
       .gazette-folio-strip span:nth-child(2) {
-        display: none; /* Ocultar el subtítulo largo del medio */
+        display: none; /* Ocultar el subtítulo largo del medio en móviles */
       }
 
       /* 5. Marcador de Campaña */
       .scoreboard-strip {
-        padding: 0.4rem 0.5rem;
+        padding: 0.45rem 0.6rem;
+        box-sizing: border-box;
+        width: 100%;
       }
       .scoreboard-grid {
         grid-template-columns: 1fr;
         gap: 0.5rem;
+        box-sizing: border-box;
+        width: 100%;
       }
 
       /* 6. El Heraldo de Mordheim */
@@ -1246,17 +1293,23 @@
         flex-direction: column;
         gap: 0.35rem;
         margin-bottom: 0.65rem;
+        box-sizing: border-box;
+        width: 100%;
       }
       .herald-nav .btn-action {
         width: 100%;
         text-align: center;
-        padding: 0.45rem 0.6rem;
-        font-size: 0.74rem;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.76rem;
         box-shadow: 1.5px 1.5px 0 var(--ink-black);
+        box-sizing: border-box;
       }
       .border-woodcut-double {
-        padding: 0.65rem 0.45rem;
+        padding: 0.75rem 0.55rem;
         border-width: 2.5px;
+        box-sizing: border-box;
+        width: 100%;
+        overflow: hidden;
       }
       .heraldo-badge-box {
         font-size: 8.5pt;
@@ -1264,35 +1317,51 @@
         padding: 2px 12px;
       }
       .heraldo-title-main {
-        font-size: 2.85rem;
+        font-size: clamp(2.2rem, 8vw, 2.85rem);
         letter-spacing: 0.5px;
         line-height: 0.95;
+        word-break: break-word;
       }
       .heraldo-title-sub {
-        font-size: 1.5rem;
+        font-size: clamp(1.2rem, 4.5vw, 1.5rem);
         margin-top: -2px;
+        word-break: break-word;
       }
       .heraldo-meta-bar {
-        font-size: 0.67rem;
-        padding: 4px 6px;
+        flex-direction: column;
+        text-align: center;
+        gap: 3px;
+        font-size: 0.68rem;
+        padding: 5px 8px;
+        margin: 6px 0;
+        box-sizing: border-box;
+        width: 100%;
       }
       .heraldo-lead-title {
-        font-size: 1.3rem;
-        line-height: 1.15;
+        font-size: clamp(1.15rem, 4.5vw, 1.35rem);
+        line-height: 1.18;
+        word-break: break-word;
       }
       .heraldo-sublead {
-        font-size: 0.74rem;
-        margin-bottom: 5px;
+        font-size: 0.75rem;
+        line-height: 1.3;
+        margin-bottom: 6px;
+        word-break: break-word;
       }
       .heraldo-lead-p {
         font-size: 0.82rem;
-        padding: 7px 9px;
+        padding: 8px 10px;
+        margin: 6px 0 10px 0;
         text-align: left;
         line-height: 1.45;
+        box-sizing: border-box;
+        width: 100%;
       }
       .heraldo-columns-grid {
         grid-template-columns: 1fr;
         gap: 14px;
+        box-sizing: border-box;
+        width: 100%;
       }
       .gazette-body-text {
         font-size: 0.92rem;
@@ -1307,36 +1376,84 @@
       .box-press-quotes {
         padding: 8px 10px;
         margin-top: 10px;
+        box-sizing: border-box;
+        width: 100%;
       }
       .bottom-features {
         flex-direction: column;
         margin-top: 12px;
+        box-sizing: border-box;
+        width: 100%;
+        overflow: hidden;
       }
       .feat-header {
         width: 100%;
         padding: 7px;
         font-size: 0.8rem;
+        box-sizing: border-box;
+      }
+      .feat-cell {
+        width: 100%;
+        border-left: none;
+        border-bottom: 1px solid #c7b28b;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        box-sizing: border-box;
+      }
+      .feat-cell:last-child {
+        border-bottom: none;
       }
       .feature-item {
         border-right: none;
         border-bottom: 1.5px solid #8c6443;
         padding: 7px 9px;
+        box-sizing: border-box;
+        width: 100%;
       }
       .feature-item:last-child {
         border-bottom: none;
       }
 
-      /* 7. Partes de Guerra (AAR) en Móvil */
+      /* 7. Misiones en Móvil */
+      .mission-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .spec-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(125px, 100%), 1fr));
+        gap: 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .mission-nav-bar {
+        flex-direction: column;
+        width: 100%;
+      }
+      .mission-nav-bar .btn-action {
+        width: 100%;
+        text-align: center;
+      }
+
+      /* 8. Partes de Guerra (AAR) en Móvil */
       .aar-layout-grid {
         grid-template-columns: 1fr;
         gap: 1.1rem;
+        width: 100%;
+        box-sizing: border-box;
       }
       .aar-layout-grid .form-control {
         font-size: 0.88rem;
         padding: 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
       }
       .aar-layout-grid textarea.form-control {
         min-height: 110px;
+        width: 100%;
+        box-sizing: border-box;
       }
       .aar-layout-grid .btn-action {
         padding: 0.65rem 1rem;
@@ -1345,12 +1462,63 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        box-sizing: border-box;
       }
 
-      /* 8. Panel GM en Móvil */
+      /* 9. Cartografía y Mapa en Móvil */
+      .map-grid-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .map-controls-bar {
+        padding: 0.5rem;
+        gap: 0.4rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .map-legend-pills {
+        gap: 0.3rem;
+      }
+      .legend-pill {
+        font-size: 0.62rem;
+        padding: 0.18rem 0.38rem;
+      }
+
+      /* 10. Oráculo y Lore en Móvil */
+      .oracle-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* 11. Panel GM en Móvil */
       #gmDirectPanel {
         grid-template-columns: 1fr !important;
         gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .spec-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .spec-cell {
+        grid-column: span 1 !important;
+      }
+      .header-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .header-actions .btn-action,
+      .identity-chip {
+        text-align: center;
+        justify-content: center;
+        width: 100%;
       }
     }
 
