@@ -1,5 +1,5 @@
 /**
- * Kar-Drakor: War Room - Adaptador de Almacenamiento Cloud (Supabase + LocalStorage Fallback)
+ * Mordheim: War Room - Adaptador de Almacenamiento Cloud (Supabase + LocalStorage Fallback)
  */
 import { CONFIG } from './config.js';
 import { INITIAL_DATA } from './data.js';
@@ -37,7 +37,7 @@ export const Storage = {
 
                 if (!error && !data) {
                     // Inicializar por primera vez en Supabase
-                    console.log('⚡ Inicializando Kar-Drakor en Supabase por primera vez...');
+                    console.log('⚡ Inicializando Mordheim en Supabase por primera vez...');
                     await this.saveState(INITIAL_DATA);
                     return INITIAL_DATA;
                 }
@@ -103,7 +103,7 @@ export const Storage = {
 
         try {
             supabaseClient
-                .channel('kardrakor-changes')
+                .channel('mordheim-changes')
                 .on(
                     'postgres_changes',
                     {

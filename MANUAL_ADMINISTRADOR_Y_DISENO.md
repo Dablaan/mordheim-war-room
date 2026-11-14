@@ -11,7 +11,7 @@
 | :--- | :--- |
 | **Aplicación Web en Vivo (24/7)** | [https://dablaan.github.io/mordheim-war-room/](https://dablaan.github.io/mordheim-war-room/) |
 | **Repositorio Oficial de Código** | [https://github.com/Dablaan/mordheim-war-room](https://github.com/Dablaan/mordheim-war-room) |
-| **Carpeta Local de Desarrollo** | `C:\Users\David\Desktop\Kar-Drakor-WarRoom\` |
+| **Carpeta Local de Desarrollo** | `C:\Users\David\Desktop\Mordheim-WarRoom\` |
 | **Carpeta Original de Campaña (Obsidian)** | `Garbancito/30 Recursos/One Page Rules/Campaña Lidon/` |
 | **Registro Central de Credenciales** | `Garbancito/20 Áreas/Gestión Digital/Registro_Central_APIs_y_Tokens.md` |
 | **Sistema de Juego** | *Age of Fantasy: Skirmish* (v3.6.0) de OnePageRules (OPR) |
@@ -40,7 +40,7 @@ Una aplicación web interactiva (PWA), adaptada a móviles y ordenadores, alojad
 ## 🗺️ 3. Estructura de Archivos y Recursos
 
 ```text
-Kar-Drakor-WarRoom/
+Mordheim-WarRoom/
 ├── index.html                           # Aplicación Web completa (HTML5 + CSS + JS Engine)
 ├── README.md                            # Resumen público del repositorio en GitHub
 ├── MANUAL_ADMINISTRADOR_Y_DISENO.md     # ESTE DOCUMENTO MAESTRO
@@ -54,14 +54,14 @@ Kar-Drakor-WarRoom/
 │   ├── ui.js                            # Renderizado dinámico de componentes
 │   └── main.js                          # Script de arranque del motor modular
 └── assets/                              # Recursos gráficos y documentos oficiales
-    ├── Mapa_Kar_Drakor.png              # Plano táctico de fondo para la cartografía
+    ├── Mapa_mordheim.png              # Plano táctico de fondo para la cartografía
     ├── Mapa_Mesa_90x90_Escaramuza.png   # Plano táctico de despliegue para la Ronda 1
-    ├── El_Heraldo_de_Kar_Drakor_Edicion_01.png # Xilografía oficial de la Edición 01
-    ├── El_Heraldo_de_Kar_Drakor_Edicion_01.pdf # PDF maquetado oficial de la Edición 01
-    ├── El_Heraldo_de_Kar_Drakor_Edicion_02.png # Xilografía oficial de la Edición 02
-    ├── El_Heraldo_de_Kar_Drakor_Edicion_02.pdf # PDF maquetado oficial de la Edición 02
+    ├── El_Heraldo_de_mordheim_Edicion_01.png # Xilografía oficial de la Edición 01
+    ├── El_Heraldo_de_mordheim_Edicion_01.pdf # PDF maquetado oficial de la Edición 01
+    ├── El_Heraldo_de_mordheim_Edicion_02.png # Xilografía oficial de la Edición 02
+    ├── El_Heraldo_de_mordheim_Edicion_02.pdf # PDF maquetado oficial de la Edición 02
     ├── Hoja_Mision_Ronda_01.pdf         # Hoja oficial de misión imprimible (2 páginas)
-    └── Reglamento_Campana_Kar_Drakor.pdf # Reglamento oficial de campaña maquetado al estilo OPR
+    └── Reglamento_Campana_mordheim.pdf # Reglamento oficial de campaña maquetado al estilo OPR
 ```
 
 ---
@@ -106,7 +106,7 @@ Cargadas en la cabecera de `index.html`:
 ## 👑 5. Guía del Administrador (Game Master / Árbitro)
 
 ### 5.1. Cómo identificarse como Game Master
-1. Entra a la web: [https://dablaan.github.io/kar-drakor-war-room/](https://dablaan.github.io/kar-drakor-war-room/).
+1. Entra a la web: [https://dablaan.github.io/Mordheim-war-room/](https://dablaan.github.io/Mordheim-war-room/).
 2. Haz clic en el escudo de identidad superior derecho.
 3. Elige la opción **David (Casa Sangre Carmesí)**.
 4. Introduce el **PIN de Game Master**: `1348`.
@@ -117,7 +117,7 @@ Cargadas en la cabecera de `index.html`:
 * **Control de Rondas**: En la pestaña *6. Panel GM*, puedes cambiar la ronda activa (de la 1 a la 5).
 * **Gestión de Recursos**: Botones rápidos para otorgar `+20 de Oro` a todos los jugadores o `+1 VP` tras resolver una misión.
 * **Auditoría de Niebla de Guerra**: Como Game Master, puedes auditar todas las órdenes secretas de los tres jugadores.
-* **Copia de Seguridad JSON**: En el Panel GM puedes descargar con un clic el archivo `kardrakor_campaign_ronda_X.json` con el estado completo de la partida, o restaurar los valores iniciales.
+* **Copia de Seguridad JSON**: En el Panel GM puedes descargar con un clic el archivo `mordheim_campaign_ronda_X.json` con el estado completo de la partida, o restaurar los valores iniciales.
 
 ---
 
@@ -125,8 +125,8 @@ Cargadas en la cabecera de `index.html`:
 
 ### 6.1. Cómo publicar una nueva Edición de "El Heraldo" (Ej: Edición 03)
 1. Coloca la imagen de portada y el PDF oficial maquetado en la carpeta `assets/`:
-   * `assets/El_Heraldo_de_Kar_Drakor_Edicion_03.png`
-   * `assets/El_Heraldo_de_Kar_Drakor_Edicion_03.pdf`
+   * `assets/El_Heraldo_de_mordheim_Edicion_03.png`
+   * `assets/El_Heraldo_de_mordheim_Edicion_03.pdf`
 2. Abre `index.html` y localiza la sección de la pestaña `#tab-gazette`.
 3. Añade un botón selector para la nueva edición:
    ```html
@@ -141,9 +141,9 @@ Cargadas en la cabecera de `index.html`:
      title.textContent = "TITULAR EN MAYÚSCULAS DE LA EDICIÓN 3";
      sublead.textContent = "SUBTITULAR IMPACTANTE";
      deck.textContent = "Breve entradilla periodística en cursiva...";
-     img.src = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_03.png";
+     img.src = "./assets/El_Heraldo_de_mordheim_Edicion_03.png";
      caption.textContent = "Xilografía: Descripción del grabado...";
-     pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_03.pdf";
+     pdfLink.href = "./assets/El_Heraldo_de_mordheim_Edicion_03.pdf";
      leftCol.innerHTML = `
        <p style="margin-bottom: 10px;">
          <span class="drop-cap">C</span>rónica redactada con letra capitular...
@@ -173,11 +173,11 @@ Están definidos en el objeto `INITIAL_DATA` dentro de `index.html`:
 
 ## ☁️ 7. Flujo de Publicación en la Nube (Git & GitHub Pages)
 
-Cualquier cambio realizado en la carpeta local `C:\Users\David\Desktop\Kar-Drakor-WarRoom\` se despliega en vivo en la nube en menos de 1 minuto siguiendo estos pasos en PowerShell:
+Cualquier cambio realizado en la carpeta local `C:\Users\David\Desktop\Mordheim-WarRoom\` se despliega en vivo en la nube en menos de 1 minuto siguiendo estos pasos en PowerShell:
 
 ```powershell
 # 1. Acceder a la carpeta del proyecto
-cd C:\Users\David\Desktop\Kar-Drakor-WarRoom
+cd C:\Users\David\Desktop\Mordheim-WarRoom
 
 # 2. Comprobar archivos modificados
 git status
@@ -195,7 +195,7 @@ git push origin main
 **¿Qué ocurre tras el push?**
 * GitHub detecta el commit en la rama `main`.
 * GitHub Pages compila y actualiza la web automáticamente en los servidores de GitHub (~30-45 segundos).
-* Todos los jugadores verán el nuevo contenido al recargar [https://dablaan.github.io/kar-drakor-war-room/](https://dablaan.github.io/kar-drakor-war-room/).
+* Todos los jugadores verán el nuevo contenido al recargar [https://dablaan.github.io/Mordheim-war-room/](https://dablaan.github.io/Mordheim-war-room/).
 
 ---
 
@@ -204,10 +204,10 @@ git push origin main
 * **Servicio**: Supabase (PostgreSQL gratuito en la nube).
 * **URL**: `https://gwryzkejvymurjnyfwpu.supabase.co`
 * **Tabla**: `kv_store`
-  * Columna `key` (`text`): `'kardrakor_warroom_v1'`
+  * Columna `key` (`text`): `'mordheim_warroom_v1'`
   * Columna `value` (`jsonb`): Almacena todo el estado activo (distritos, marcador, partes AAR y ronda).
 * **Mecanismo de Salvaguarda**: Si un jugador entra sin conexión o falla la red, el código utiliza automáticamente `localStorage` como fallback transparente para que la aplicación nunca se bloquee. Al recuperar la red, se sincroniza con la nube.
 
 ---
 
-*Documento redactado el 12 de Noviembre de 2026. Mantenido bajo la Cédula del Tribunal de Guerra de Kar-Drakor.*
+*Documento redactado el 12 de Noviembre de 2026. Mantenido bajo la Cédula del Tribunal de Guerra de Mordheim.*

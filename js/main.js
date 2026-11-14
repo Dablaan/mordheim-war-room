@@ -1,5 +1,5 @@
 /**
- * Kar-Drakor: War Room — Script Principal
+ * Mordheim: War Room — Script Principal
  */
 import { AppState } from './state.js';
 import { UI } from './ui.js';
@@ -7,7 +7,7 @@ import { UI } from './ui.js';
 window.AppState = AppState;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('⚔️ Iniciando Kar-Drakor: War Room...');
+    console.log('⚔️ Iniciando Mordheim: War Room...');
     
     // Inicializar estado reactivo
     await AppState.init();
@@ -25,5 +25,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    console.log('🏰 Cuartel General de Kar-Drakor listo.');
+    console.log('🏰 Cuartel General de Mordheim listo.');
 });

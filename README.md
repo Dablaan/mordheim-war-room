@@ -35,4 +35,4 @@ En él encontrarás:
 
 ---
 
-*Campaña narrativa de Age of Fantasy: Skirmish — Códice Kar-Drakor.*
+*Campaña narrativa de Age of Fantasy: Skirmish — Códice Mordheim.*

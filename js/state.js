@@ -1,5 +1,5 @@
 /**
- * Kar-Drakor: War Room - Gestor de Estado Reactivo
+ * Mordheim: War Room - Gestor de Estado Reactivo
  */
 import { CONFIG } from './config.js';
 import { Storage } from './storage.js';
@@ -22,7 +22,7 @@ export const AppState = {
         this.datos = await Storage.loadState();
         
         // Recuperar última sesión de jugador si existe
-        const sesionGuardada = localStorage.getItem('kardrakor_usuario_activo');
+        const sesionGuardada = localStorage.getItem('mordheim_usuario_activo');
         if (sesionGuardada) {
             this.jugadorActual = sesionGuardada;
         }
@@ -57,14 +57,14 @@ export const AppState = {
             }
         }
         this.jugadorActual = jugadorId;
-        localStorage.setItem('kardrakor_usuario_activo', jugadorId);
+        localStorage.setItem('mordheim_usuario_activo', jugadorId);
         this.notify();
         return { success: true };
     },
 
     logout() {
         this.jugadorActual = null;
-        localStorage.removeItem('kardrakor_usuario_activo');
+        localStorage.removeItem('mordheim_usuario_activo');
         this.notify();
     },
 
@@ -136,7 +136,7 @@ export const AppState = {
      */
     async consultarOraculo(pregunta) {
         const promptSystem = `
-Eres el "Oráculo de Kar-Drakor", un árbitro experto e imparcial en el wargame "Age of Fantasy: Skirmish" (v3.6.0) de OnePageRules (OPR) y en la campaña narrativa "Las Cenizas de Kar-Drakor".
+Eres el "Oráculo de Mordheim", un árbitro experto e imparcial en el wargame "Age of Fantasy: Skirmish" (v3.6.0) de OnePageRules (OPR) y en la campaña narrativa "Mordheim: La Sombra del Cometa".
 Reglas clave:
 - Acciones: Hold (dispara), Advance (mueve 6" y dispara), Rush (mueve 12", sin disparar), Charge (mueve 12" a CaC).
 - Combate: Calidad (Q) para impactar, Defensa (Def - AP) para bloquear.

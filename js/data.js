@@ -1,5 +1,5 @@
 /**
- * Kar-Drakor: War Room - Datos Iniciales de Campaña
+ * Mordheim: War Room - Datos Iniciales de Campaña
  */
 export const INITIAL_DATA = {
     rondaActual: 1,
@@ -45,7 +45,7 @@ export const INITIAL_DATA = {
         }
     },
 
-    // 9 Distritos de Kar-Drakor con coordenadas tácticas (% en el mapa)
+    // 9 Distritos de Mordheim con coordenadas tácticas (% en el mapa)
     distritos: [
         {
             id: 1,
@@ -142,7 +142,7 @@ export const INITIAL_DATA = {
             x: 80,
             y: 80,
             icono: 'fa-crown',
-            descripcion: 'El corazón soberano de Kar-Drakor, fracturado en dos por la Falla. El Trono de Hierro espera rey.',
+            descripcion: 'El corazón soberano de Mordheim, fracturado en dos por la Falla. El Trono de Hierro espera rey.',
             ventaja: 'Dominio Supremo: Concede +2 VP de Campaña por ronda que se mantenga bajo control.',
             estado: 'Sellado en las profundidades de la fortaleza.'
         }
@@ -166,9 +166,9 @@ export const INITIAL_DATA = {
         titulo: 'El Asalto a la Puerta del Abismo',
         escenario: 'Seize Ground (Tomar Terreno) — Pág. 22 AoFS',
         distritoDisputa: '1. La Puerta del Abismo',
-        bandasPuntos: '300 puntos (máx. 1 Héroe)',
+        bandasPuntos: '600 puntos (máx. 1 Héroe)',
         duracion: '4 Rondas de juego (o muerte súbita)',
-        lore: 'El suelo tembló cuando los antiguos portones de piedra enana de Kar-Drakor cedieron. Ahora, sobre una meseta sembrada de losas fracturadas y monolitos caídos, la vanguardia de los Vampiric Undead y la avanzadilla de los Ratmen chocan por el control de la única entrada transitable.',
+        lore: 'El suelo tembló cuando los antiguos portones de piedra enana de Mordheim cedieron. Ahora, sobre una meseta sembrada de losas fracturadas y monolitos caídos, la vanguardia de los Vampiric Undead y la avanzadilla de los Ratmen chocan por el control de la única entrada transitable.',
         mesa: '4x4 pies (120x120 cm) o mesa 90x90 cm con 4 marcadores de objetivo en los cuadrantes.',
         condiciones: 'Control de Marcadores a 3" sin enemigos. Ganador: +2 VP de Campaña + 60 pts tesorería + control del Distrito 1. Perdedor: +120 pts tesorería de recuperación.',
         pdfUrl: 'assets/Hoja_Mision_Ronda_01.pdf',
@@ -194,7 +194,7 @@ export const INITIAL_DATA = {
         javi: {
             jugador: 'Javi',
             titulo: '«Reconocimiento de Agravios»',
-            trasfondo: 'Los clanes de ingenieros han enviado exploradores hacia las lindes de Kar-Drakor. Se han detectado movimientos de blasfemos chupasangres e inmundas alimañas.',
+            trasfondo: 'Los clanes de ingenieros han enviado exploradores hacia las lindes de Mordheim. Se han detectado movimientos de blasfemos chupasangres e inmundas alimañas.',
             objetivo: 'Durante tu incursión de reconocimiento o primera escaramuza, mantén al menos el 50% de tus unidades intactas y asegura que tu Héroe sobreviva ileso al final del combate.',
             recompensa: '+1 VP de Campaña por disciplina táctica y +15 pts de tesorería de un alijo ancestral enano.'
         }
@@ -208,17 +208,17 @@ export const INITIAL_DATA = {
             fecha: 'Ronda 1 — Noviembre 2026',
             titular: '¡MASACRE EN EL BASTIÓN CENTRAL Y COBARDÍA HISTÓRICA!',
             resumen: 'Crónica del sangriento duelo entre Lord David y las hordas del Clan Scutrix. El infame Loky huyó en el carromato de víveres dejando a sus hermanos a merced de los colmillos no-muertos.',
-            imagen: 'assets/El_Heraldo_de_Kar_Drakor_Edicion_02.png',
-            pdf: 'assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf'
+            imagen: 'assets/El_Heraldo_de_mordheim_Edicion_02.png',
+            pdf: 'assets/El_Heraldo_de_mordheim_Edicion_02.pdf'
         },
         {
             edicion: 1,
             titulo: 'Edición Inaugural: El Despertar del Colmillo de Hierro',
             fecha: 'Apertura de Campaña — Noviembre 2026',
             titular: '¡LA GRAN FALLA SE ABRE: CUATROCIENTOS AÑOS DE SILENCIO ROTOS!',
-            resumen: 'Tres señores de la guerra convergen hacia las ruinas de Kar-Drakor. El pregonero de la fortaleza publica el bando oficial de reclutamiento y las reglas de conquista de los 9 distritos.',
-            imagen: 'assets/El_Heraldo_de_Kar_Drakor_Edicion_01.png',
-            pdf: 'assets/El_Heraldo_de_Kar_Drakor_Edicion_01.pdf'
+            resumen: 'Tres señores de la guerra convergen hacia las ruinas de Mordheim. El pregonero de la fortaleza publica el bando oficial de reclutamiento y las reglas de conquista de los 9 distritos.',
+            imagen: 'assets/El_Heraldo_de_mordheim_Edicion_01.png',
+            pdf: 'assets/El_Heraldo_de_mordheim_Edicion_01.pdf'
         }
     ],
 

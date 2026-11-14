@@ -1,11 +1,11 @@
 /**
- * Kar-Drakor: War Room - Configuración de Servicios Cloud
+ * Mordheim: War Room - Configuración de Servicios Cloud
  */
 export const CONFIG = {
     // Supabase Cloud Persistence (reutilizando la instancia del usuario)
     SUPABASE_URL: 'https://gwryzkejvymurjnyfwpu.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw',
-    STORAGE_KEY: 'kardrakor_warroom_v1',
+    STORAGE_KEY: 'mordheim_warroom_v1',
 
     // Google Gemini API para el Oráculo de Reglas
     GEMINI_API_KEY: '',

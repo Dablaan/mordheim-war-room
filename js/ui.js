@@ -1,5 +1,5 @@
 /**
- * Kar-Drakor: War Room — Interfaz y Renderizado de Componentes
+ * Mordheim: War Room — Interfaz y Renderizado de Componentes
  */
 import { CONFIG } from './config.js';
 import { AppState } from './state.js';
@@ -84,7 +84,7 @@ export const UI = {
                 };
 
                 await AppState.registrarParte(parteData);
-                alert('⚔️ ¡Parte de guerra registrado en los anales de Kar-Drakor y sincronizado en la nube!');
+                alert('⚔️ ¡Parte de guerra registrado en los anales de Mordheim y sincronizado en la nube!');
                 formParte.reset();
                 document.getElementById('resultado-dado').innerText = '';
             });
@@ -102,7 +102,7 @@ export const UI = {
                 inputOraculo.value = '';
 
                 // Loader provisional
-                const loaderId = this.agregarMensajeOraculo('oracle', '🔮 *El Oráculo consulta las cenizas rúnicas de Kar-Drakor...*');
+                const loaderId = this.agregarMensajeOraculo('oracle', '🔮 *El Oráculo consulta las cenizas rúnicas de Mordheim...*');
 
                 const respuesta = await AppState.consultarOraculo(txt);
                 const elem = document.getElementById(loaderId);
@@ -324,7 +324,7 @@ export const UI = {
                 <div class="secret-order-card" style="text-align:center; padding:40px 20px;">
                     <i class="fa-solid fa-eye-slash" style="font-size:2.5rem; color:#8b5cf6; margin-bottom:14px;"></i>
                     <h3 style="font-family:var(--font-heading); color:#c4b5fd;">Niebla de Guerra Total</h3>
-                    <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">Identifícate con tu facción para revelar las órdenes secretas que tus espías han interceptado en Kar-Drakor.</p>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">Identifícate con tu facción para revelar las órdenes secretas que tus espías han interceptado en Mordheim.</p>
                     <button class="dice-btn" style="margin:16px auto 0 auto;" onclick="window.UI.abrirModalLogin()">Identificar Comandante</button>
                 </div>
             `;
@@ -395,7 +395,7 @@ export const UI = {
             <div class="gazette-card">
                 <div class="gazette-header">
                     <div style="font-size:0.8rem; letter-spacing:3px; text-transform:uppercase;">Gaceta Oficial de las Ruinas</div>
-                    <h2 class="gazette-name">EL HERALDO DE KAR-DRAKOR</h2>
+                    <h2 class="gazette-name">EL HERALDO DE Mordheim</h2>
                     <div style="font-size:0.85rem; color:#c5a059; margin-top:4px;">${p.titulo} • ${p.fecha}</div>
                 </div>
                 <div class="gazette-body">

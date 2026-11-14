@@ -809,7 +809,7 @@ html_content = '''<!DOCTYPE html>
                 </p>
               </div>
               <div style="text-align: center; margin-top: 10px;">
-                <a id="gazettePdfLink" href="./assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf" target="_blank" class="btn-action">
+                <a id="gazettePdfLink" href="./assets/El_Heraldo_de_mordheim_Edicion_02.pdf" target="_blank" class="btn-action">
                   <i class="fa-solid fa-file-pdf"></i> Abrir Edición Completa en PDF
                 </a>
               </div>
@@ -852,7 +852,7 @@ html_content = '''<!DOCTYPE html>
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Puntos de Banda</div>
-                <div class="spec-cell-val" id="missionPoints">300 pts (+botín)</div>
+                <div class="spec-cell-val" id="missionPoints">600 pts (+botín)</div>
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Límite de Rondas</div>
@@ -1240,7 +1240,7 @@ html_content = '''<!DOCTYPE html>
     // 1. CONFIGURACIÓN SUPABASE & MEMORIA
     const SUPABASE_URL = "https://gwryzkejvymurjnyfwpu.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cnl6a2VqdnltdXJqbnlmd3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjg1NDgsImV4cCI6MjA4NzcwNDU0OH0.x1PU7qnWJTLA5P6DO0Og6SlnSi0vIyTh98iu3GCk3fw";
-    const STORAGE_KEY = "kardrakor_warroom_v1";
+    const STORAGE_KEY = "mordheim_warroom_v1";
     const SUGGESTIONS_KEY = "mordheim_sugerencias";
     const GEMINI_CONFIG_KEY = "mordheim_gemini_config";
 
@@ -1416,7 +1416,7 @@ html_content = '''<!DOCTYPE html>
         badge: "COMPLETADA",
         badgeStyle: "background: #dfcb9f; color: #3a2e22; border: 1.5px solid #3a2e22;",
         rulebook: "AoF: Skirmish v3.6.0",
-        points: "300 pts",
+        points: "600 pts",
         turns: "4 Rondas",
         tableSize: "90x90 cm (David) / 120x120 cm (Sergio & Javi)",
         lore: "Tras el impacto del cometa sobre las cúpulas de Mordheim, las avanzadas de la Casa Sangre Carmesí y del Clan Scutrix se lanzaron a disputar el paso de La Roca de Sigmar y los muelles fluviales. El choque concluyó con la victoria de las ratas y la cobarde fuga de Loky.",
@@ -1432,7 +1432,7 @@ html_content = '''<!DOCTYPE html>
         badge: "RONDA EN CURSO",
         badgeStyle: "background: var(--faction-sergio-bg); color: var(--faction-sergio); border: 1.5px solid var(--faction-sergio);",
         rulebook: "AoF: Skirmish v3.6.0",
-        points: "300 pts (+botín acumulado)",
+        points: "600 pts (+botín acumulado)",
         turns: "4 Rondas",
         tableSize: "90x90 cm (David) / 120x120 cm (Sergio & Javi)",
         lore: "Los ecos de la fuga de Loky aún resuenan en las tabernas de los arrabales. Tres filones de Piedra Bruja fosforescente han quedado al descubierto entre los escombros de la Plaza del Mercado y el Gran Puente del Río Stir. Las tres bandas se lanzan en una carrera desesperada para saquear los monolitos antes de que la niebla ponzoñosa los asfixie.",
@@ -1784,7 +1784,7 @@ html_content = '''<!DOCTYPE html>
           sublead.textContent = "LA GRAN METRÓPOLIS CALCINADA POR LA ESTRELLA ERRANTE";
           img.src = "./assets/portada_edicion_00.jpg";
           caption.textContent = "Xilografía Fundacional: El cometa de dos colas precipitándose sobre las cúpulas de Mordheim.";
-          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_00.pdf";
+          pdfLink.href = "./assets/El_Heraldo_de_mordheim_Edicion_00.pdf";
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
               <span class="drop-cap">E</span>l juicio anunciado por los astrónomos no fue un símbolo de gloria, sino la tumba de la mayor metrópolis imperial. En la víspera del nuevo milenio, el bólido celeste de mineral oscuro atravesó las nubes y pulverizó los palacios, hundiendo el centro geográfico en un abismo titánico conocido como <strong>El Pozo</strong>.
@@ -1802,7 +1802,7 @@ html_content = '''<!DOCTYPE html>
           sublead.textContent = "TRES HUESTES CONVERGEN HACIA LAS RUINAS";
           img.src = "./assets/portada_edicion_01.jpg";
           caption.textContent = "Xilografía de Época: Tres huestes convergiendo en las ruinas de Mordheim.";
-          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_01.pdf";
+          pdfLink.href = "./assets/El_Heraldo_de_mordheim_Edicion_01.pdf";
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
               <span class="drop-cap">L</span>a Ciudad Condenada ha abierto sus fauces. Tras meses de niebla ponzoñosa, los accesos a la metrópolis son disputados con furia sanguinaria. Tres señores de la guerra pugnan por el dominio del empedrado.
@@ -1820,7 +1820,7 @@ html_content = '''<!DOCTYPE html>
           sublead.textContent = "COBARDÍA HISTÓRICA EN LA ENCRUCIJADA";
           img.src = "./assets/portada_edicion_02.jpg";
           caption.textContent = "Xilografía Clandestina: La cobarde fuga de Loky en su carromato de mulas tras la refriega en la encrucijada.";
-          pdfLink.href = "./assets/El_Heraldo_de_Kar_Drakor_Edicion_02.pdf";
+          pdfLink.href = "./assets/El_Heraldo_de_mordheim_Edicion_02.pdf";
           leftCol.innerHTML = `
             <p style="margin-bottom: 10px;">
               <span class="drop-cap">¡E</span>scándalo en los arrabales de Mordheim! Los mensajeros del Heraldo confirman la masacre en la Encrucijada. Mientras las garras vampíricas de Lord David decapitaban al campeón Queek del Clan Scutrix, el infame mercenario Loky abandonó el frente a todo galope.
@@ -2021,7 +2021,7 @@ html_content = '''<!DOCTYPE html>
         if (type === 'fatiga') input.value = "¿Cómo funciona exactamente la fatiga en combate cuerpo a cuerpo?";
         if (type === 'moral') input.value = "¿Cuándo se chequea pánico al 50% de la banda?";
         if (type === 'escenografia') input.value = "¿Qué escenografía 3MF tenemos y qué cobertura da?";
-        if (type === 'armyforge') input.value = "¿Cómo configurar la banda en ArmyForge para 300 puntos?";
+        if (type === 'armyforge') input.value = "¿Cómo configurar la banda en ArmyForge para 600 puntos?";
         this.sendOracleQuery();
       }
 
@@ -2056,7 +2056,7 @@ Conoces el reglamento oficial:
 - Moral al 50%: chequear Calidad. Fallo por disparo causa Shaken (acobardada). Fallo en melé tras perder el asalto causa Rout (baja definitiva).
 - Cobertura da +1 a Defensa contra disparos. Trepar vertical hasta 3 pulg. gratis.
 - Escenografía 3MF disponible: Mansión en ruinas (Building 4, 2 plantas), Ruinas Ulvheim (Placas 6 y 17 modulares), Casas derruidas 2 y 3, Muros caídos, Pilas de cajas y barriles (cobertura baja), Bosque tenebroso.
-- Límites de banda: 300 pts en ArmyForge.
+- Límites de banda: 600 pts en ArmyForge.
 Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador: "${query}"`;
 
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.geminiApiKey}`, {
@@ -2093,7 +2093,7 @@ Responde de forma clara, precisa y ambientada en Mordheim. Consulta del jugador:
           } else if (q.includes("escenografia") || q.includes("3mf") || q.includes("imprimir") || q.includes("terreno")) {
             ans = "<strong>Escenografía 3MF de Campaña:</strong><br>• <strong>Building 4:</strong> Mansión gótica de 2 plantas. Bloquea línea de visión y da altura.<br>• <strong>Ruinas Ulvheim (Placas 6 y 17):</strong> Muros con ventanas que otorgan +1 a cobertura.<br>• <strong>Cajas y Barriles:</strong> Cobertura baja.<br>• <strong>Bosque:</strong> Terreno difícil (-2 pulg. al avance).";
           } else if (q.includes("armyforge") || q.includes("lista") || q.includes("puntos") || q.includes("crear")) {
-            ans = "<strong>Creación con ArmyForge:</strong> En la web de OPR ArmyForge selecciona <em>Age of Fantasy: Skirmish</em>. El presupuesto oficial de campaña es de <strong>300 puntos</strong> por banda, con un máximo de 1 Héroe y respetando el coste de equipo rúnico y magia.";
+            ans = "<strong>Creación con ArmyForge:</strong> En la web de OPR ArmyForge selecciona <em>Age of Fantasy: Skirmish</em>. El presupuesto oficial de campaña es de <strong>600 puntos</strong> por banda, con un máximo de 1 Héroe y respetando el coste de equipo rúnico y magia.";
           }
 
           botBubble.innerHTML = `<strong>Oráculo Arcano:</strong> ${ans}`;
@@ -2298,7 +2298,7 @@ Responde en perfecto personaje, manteniendo tu tono y referencias a los sucesos 
 </html>
 '''
 
-with open(r'C:\Users\David\Desktop\Kar-Drakor-WarRoom\index.html', 'w', encoding='utf-8') as f:
+with open(r'C:\Users\David\Desktop\Mordheim-WarRoom\index.html', 'w', encoding='utf-8') as f:
     f.write(html_content)
 
 print("index.html generado con exito!")
