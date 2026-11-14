@@ -545,20 +545,47 @@
       font-size: 0.85rem;
       letter-spacing: 1px;
     }
-    .feat-cell {
+    .feature-item {
       flex: 1;
       padding: 6px 10px;
       border-right: 1.5px solid #8c6443;
-      line-height: 1.3;
-      text-align: justify;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
     }
-    .feat-cell:last-child { border-right: none; }
-    .feat-cell b {
+    .feature-item:last-child { border-right: none; }
+    .feature-num {
+      font-family: var(--font-title-dec);
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: #7a1515;
+      line-height: 1;
+    }
+    .feature-title {
       font-family: var(--font-title);
-      display: block;
+      font-weight: 800;
+      font-size: 0.74rem;
+      color: #331505;
+      letter-spacing: 0.05em;
       margin-bottom: 2px;
-      font-size: 0.76rem;
-      color: #541212;
+    }
+    .feature-desc {
+      font-size: 0.72rem;
+      color: #241c16;
+      line-height: 1.25;
+    }
+
+    /* GRID RESPONSIVO PARA EL HERALDO Y PARTES DE GUERRA */
+    .heraldo-columns-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .aar-layout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
     }
 
     /* PESTAÑA 2: MISIONES */
@@ -1028,6 +1055,276 @@
       border-color: var(--ink-black);
     }
 
+    /* ======================================================== */
+    /* NAVEGACIÓN MÓVIL (1 TOQUE, CERO SCROLL HORIZONTAL)       */
+    /* ======================================================== */
+    .mobile-section-nav {
+      display: none;
+      background: #ebd8b2;
+      border-bottom: 2.5px solid var(--ink-black);
+      padding: 0.45rem 0.65rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+    }
+    .mobile-nav-control {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--bg-parchment-sheet);
+      border: 1.8px solid var(--ink-black);
+      padding: 0.35rem 0.55rem;
+      box-shadow: 2px 2px 0 var(--ink-black);
+    }
+    .mobile-nav-label {
+      font-family: var(--font-title);
+      font-weight: 900;
+      font-size: 0.72rem;
+      color: var(--faction-david);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .mobile-tab-select {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--line-sepia);
+      background: #faf4e6;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--ink-black);
+      padding: 0.4rem 0.45rem;
+      cursor: pointer;
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: menulist;
+      appearance: menulist;
+    }
+    .mobile-nav-arrows {
+      display: flex;
+      gap: 0.25rem;
+    }
+    .btn-nav-step {
+      background: #ebd9b5;
+      border: 1.5px solid var(--ink-black);
+      color: var(--ink-black);
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      box-shadow: 1px 1px 0 var(--ink-black);
+      border-radius: 2px;
+      transition: background 0.1s;
+    }
+    .btn-nav-step:active {
+      background: #fff;
+      transform: translate(1px, 1px);
+      box-shadow: none;
+    }
+
+    /* ======================================================== */
+    /* REGLAS MAESTRAS DE RESPONSIVIDAD MÓVIL (< 768px)          */
+    /* ======================================================== */
+    @media (max-width: 768px) {
+      /* 1. Activar selector móvil y ocultar barra horizontal con scroll */
+      .mobile-section-nav {
+        display: block;
+      }
+      .tabs-nav {
+        display: none !important;
+      }
+
+      /* 2. Contenedor y márgenes de pantalla */
+      body {
+        padding: 0.2rem 0.2rem 2.2rem 0.2rem;
+      }
+      .gazette-wrapper {
+        border-width: 2px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      }
+      .tab-pane {
+        padding: 0.65rem 0.45rem;
+      }
+      .panel-box {
+        padding: 0.75rem 0.55rem;
+      }
+
+      /* 3. Cabecera principal y Metadatos */
+      .gazette-header {
+        padding: 0.6rem 0.65rem;
+        gap: 0.5rem;
+      }
+      .header-branding {
+        gap: 0.45rem;
+      }
+      .header-logo-icon {
+        font-size: 1.5rem;
+      }
+      .header-title-main {
+        font-size: 1.35rem;
+        line-height: 1.1;
+      }
+      .header-sub-main {
+        font-size: 0.62rem;
+        letter-spacing: 0.04em;
+      }
+      .header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.35rem;
+        flex-wrap: nowrap;
+      }
+      .header-actions .btn-action,
+      .identity-chip {
+        font-size: 0.68rem;
+        padding: 0.3rem 0.45rem;
+        white-space: nowrap;
+      }
+
+      /* 4. Folio Strip (evitar columnas verticales de texto roto) */
+      .gazette-folio-strip {
+        flex-direction: column;
+        text-align: center;
+        gap: 2px;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.65rem;
+      }
+      .gazette-folio-strip span:nth-child(2) {
+        display: none; /* Ocultar el subtítulo largo del medio */
+      }
+
+      /* 5. Marcador de Campaña */
+      .scoreboard-strip {
+        padding: 0.4rem 0.5rem;
+      }
+      .scoreboard-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      /* 6. El Heraldo de Mordheim */
+      .herald-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin-bottom: 0.65rem;
+      }
+      .herald-nav .btn-action {
+        width: 100%;
+        text-align: center;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.74rem;
+        box-shadow: 1.5px 1.5px 0 var(--ink-black);
+      }
+      .border-woodcut-double {
+        padding: 0.65rem 0.45rem;
+        border-width: 2.5px;
+      }
+      .heraldo-badge-box {
+        font-size: 8.5pt;
+        letter-spacing: 2px;
+        padding: 2px 12px;
+      }
+      .heraldo-title-main {
+        font-size: 2.85rem;
+        letter-spacing: 0.5px;
+        line-height: 0.95;
+      }
+      .heraldo-title-sub {
+        font-size: 1.5rem;
+        margin-top: -2px;
+      }
+      .heraldo-meta-bar {
+        font-size: 0.67rem;
+        padding: 4px 6px;
+      }
+      .heraldo-lead-title {
+        font-size: 1.3rem;
+        line-height: 1.15;
+      }
+      .heraldo-sublead {
+        font-size: 0.74rem;
+        margin-bottom: 5px;
+      }
+      .heraldo-lead-p {
+        font-size: 0.82rem;
+        padding: 7px 9px;
+        text-align: left;
+        line-height: 1.45;
+      }
+      .heraldo-columns-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .gazette-body-text {
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+      .gazette-body-text p {
+        text-align: left; /* Eliminar huecos de justificado en móvil */
+        hyphens: auto;
+        word-break: normal;
+        margin-bottom: 10px;
+      }
+      .box-press-quotes {
+        padding: 8px 10px;
+        margin-top: 10px;
+      }
+      .bottom-features {
+        flex-direction: column;
+        margin-top: 12px;
+      }
+      .feat-header {
+        width: 100%;
+        padding: 7px;
+        font-size: 0.8rem;
+      }
+      .feature-item {
+        border-right: none;
+        border-bottom: 1.5px solid #8c6443;
+        padding: 7px 9px;
+      }
+      .feature-item:last-child {
+        border-bottom: none;
+      }
+
+      /* 7. Partes de Guerra (AAR) en Móvil */
+      .aar-layout-grid {
+        grid-template-columns: 1fr;
+        gap: 1.1rem;
+      }
+      .aar-layout-grid .form-control {
+        font-size: 0.88rem;
+        padding: 0.5rem;
+      }
+      .aar-layout-grid textarea.form-control {
+        min-height: 110px;
+      }
+      .aar-layout-grid .btn-action {
+        padding: 0.65rem 1rem;
+        font-size: 0.82rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* 8. Panel GM en Móvil */
+      #gmDirectPanel {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1128,6 +1425,32 @@
       </div>
     </section>
 
+    <!-- SELECTOR DE SECCIÓN PARA MÓVIL (1 TOQUE, CERO SCROLL HORIZONTAL) -->
+    <div class="mobile-section-nav" id="mobileSectionNav">
+      <div class="mobile-nav-control">
+        <label for="mobileTabSelect" class="mobile-nav-label">
+          <i class="fa-solid fa-compass"></i> SECCIÓN:
+        </label>
+        <select id="mobileTabSelect" class="mobile-tab-select" onchange="app.showTab(this.value)">
+          <option value="tab-gazette">🗞️ 1. El Heraldo de Mordheim</option>
+          <option value="tab-mission">🛡️ 2. Misiones Tácticas</option>
+          <option value="tab-map">🗺️ 3. Cartografía Urbana</option>
+          <option value="tab-aar">📜 4. Partes de Guerra (AAR)</option>
+          <option value="tab-oracle">⚖️ 5. El Oráculo (IA)</option>
+          <option value="tab-roleplay">💀 6. Lore &amp; Bajos Fondos</option>
+          <option value="tab-gm" id="mobileGmOption">👑 7. Panel GM (David)</option>
+        </select>
+        <div class="mobile-nav-arrows">
+          <button type="button" class="btn-nav-step" onclick="app.stepTab(-1)" title="Sección anterior">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button type="button" class="btn-nav-step" onclick="app.stepTab(1)" title="Sección siguiente">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- BARRA DE PESTAÑAS (ORDEN DE DAVID: 1 Heraldo, 2 Misiones, 3 Mapa, 4 AAR, 5 Oráculo, 6 Contacto, 7 GM) -->
     <nav class="tabs-nav" id="mainTabsNav">
       <button class="tab-btn active" data-tab="tab-gazette">
@@ -1202,7 +1525,7 @@
           </div>
 
           <!-- CUADRÍCULA: CRÓNICA + XILOGRAFÍA -->
-          <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; align-items: start;">
+          <div class="heraldo-columns-grid">
             <!-- Crónica Izquierda -->
             <div>
               <div id="gazetteLeftCol" class="gazette-body-text">
@@ -1468,7 +1791,7 @@
       <!-- PESTAÑA 4: PARTES DE GUERRA (AARs) (FOLIO 4)             -->
       <!-- ======================================================== -->
       <section class="tab-pane" id="tab-aar">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+        <div class="aar-layout-grid">
           <!-- Enviar nuevo Parte -->
           <div class="panel-box">
             <h3 style="font-family: var(--font-gothic); font-size: 1.5rem; margin-bottom: 0.6rem;">
@@ -2447,6 +2770,8 @@
         const gmDirect = document.getElementById("gmDirectPanel");
         const gmGate = document.getElementById("gmGatePanel");
 
+        const mobGm = document.getElementById("mobileGmOption");
+
         if (this.currentUser) {
           if (avatar) avatar.textContent = this.currentUser.avatar;
           if (name) name.textContent = this.currentUser.name;
@@ -2454,10 +2779,12 @@
             if (districtGmBox) districtGmBox.style.display = 'block';
             if (gmDirect) gmDirect.style.display = 'grid';
             if (gmGate) gmGate.style.display = 'none';
+            if (mobGm) mobGm.style.display = 'block';
           } else {
             if (districtGmBox) districtGmBox.style.display = 'none';
             if (gmDirect) gmDirect.style.display = 'none';
             if (gmGate) gmGate.style.display = 'block';
+            if (mobGm) mobGm.style.display = 'none';
           }
         } else {
           if (avatar) avatar.textContent = "👁️";
@@ -2465,6 +2792,7 @@
           if (districtGmBox) districtGmBox.style.display = 'none';
           if (gmDirect) gmDirect.style.display = 'none';
           if (gmGate) gmGate.style.display = 'block';
+          if (mobGm) mobGm.style.display = 'none';
         }
       }
 
@@ -2478,6 +2806,7 @@
       }
 
       showTab(tabId) {
+        this.currentTab = tabId;
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
@@ -2487,6 +2816,9 @@
         const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
         if (btn) btn.classList.add('active');
 
+        const mobSelect = document.getElementById("mobileTabSelect");
+        if (mobSelect) mobSelect.value = tabId;
+
         if (tabId === 'tab-gazette') {
           this.showGazette(this.currentGazetteEdition);
         } else if (tabId === 'tab-mission') {
@@ -2494,6 +2826,16 @@
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      stepTab(delta) {
+        const tabs = ['tab-gazette', 'tab-mission', 'tab-map', 'tab-aar', 'tab-oracle', 'tab-roleplay'];
+        if (this.currentUser && this.currentUser.isGm) tabs.push('tab-gm');
+        const current = this.currentTab || 'tab-gazette';
+        let idx = tabs.indexOf(current);
+        if (idx === -1) idx = 0;
+        let nextIdx = (idx + delta + tabs.length) % tabs.length;
+        this.showTab(tabs[nextIdx]);
       }
 
       async loadCloudState() {
