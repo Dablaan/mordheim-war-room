@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>MORDHEIM: WAR ROOM — Gaceta Táctica &amp; Cuartel General de Campaña</title>
 
   <!-- Google Fonts de Imprenta Antigua y Gótica de Alta Legibilidad -->
@@ -47,6 +47,15 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      touch-action: pan-x pan-y;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    button, a, select, input, textarea, .btn-action, .tab-btn {
+      touch-action: manipulation;
+    }
 
     body {
       background-color: var(--bg-wood-dark);
@@ -1482,18 +1491,21 @@
       <!-- PESTAÑA 1: EL HERALDO DE MORDHEIM (MASTHEAD RESTAURADA) -->
       <!-- ======================================================== -->
       <section class="tab-pane active" id="tab-gazette">
-        <!-- Selector de Edición -->
+        <!-- Selector de Edición Cronológico -->
         <div class="herald-nav">
           <button class="btn-action" id="btnGazette0" onclick="app.showGazette(0)">
             <i class="fa-solid fa-meteor"></i> Edición 00 (Fundacional)
           </button>
-          <button class="btn-action active" id="btnGazette1" onclick="app.showGazette(1)">
-            <i class="fa-solid fa-shield"></i> Edición 01 (Oficial: ¡El Cometa Vuelve a Pulsar!)
+          <button class="btn-action" id="btnGazette1" onclick="app.showGazette(1)">
+            <i class="fa-solid fa-compass"></i> Edición 01 (Incursión)
           </button>
           <button class="btn-action" id="btnGazette2" onclick="app.showGazette(2)">
-            <i class="fa-solid fa-skull"></i> Edición 02 (Archivo: La Fuga de Loky)
+            <i class="fa-solid fa-skull"></i> Edición 02 (La Fuga de Loky)
           </button>
-          <a class="btn-action" id="gazettePdfLink" href="./assets/El_Heraldo_de_Mordheim_Edicion_01.pdf" target="_blank" style="margin-left:auto; text-decoration:none; color:var(--faction-david);">
+          <button class="btn-action active" id="btnGazette3" onclick="app.showGazette(3)">
+            <i class="fa-solid fa-shield"></i> Edición 03 (Última: ¡El Cometa Vuelve a Pulsar!)
+          </button>
+          <a class="btn-action" id="gazettePdfLink" href="./assets/El_Heraldo_de_Mordheim_Edicion_03.pdf" target="_blank" style="margin-left:auto; text-decoration:none; color:var(--faction-david);">
             <i class="fa-solid fa-file-pdf"></i> Descargar PDF Facsímil
           </a>
         </div>
@@ -1509,7 +1521,7 @@
             </div>
             <div class="heraldo-divider-line"></div>
             <div class="heraldo-meta-bar">
-              <span id="gazetteIssueMeta">Año 2000 C.I. • Calendas de Nachgeheim • Edición Inaugural (Volumen I)</span>
+              <span id="gazetteIssueMeta">Número 3 • Calendas de Nachgeheim • ¡El Cometa Vuelve a Pulsar!</span>
               <span id="gazettePriceMeta">PRECIO: 2 PENIQUES DE COBRE O 1 ESQUIRLA</span>
             </div>
           </div>
@@ -2468,57 +2480,41 @@
       },
       1: {
         num: 1,
-        meta: "Año 2000 C.I. • Calendas de Nachgeheim • Edición Inaugural (Volumen I)",
-        price: "2 PENIQUES DE COBRE O 1 ESQUIRLA",
-        title: "¡EL COMETA VUELVE A PULSAR: LA CIUDAD CONDENADA DESPIERTA TRAS EL SILENCIO!",
-        sublead: "EL MINERAL OSCURO IRRADIA DESDE EL POZO • VIEJOS GENERALES DESENTIERRAN SUS HIERROS Y CONVERGEN HACIA EL DISTRITO II Y EL TEMPLO DE MORR",
-        lead: "DESPACHO EXTRAORDINARIO DE VANGUARDIA: Las campanas mohosas de los campanarios rotos han vuelto a tañer empujadas por un viento que sabe a azufre y ceniza fría. El Pozo ha vuelto a pulsar con una lumbre verdosa y espectral que hiela la médula... Lord David (Casa Sangre Carmesí) y el Caudillo Sergio (Clan Scutrix) convergen hacia el Distrito II y el Cruce del Degollador.",
-        img: "./assets/grabado_edicion_01.jpg",
-        caption: "Xilografía de Época: El Templo de Morr en el Distrito II bajo la lumbre del Pozo y el avance de las huestes.",
+        meta: "Número 1 • Apertura de la Campaña Urbana",
+        price: "DOS PENIQUES",
+        title: "EL DESPERTAR DE LA CIUDAD CONDENADA",
+        sublead: "TRES HUESTES CONVERGEN HACIA LAS RUINAS DE MORDHEIM",
+        lead: "DESPACHO DE VANGUARDIA: Las partidas de guerra cruzan los muros exteriores disputando cada losa y cada barricada de Mordheim. Los Hombres Rata fortifican los desagües del río Stir, los Vampiros profanan las Criptas y los Enanos despliegan sus cañones de avancarga.",
+        img: "./assets/portada_edicion_01.jpg",
+        caption: "Xilografía de Época: Tres huestes convergiendo en las ruinas de Mordheim.",
         pdf: "./assets/El_Heraldo_de_Mordheim_Edicion_01.pdf",
         text: `
-          <p class="no-indent"><span class="drop-cap">L</span>as campanas mohosas de los campanarios rotos han vuelto a tañer empujadas por un viento que sabe a azufre y ceniza fría. Aquellos que creyeron que Mordheim dormiría eternamente bajo el sudario de su propio castigo cósmico han sido sacudidos de su letargo: el cráter titánico de <strong>El Pozo</strong> ha vuelto a pulsar con una lumbre verdosa y espectral que hiela la médula de cuantos la contemplan desde el campamento de frontera.</p>
-          <p>Nadie duerme ya a salvo al abrigo de los terraplenes. El Gran Silencio ha quedado quebrado por el rechinar de ruedas blindadas y el rumor sordo de botas sobre losas ensangrentadas. Dos grandes huestes han tomado posiciones en el empedrado del <strong>Distrito II</strong>, en torno a los aledaños sombríos del <strong>Templo de Morr</strong> y las lindes del <strong>Cruce del Degollador</strong>.</p>
-          <p>Desde los accesos fluviales y las criptas selladas, la aristocracia de la noche ha reclamado su coto de caza. <strong>Lord David</strong>, señor de la <strong>Casa Sangre Carmesí</strong> (<em>Vampiric Undead</em>), marcha al frente de sus legiones vampíricas. La urbe quebrada es su mayor festín: una fosa común a cielo abierto donde miles de esqueletos aguardan su mandato para alzarse, mientras sus nigromantes cosechan la Piedra de Disformidad para alimentar sus dínamos arcanas.</p>
-          <p>Mas las alcantarillas no admiten amos sin disputa. Con chillidos que erizan el espinazo, el <strong>Caudillo Sergio</strong> ha desatado a las hordas del <strong>Clan Scutrix</strong> (<em>Ratmen</em>). Los Hombres Rata veneran la roca celeste como la reliquia bendita de su dios cornudo. Con mosquetes de chispa y esferas de gas ponzoñosa, han jurado convertir el Templo de Morr en su madriguera sagrada.</p>
+          <p class="no-indent"><span class="drop-cap">L</span>as campanas rotas de las abadías tañen con el viento ponzoñoso. En las sombras de los accesos fluviales, los exploradores de la <strong>Casa Sangre Carmesí</strong> han avanzado sin descanso, asegurando el perímetro de las <strong>Criptas de Sylvania</strong>.</p>
+          <p>Por su parte, los chillidos de los <strong>Ratmen del Clan Scutrix</strong> confirman su dominio de las cloacas bajas. Armados con mosquetes de chispa y veneno de disformidad, sus patrullas han tomado posiciones de emboscada sobre <strong>La Roca de Sigmar</strong>, esperando a que cualquier intruso asome el morro por el puente.</p>
+          <p>Los <strong>Hijos del Yunque</strong> han respondido con flema enana: <em>«Que vengan los monstruos o las ratas; nuestro plomo vuela recto y nuestras hachas no piden perdón»</em>. Los primeros 9 distritos quedan abiertos a sangre y fuego.</p>
         `,
         quotes: `
           <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-bottom: 1.5px solid #6b3512; padding-bottom: 4px; margin-bottom: 6px;">
             🍻 SUSURROS EN 'EL CERDO DEGOLLADO'
           </div>
-          <div class="quote-speaker-title">Gunter «Tres-Dedos» (Tabernero):</div>
-          <div class="quote-speaker-text">«*Hic*... Os juro por la tumba de mi madre que las losas del cementerio vibran antes de medianoche. Vi un carromato negro descargar seis arcas de roble frente al panteón de los Stirland... ¡y los mozos no respiraban! Y por las cloacas del río, no asoméis la nariz: las ratas andan erguidas mascando piedras verdes como si fueran turrón de almendra.»</div>
-
-          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-top: 1px dashed #8c7759; border-bottom: 1.5px solid #6b3512; padding-top: 6px; padding-bottom: 4px; margin-top: 8px; margin-bottom: 6px;">
-            ⚖️ EL BAREMO DE ELBRICHT (COTIZACIÓN)
-          </div>
-          <div style="font-size: 0.8rem; line-height: 1.35; color: #17130e;">
-            • <strong>Fragmento Puro (1 lb):</strong> 50 Coronas de Oro<br/>
-            • <strong>Esquirla Menuda Verde:</strong> 14 Peniques de Cobre<br/>
-            • <strong>Polvo de Cráter:</strong> 4 Peniques de Cobre<br/>
-            <em style="color:#6e1414;">⚠️ Quien intente colar carbón con vitriolo irá a la fosa séptica.</em>
-          </div>
-
-          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #6e1414; border-top: 1px dashed #8c7759; border-bottom: 1.5px solid #6b3512; padding-top: 6px; padding-bottom: 4px; margin-top: 8px; margin-bottom: 6px;">
-            🎭 LA VERGONZOSA FUGA DE LOKY
-          </div>
-          <div style="font-size: 0.78rem; line-height: 1.3; font-style: italic; color: #2a1f18;">
-            «Al vislumbrar el resplandor verdoso en el cielo, el infame capitán Loky no desenvainó el hierro: cargó cuatro jamones rancios, tres mantas apolilladas y un gato tuerto, arreando sus mulas rengas hacia las colinas. ¡Más corre una mula espantada que la honra de un mercenario de pacotilla!»
-          </div>
+          <div class="quote-speaker-title">Gunter «Tres-Dedos»:</div>
+          <div class="quote-speaker-text">«*Hic*... Dicen que un carruaje fúnebre descargó ataúdes en los sótanos de la torre norte. Si tenéis apego al pescuezo, no paséis por la avenida de las criptas tras el ocaso.»</div>
+          <div class="quote-speaker-title">Mercenario Anónimo:</div>
+          <div class="quote-speaker-text">«Las ratas no buscan oro; se comen las piedras verdes que brillan en el fango. ¡Están poseídas por el delirio del cometa!»</div>
         `,
         features: `
           <div class="feat-header">EN ESTE NÚMERO</div>
           <div class="feat-cell">
-            <b>☄️ EL DESPERTAR TRAS EL SILENCIO</b>
-            El Pozo vuelve a pulsar con lumbre verdosa y las campanas rotas tañen al viento de azufre.
+            <b>🛡️ LA ROCA DE SIGMAR</b>
+            El bastión insular en mitad del río Stir que controla los pasos de asedio fluvial.
           </div>
           <div class="feat-cell">
-            <b>⚔️ DUELO EN EL DISTRITO II</b>
-            Lord David (Vampiric Undead) y Caudillo Sergio (Clan Scutrix) convergen a 600 puntos.
+            <b>⚙️ MAESTRÍA DEL ACERO</b>
+            Cómo los enanos descuentan equipo rúnico en la Forja de los Gremios.
           </div>
           <div class="feat-cell">
-            <b>⚖️ TASACIÓN DE PIEDRA BRUJA</b>
-            Cotizaciones oficiales de Maese Elbricht y edicto de cal viva del Santo Oficio.
+            <b>🐀 INFILTRACIÓN MURINA</b>
+            Los accesos clandestinos de las cloacas que permiten desplegar tropas con Ambush.
           </div>
         `
       },
@@ -2562,6 +2558,62 @@
           <div class="feat-cell">
             <b>📜 MANUAL DE MORAL</b>
             Guía práctica para recordar chequeos de liderazgo al 50% a caudillos rata olvidadizos.
+          </div>
+        `
+      },
+      3: {
+        num: 3,
+        meta: "Número 3 • Calendas de Nachgeheim • ¡El Cometa Vuelve a Pulsar!",
+        price: "2 PENIQUES DE COBRE O 1 ESQUIRLA",
+        title: "¡EL COMETA VUELVE A PULSAR: LA CIUDAD CONDENADA DESPIERTA TRAS EL SILENCIO!",
+        sublead: "EL MINERAL OSCURO IRRADIA DESDE EL POZO • VIEJOS GENERALES DESENTIERRAN SUS HIERROS Y CONVERGEN HACIA EL DISTRITO II Y EL TEMPLO DE MORR",
+        lead: "DESPACHO EXTRAORDINARIO DE VANGUARDIA: Las campanas mohosas de los campanarios rotos han vuelto a tañer empujadas por un viento que sabe a azufre y ceniza fría. El Pozo ha vuelto a pulsar con una lumbre verdosa y espectral que hiela la médula... Lord David (Casa Sangre Carmesí) y el Caudillo Sergio (Clan Scutrix) convergen hacia el Distrito II y el Cruce del Degollador.",
+        img: "./assets/grabado_edicion_01.jpg",
+        caption: "Xilografía de Época: El Templo de Morr en el Distrito II bajo la lumbre del Pozo y el avance de las huestes.",
+        pdf: "./assets/El_Heraldo_de_Mordheim_Edicion_03.pdf",
+        text: `
+          <p class="no-indent"><span class="drop-cap">L</span>as campanas mohosas de los campanarios rotos han vuelto a tañer empujadas por un viento que sabe a azufre y ceniza fría. Aquellos que creyeron que Mordheim dormiría eternamente bajo el sudario de su propio castigo cósmico han sido sacudidos de su letargo: el cráter titánico de <strong>El Pozo</strong> ha vuelto a pulsar con una lumbre verdosa y espectral que hiela la médula de cuantos la contemplan desde el campamento de frontera.</p>
+          <p>Nadie duerme ya a salvo al abrigo de los terraplenes. El Gran Silencio ha quedado quebrado por el rechinar de ruedas blindadas y el rumor sordo de botas sobre losas ensangrentadas. Dos grandes huestes han tomado posiciones en el empedrado del <strong>Distrito II</strong>, en torno a los aledaños sombríos del <strong>Templo de Morr</strong> y las lindes del <strong>Cruce del Degollador</strong>.</p>
+          <p>Desde los accesos fluviales y las criptas selladas, la aristocracia de la noche ha reclamado su coto de caza. <strong>Lord David</strong>, señor de la <strong>Casa Sangre Carmesí</strong> (<em>Vampiric Undead</em>), marcha al frente de sus legiones vampíricas. La urbe quebrada es su mayor festín: una fosa común a cielo abierto donde miles de esqueletos aguardan su mandato para alzarse, mientras sus nigromantes cosechan la Piedra de Disformidad para alimentar sus dínamos arcanas.</p>
+          <p>Mas las alcantarillas no admiten amos sin disputa. Con chillidos que erizan el espinazo, el <strong>Caudillo Sergio</strong> ha desatado a las hordas del <strong>Clan Scutrix</strong> (<em>Ratmen</em>). Los Hombres Rata veneran la roca celeste como la reliquia bendita de su dios cornudo. Con mosquetes de chispa y esferas de gas ponzoñosa, han jurado convertir el Templo de Morr en su madriguera sagrada.</p>
+        `,
+        quotes: `
+          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-bottom: 1.5px solid #6b3512; padding-bottom: 4px; margin-bottom: 6px;">
+            🍻 SUSURROS EN 'EL CERDO DEGOLLADO'
+          </div>
+          <div class="quote-speaker-title">Gunter «Tres-Dedos» (Tabernero):</div>
+          <div class="quote-speaker-text">«*Hic*... Os juro por la tumba de mi madre que las losas del cementerio vibran antes de medianoche. Vi un carromato negro descargar seis arcas de roble frente al panteón de los Stirland... ¡y los mozos no respiraban! Y por las cloacas del río, no asoméis la nariz: las ratas andan erguidas mascando piedras verdes como si fueran turrón de almendra.»</div>
+
+          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-top: 1px dashed #8c7759; border-bottom: 1.5px solid #6b3512; padding-top: 6px; padding-bottom: 4px; margin-top: 8px; margin-bottom: 6px;">
+            ⚖️ EL BAREMO DE ELBRICHT (COTIZACIÓN)
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.35; color: #17130e;">
+            • <strong>Fragmento Puro (1 lb):</strong> 50 Coronas de Oro<br/>
+            • <strong>Esquirla Menuda Verde:</strong> 14 Peniques de Cobre<br/>
+            • <strong>Polvo de Cráter:</strong> 4 Peniques de Cobre<br/>
+            <em style="color:#6e1414;">⚠️ Quien intente colar carbón con vitriolo irá a la fosa séptica.</em>
+          </div>
+
+          <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #6e1414; border-top: 1px dashed #8c7759; border-bottom: 1.5px solid #6b3512; padding-top: 6px; padding-bottom: 4px; margin-top: 8px; margin-bottom: 6px;">
+            🎭 LA VERGONZOSA FUGA DE LOKY
+          </div>
+          <div style="font-size: 0.78rem; line-height: 1.3; font-style: italic; color: #2a1f18;">
+            «Al vislumbrar el resplandor verdoso en el cielo, el infame capitán Loky no desenvainó el hierro: cargó cuatro jamones rancios, tres mantas apolilladas y un gato tuerto, arreando sus mulas rengas hacia las colinas. ¡Más corre una mula espantada que la honra de un mercenario de pacotilla!»
+          </div>
+        `,
+        features: `
+          <div class="feat-header">EN ESTE NÚMERO</div>
+          <div class="feat-cell">
+            <b>☄️ EL DESPERTAR TRAS EL SILENCIO</b>
+            El Pozo vuelve a pulsar con lumbre verdosa y las campanas rotas tañen al viento de azufre.
+          </div>
+          <div class="feat-cell">
+            <b>⚔️ DUELO EN EL DISTRITO II</b>
+            Lord David (Vampiric Undead) y Caudillo Sergio (Clan Scutrix) convergen a 600 puntos.
+          </div>
+          <div class="feat-cell">
+            <b>⚖️ TASACIÓN DE PIEDRA BRUJA</b>
+            Cotizaciones oficiales de Maese Elbricht y edicto de cal viva del Santo Oficio.
           </div>
         `
       }
@@ -3459,8 +3511,8 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
       }
 
       getLatestGazetteEdition() {
-        // En la campaña activa "Mordheim: La Sombra del Cometa", la edición oficial vigente es la 1
-        return 1;
+        const keys = Object.keys(GAZETTE_EDITIONS).map(Number).sort((a, b) => b - a);
+        return keys.length > 0 ? keys[0] : 0;
       }
 
       getLatestMissionId() {
@@ -4233,6 +4285,31 @@ No salgas jamás del personaje ni uses fórmulas genéricas de IA. Responde de f
         });
       }
     }
+
+    // ==========================================
+    // BLOQUEO ESTRICTO DE ZOOM EN MÓVILES (iOS / Android)
+    // ==========================================
+    document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gesturechange', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
+
+    document.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        const tag = e.target ? e.target.tagName : '';
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+          e.preventDefault();
+        }
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
 
     // Instanciación Global
     window.app = new WarRoomApp();
