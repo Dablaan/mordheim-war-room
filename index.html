@@ -1191,13 +1191,13 @@
           <!-- TITULARES DE LA EDICIÓN -->
           <div class="heraldo-headline-box">
             <h2 id="gazetteLeadTitle" class="heraldo-lead-title">
-              ¡LA MASACRE Y LA FUGA DE LOKY!
+              ¡LA MASACRE EN LA ENCRUCIJADA Y LA FUGA DE LOKY!
             </h2>
             <div id="gazetteSublead" class="heraldo-sublead">
-              COBARDÍA HISTÓRICA EN LA ENCRUCIJADA
+              COBARDÍA HISTÓRICA TRAS EL CHOQUE EN EL BASTIÓN CENTRAL
             </div>
             <div id="gazetteLeadSummary" class="heraldo-lead-p">
-              <!-- Inyectado por JS -->
+              <strong>INFORME OFICIAL:</strong> INFORME IMPARCIAL: Las avanzadas de la Casa Sangre Carmesí y del Clan Scutrix colisionaron frontalmente en el arrabal de La Encrucijada de Mordheim. Mientras Lord David decapitó en combate singular a Queek Coleccionista de Cabezas, la audacia de una ametralladora roedora aseguró el edificio clave en los últimos compases. Entretanto, el infame mercenario Loky protagonizó una cobarde huida a lomos de su carromato de mulas.
             </div>
           </div>
 
@@ -1206,7 +1206,9 @@
             <!-- Crónica Izquierda -->
             <div>
               <div id="gazetteLeftCol" class="gazette-body-text">
-                <!-- Inyectado por JS -->
+                <p class="no-indent"><span class="drop-cap">E</span>l terreno de 90x90 cm amaneció anegado bajo una espesa bruma de azufre. Las tropas imperiales de la <strong>Casa Sangre Carmesí</strong> avanzaron en formación cerrada desde el pórtico este, topándose con las hordas viles del <strong>Clan Scutrix</strong> que emergían de los colectores.</p>
+                <p>El combate fue implacable: en un duelo digno de los cantares de gesta, Lord David abatió al caudillo Queek decapitándolo con un golpe limpio de mandoble. No obstante, las ratas lograron atrincherar una ametralladora rotatoria en el segundo piso del edificio consistorial, barriendo la plaza en la cuarta ronda.</p>
+                <p>Pero el hecho más bochornoso —que ya corre de boca en boca por todas las tabernas de mala muerte del arrabal— lo protagonizó <strong>Loky</strong>. Al primer estallido de metralla, azuzó sus mulas a latigazos, perdiéndose en el horizonte entre nubes de polvo y dejando atrás a sus hombres y tres barriles de pólvora intactos.</p>
               </div>
             </div>
 
@@ -1219,18 +1221,42 @@
                 </p>
               </div>
 
-
-
               <!-- Caja de Declaraciones / Avisos -->
               <div id="gazetteRightQuotesBox" class="box-press-quotes">
-                <!-- Inyectado por JS -->
+                <div style="font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; color: #5c1313; border-bottom: 1.5px solid #6b3512; padding-bottom: 4px; margin-bottom: 6px;">
+                  📜 DECLARACIÓN PÚBLICA DEL TRIBUNAL
+                </div>
+                <div style="font-size: 0.82rem; line-height: 1.35; color: #17130e;">
+                  <em>«Se ofrece recompensa de 15 coronas de oro por el paradero del carromato de mulas de Loky. Su cobardía ante el enemigo no quedará impune.»</em>
+                  <div style="text-align: right; font-weight: 700; font-size: 0.75rem; margin-top: 4px;">— Richter Kless, Juez Arbitral</div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Faldón Inferior "En Este Número" -->
           <div class="bottom-features" id="gazetteBottomFeatures">
-            <!-- Inyectado por JS -->
+            <div class="feature-item">
+              <span class="feature-num">I</span>
+              <div>
+                <div class="feature-title">DUELO DE CAPITANES</div>
+                <div class="feature-desc">David abate a Queek en combate singular cuerpo a cuerpo.</div>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-num">II</span>
+              <div>
+                <div class="feature-title">EL FORTÍN DE LAS RATAS</div>
+                <div class="feature-desc">El nido de ametralladora de Sergio sella el control táctico.</div>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-num">III</span>
+              <div>
+                <div class="feature-title">BANDO DE BÚSQUEDA</div>
+                <div class="feature-desc">Se busca a Loky: cobarde huida con víveres del campamento.</div>
+              </div>
+            </div>
           </div>
         </article>
       </section>
@@ -2376,6 +2402,17 @@
         }
       }
 
+      renderAll() {
+        this.renderScoreboard();
+        this.renderMordheimMap();
+        this.renderFogOfWar();
+        this.renderAarFeed();
+        this.renderRoleplayGreeting();
+        if (this.currentUser && this.currentUser.isGm) {
+          this.renderGmSuggestions();
+        }
+      }
+
       onUserLoggedIn() {
         const gate = document.getElementById("loginGateOverlay");
         if (gate) gate.style.display = 'none';
@@ -2506,6 +2543,23 @@
             document.getElementById("syncDot").className = "sync-dot offline";
             document.getElementById("syncText").textContent = "Modo Local / Desconectado";
           }
+        }
+      }
+
+      async saveState() {
+        if (!supabase) return;
+        try {
+          await supabase.from('kv_store').upsert({ key: STORAGE_KEY, value: this.state });
+          const syncDot = document.getElementById("syncDot");
+          const syncText = document.getElementById("syncText");
+          if (syncDot) syncDot.className = "sync-dot";
+          if (syncText) syncText.textContent = "Nube Conectada (Supabase 24/7)";
+        } catch (e) {
+          console.warn("Supabase save error:", e);
+          const syncDot = document.getElementById("syncDot");
+          const syncText = document.getElementById("syncText");
+          if (syncDot) syncDot.className = "sync-dot offline";
+          if (syncText) syncText.textContent = "Modo Local / Desconectado";
         }
       }
 
@@ -3143,6 +3197,95 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
             existing.isCentral = def.isCentral;
           }
         });
+      }
+
+      // CONTROLES DE ZOOM, PAN Y PANTALLA COMPLETA HD DEL MAPA
+      initMapControls() {
+        const zoomInBtn = document.getElementById("mapZoomIn");
+        const zoomOutBtn = document.getElementById("mapZoomOut");
+        const zoomResetBtn = document.getElementById("mapZoomReset");
+        const fsBtn = document.getElementById("mapFullscreenBtn");
+        const viewport = document.getElementById("tacticalMapViewport");
+        const stage = document.getElementById("tacticalMapStage");
+
+        if (zoomInBtn) zoomInBtn.onclick = () => this.zoomMap(0.3);
+        if (zoomOutBtn) zoomOutBtn.onclick = () => this.zoomMap(-0.3);
+        if (zoomResetBtn) zoomResetBtn.onclick = () => this.resetMapZoom();
+        if (fsBtn) fsBtn.onclick = () => this.toggleMapFullscreen();
+
+        // Drag / Pan cuando zoom > 1
+        if (viewport && stage) {
+          viewport.addEventListener('mousedown', (e) => {
+            if (this.mapZoom <= 1) return;
+            if (e.target.closest('.map-pin')) return;
+            this.isPanning = true;
+            this.panStartX = e.clientX - this.mapPanX * this.mapZoom;
+            this.panStartY = e.clientY - this.mapPanY * this.mapZoom;
+            viewport.style.cursor = 'grabbing';
+          });
+
+          window.addEventListener('mousemove', (e) => {
+            if (!this.isPanning) return;
+            this.mapPanX = (e.clientX - this.panStartX) / this.mapZoom;
+            this.mapPanY = (e.clientY - this.panStartY) / this.mapZoom;
+            this.applyMapTransform();
+          });
+
+          window.addEventListener('mouseup', () => {
+            if (this.isPanning) {
+              this.isPanning = false;
+              if (viewport) viewport.style.cursor = this.mapZoom > 1 ? 'grab' : 'default';
+            }
+          });
+        }
+
+        // Tecla Escape para salir de Fullscreen
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            const vp = document.getElementById("tacticalMapViewport");
+            if (vp && vp.classList.contains("fullscreen-mode")) {
+              this.toggleMapFullscreen();
+            }
+          }
+        });
+      }
+
+      zoomMap(delta) {
+        this.mapZoom = Math.max(1, Math.min(2.6, +(this.mapZoom + delta).toFixed(1)));
+        if (this.mapZoom === 1) {
+          this.mapPanX = 0;
+          this.mapPanY = 0;
+        }
+        const vp = document.getElementById("tacticalMapViewport");
+        if (vp) vp.style.cursor = this.mapZoom > 1 ? 'grab' : 'default';
+        this.applyMapTransform();
+      }
+
+      resetMapZoom() {
+        this.mapZoom = 1;
+        this.mapPanX = 0;
+        this.mapPanY = 0;
+        const vp = document.getElementById("tacticalMapViewport");
+        if (vp) vp.style.cursor = 'default';
+        this.applyMapTransform();
+      }
+
+      applyMapTransform() {
+        const stage = document.getElementById("tacticalMapStage");
+        if (!stage) return;
+        stage.style.transition = this.isPanning ? 'none' : 'transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1)';
+        stage.style.transform = `scale(${this.mapZoom}) translate(${this.mapPanX}px, ${this.mapPanY}px)`;
+      }
+
+      toggleMapFullscreen() {
+        const vp = document.getElementById("tacticalMapViewport");
+        const closeBar = document.getElementById("mapFsCloseBar");
+        if (!vp) return;
+        vp.classList.toggle("fullscreen-mode");
+        const isFs = vp.classList.contains("fullscreen-mode");
+        if (closeBar) closeBar.style.display = isFs ? "flex" : "none";
+        document.body.style.overflow = isFs ? "hidden" : "";
+        if (!isFs) this.resetMapZoom();
       }
 
       renderMordheimMap() {
