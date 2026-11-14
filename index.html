@@ -994,17 +994,36 @@
     .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #2b8a3e; box-shadow: 0 0 5px #2b8a3e; }
     .sync-dot.offline { background: #d97706; box-shadow: none; }
   
-    /* BLINDAJE ESTRICTO DE ACCESO (GATE OVERLAY) */
+    /* ======================================================== */
+    /* AISLAMIENTO Y BLINDAJE ESTRICTO DE PANTALLA DE LOGIN    */
+    /* ======================================================== */
+    body.login-locked {
+      overflow: hidden !important;
+      position: fixed !important;
+      width: 100% !important;
+      height: 100% !important;
+      height: 100dvh !important;
+      background: #0d0a08 !important;
+    }
+    body.login-locked .gazette-wrapper {
+      display: none !important;
+      visibility: hidden !important;
+    }
     .login-gate-overlay {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
       z-index: 9999999;
       background: radial-gradient(circle at center, #2e241b 0%, #0d0a08 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding: 1.2rem 1rem;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
     }
     .login-gate-modal {
       width: 100%;
@@ -1014,6 +1033,7 @@
       padding: 2rem 1.8rem;
       box-shadow: 0 10px 30px rgba(0,0,0,0.8), 6px 6px 0 var(--ink-black);
       text-align: center;
+      margin: auto;
     }
     .lore-chapter-box {
       background: #faf4e6;
@@ -1336,7 +1356,7 @@
 
   </style>
 </head>
-<body>
+<body class="login-locked">
 
   <!-- ======================================================== -->
   <!-- BLINDAJE ESTRICTO DE ACCESO: LOGIN GATE OVERLAY         -->
@@ -1394,7 +1414,7 @@
   </div>
 
 
-  <div class="gazette-wrapper">
+  <div class="gazette-wrapper" id="mainAppWrapper" style="display: none;">
 
     <!-- CABECERA PRINCIPAL -->
     <header class="gazette-header">
@@ -1505,9 +1525,6 @@
           <button class="btn-action active" id="btnGazette3" onclick="app.showGazette(3)">
             <i class="fa-solid fa-shield"></i> Edición 03 (Última: ¡El Cometa Vuelve a Pulsar!)
           </button>
-          <a class="btn-action" id="gazettePdfLink" href="./assets/El_Heraldo_de_Mordheim_Edicion_03.pdf" target="_blank" style="margin-left:auto; text-decoration:none; color:var(--faction-david);">
-            <i class="fa-solid fa-file-pdf"></i> Descargar PDF Facsímil
-          </a>
         </div>
 
         <article class="border-woodcut-double">
@@ -2727,6 +2744,10 @@
         sessionStorage.removeItem("mordheim_warroom_user");
         this.currentUser = null;
 
+        document.body.classList.add('login-locked');
+        const wrapper = document.getElementById("mainAppWrapper") || document.querySelector('.gazette-wrapper');
+        if (wrapper) wrapper.style.display = 'none';
+
         const gate = document.getElementById("loginGateOverlay");
         if (gate) gate.style.display = 'flex';
 
@@ -2824,6 +2845,10 @@
       }
 
       onUserLoggedIn() {
+        document.body.classList.remove('login-locked');
+        const wrapper = document.getElementById("mainAppWrapper") || document.querySelector('.gazette-wrapper');
+        if (wrapper) wrapper.style.display = 'block';
+
         const gate = document.getElementById("loginGateOverlay");
         if (gate) gate.style.display = 'none';
         const box = document.getElementById("loginPinBox");
@@ -2840,14 +2865,23 @@
 
       logout() {
         localStorage.removeItem("mordheim_warroom_user");
+        sessionStorage.removeItem("mordheim_warroom_user");
         this.currentUser = null;
         this.updateUserChip();
+
+        document.body.classList.add('login-locked');
+        const wrapper = document.getElementById("mainAppWrapper") || document.querySelector('.gazette-wrapper');
+        if (wrapper) wrapper.style.display = 'none';
+
         const gate = document.getElementById("loginGateOverlay");
         if (gate) gate.style.display = 'flex';
         const box = document.getElementById("loginPinBox");
         if (box) box.style.display = 'none';
         const input = document.getElementById("loginPinInput");
         if (input) input.value = '';
+
+        document.querySelectorAll('#loginGateOverlay .login-user-card').forEach(c => c.classList.remove('selected'));
+        this.loginSelectedUser = null;
       }
 
       updateUserChip() {
@@ -3553,8 +3587,7 @@ Usa estilos en línea discretos acordes a Mordheim (fondo pergamino #faf4e6, bor
         if (img && ed.img) img.src = ed.img;
         setElText("gazetteImgCaption", ed.caption);
 
-        const pdfLink = document.getElementById("gazettePdfLink");
-        if (pdfLink && ed.pdf) pdfLink.href = ed.pdf;
+// Descarga de PDF de El Heraldo desactivada (publicacion directa web)
 
         setElHtml("gazetteRightQuotesBox", ed.quotes);
         setElHtml("gazetteBottomFeatures", ed.features);
