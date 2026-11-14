@@ -1561,6 +1561,14 @@
             <div class="login-card-desc">Señor del Clan Scutrix • Hombres Rata</div>
           </div>
         </div>
+        <!-- Javi -->
+        <div class="login-user-card" data-user="javi" onclick="app.selectLoginUser('javi', this)">
+          <span class="login-avatar" style="font-size: 2rem;">⚒️</span>
+          <div style="text-align: left;">
+            <div class="login-card-title" style="font-size: 1rem;">Javi</div>
+            <div class="login-card-desc">Patriarca de los Hijos del Yunque • Enanos</div>
+          </div>
+        </div>
       </div>
 
       <!-- Cuadro de PIN -->
@@ -1612,7 +1620,7 @@
     <div class="gazette-folio-strip">
       <span><i class="fa-solid fa-landmark"></i> ARCHIVOS DEL TRIBUNAL DE GUERRA</span>
       <span>AÑO DE LAS SOMBRAS 1599 • IMPRENTA DE LA CIUDAD CONDENADA</span>
-      <span id="headerRoundTag">FASE DE ENTRENAMIENTO • ESCARAMUZA 01</span>
+      <span id="headerRoundTag">RONDA 01 • LOS TRES BALUARTES URBANOS</span>
     </div>
 
     <!-- MARCADOR DE CAMPAÑA (TRES FACCIONES) -->
@@ -1807,7 +1815,7 @@
         <!-- Selector de Misiones -->
         <div class="mission-nav-bar">
           <button class="btn-action active" id="btnMission1" onclick="app.showMission(1)">
-            <i class="fa-solid fa-flag-checkered"></i> Escaramuza 01 (Entrenamiento): El Cruce del Degollador
+            <i class="fa-solid fa-flag-checkered"></i> Escenario Oficial: Los Tres Baluartes Urbanos
           </button>
         </div>
 
@@ -1816,10 +1824,10 @@
           <div class="panel-box">
             <div class="panel-title-strip">
               <h3 class="panel-title" id="missionTitleDisplay" style="font-family: var(--font-gothic); font-size: 1.6rem;">
-                Escaramuza 01 (Entrenamiento): Sangre en El Cruce del Degollador
+                Escenario Oficial: «Los Tres Baluartes Urbanos»
               </h3>
               <span class="rank-tag" id="missionStatusBadge" style="background: #fbf2f2; color: #7a1515; border: 1.5px solid #7a1515; padding: 0.2rem 0.6rem; font-weight: 800; font-family: var(--font-title); font-size: 0.72rem;">
-                ESCARAMUZA DE ENTRENAMIENTO
+                ESCENARIO OFICIAL DE ASEDIO URBANO
               </span>
             </div>
 
@@ -1827,7 +1835,7 @@
             <div class="spec-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
               <div class="spec-cell" style="grid-column: span 2; border-left: 4px solid var(--faction-david);">
                 <div class="spec-cell-lbl">Facciones Enfrentadas</div>
-                <div class="spec-cell-val" id="missionFactions" style="font-size: 0.88rem; color: var(--faction-david);">Casa Sangre Carmesí vs Clan Scutrix</div>
+                <div class="spec-cell-val" id="missionFactions" style="font-size: 0.88rem; color: var(--faction-david);">Enanos de Mordheim (Javi) vs Clan Scutrix (Sergio)</div>
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Puntos de Banda</div>
@@ -1835,7 +1843,7 @@
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Mesa de Asedio</div>
-                <div class="spec-cell-val" id="missionTableSize">90 x 90 cm</div>
+                <div class="spec-cell-val" id="missionTableSize">48" x 48" (120 x 120 cm) • Casa de Sergio</div>
               </div>
               <div class="spec-cell">
                 <div class="spec-cell-lbl">Límite de Rondas</div>
@@ -1863,9 +1871,33 @@
               </ul>
             </div>
 
+            <!-- Plano Táctico Arquitectónico a Escala -->
+            <div style="margin: 1.1rem 0; border: 2px solid var(--ink-black); background: #17130e; padding: 4px; box-shadow: 3px 3px 0 rgba(0,0,0,0.2);">
+              <img src="./assets/Mapa_Mesa_48x48_OpcionB.png" alt="Plano Táctico Los Tres Baluartes Urbanos (120x120 cm)" style="width: 100%; height: auto; display: block;" />
+              <div style="background: #2a221a; color: #ede1c7; font-family: var(--font-title); font-size: 0.72rem; padding: 0.4rem 0.6rem; text-align: center; border-top: 1px solid var(--line-sepia);">
+                <i class="fa-solid fa-map-location-dot"></i> <strong>Plano Táctico Arquitectónico Homologado</strong> • Mesa 48" x 48" (120 x 120 cm) • Cortafuegos Centrales de LoS y 3 Objetivos Tácticos
+              </div>
+            </div>
+
+            <!-- Desglose de Escenografía Oficial Impresa -->
+            <div style="margin-bottom: 1.1rem; background: #faf4e6; border: 1.5px solid var(--line-sepia); padding: 0.8rem 1rem;">
+              <h5 style="font-family: var(--font-title); font-size: 0.82rem; color: #4a1515; margin-bottom: 0.4rem; text-transform: uppercase;">
+                <i class="fa-solid fa-cubes-stacked"></i> Parque 3D Desplegado en Mesa:
+              </h5>
+              <div style="font-size: 0.78rem; line-height: 1.5; color: var(--ink-dark);">
+                • <strong>Alcaldía (X: 16.5", Y: 20.5" Norte):</strong> Cortafuegos central que separa Objetivo Alfa de Beta.<br/>
+                • <strong>Septo_2plantas (X: 31.5", Y: 21.5" Sur):</strong> Cortafuegos central que separa Objetivo Beta de Gamma.<br/>
+                • <strong>Árbol marchito (X: 24", Y: 24"):</strong> Centro exacto del tablero. Alberga el Objetivo ★ Beta (Terreno Difícil + Cobertura).<br/>
+                • <strong>Esquina derruida &amp; Septo_esquinas:</strong> Coberturas defensivas en el flanco Oeste (Alfa / Callejón de Morr).<br/>
+                • <strong>Casa_señorial &amp; Iglesia-ruinas:</strong> Baluartes góticos en el flanco Este (Gamma / Plaza de la Atalaya).<br/>
+                • <strong>Torre_cuadrada_3plantas:</strong> Nido de francotiradores vertical (163 mm) en flanco Este.<br/>
+                • <strong>Barriles_cajas:</strong> 5 elementos divisibles protegiendo los accesos Norte y Sur a los objetivos.
+              </div>
+            </div>
+
             <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-              <a href="./assets/Hoja_Mision_Ronda_01.pdf" target="_blank" class="btn-action">
-                <i class="fa-solid fa-file-pdf"></i> Descargar Orden de Batalla en PDF
+              <a href="./assets/Hoja_Mision_Ronda_01.pdf" target="_blank" class="btn-action" style="background: var(--faction-david); color: #fff; font-weight: 800;">
+                <i class="fa-solid fa-file-pdf"></i> Descargar Orden de Batalla en PDF (48x48)
               </a>
             </div>
           </div>
@@ -2602,20 +2634,25 @@
     const MISSIONS_DATA = {
       1: {
         id: 1,
-        title: "Escaramuza 01 (Entrenamiento): Sangre en El Cruce del Degollador",
-        factions: "Casa Sangre Carmesí (David) vs Clan Scutrix (Sergio)",
-        badge: "ESCARAMUZA DE ENTRENAMIENTO",
+        title: "Escenario Oficial: «Los Tres Baluartes Urbanos»",
+        factions: "Enanos de Mordheim (General Javi) vs Clan Scutrix (Señor Sergio)",
+        badge: "ESCENARIO OFICIAL DE ASEDIO URBANO",
         badgeStyle: "background: #fbf2f2; color: #7a1515; border: 1.5px solid #7a1515;",
-        rulebook: "Age of Fantasy: Skirmish v3.6.0 (OPR)",
+        rulebook: "Age of Fantasy: Skirmish v3.6.0 (OnePageRules)",
         points: "600 pts",
         turns: "4 Rondas",
-        tableSize: "90 x 90 cm (Casa de David)",
-        lore: "Batalla inaugural de entrenamiento en el Distrito II: El Cruce del Degollador (Mesa de 90x90 cm en Casa de David). Este encuentro preliminar servirá para que ambos comandantes rueden sus listas de banda de 600 puntos, pongan a prueba las mecánicas de disparo, combate y chequeos de moral al 50%, y dominen el reporte de partes de guerra y validación de listas en la WebApp.",
+        tableSize: "48\" x 48\" (120 x 120 cm) • Casa de Sergio",
+        lore: "En el corazón del Distrito II, la arquitectura imperial resiste el paso de los siglos. La Alcaldía de tres plantas y el Septo Fortificado dividen la gran avenida en tres plazas independientes, canalizando los avances a través de callejones estrechos donde la infantería puede maniobrar sin ser diezmada por fuego lejano. Un filón triple de Piedra Bruja palpita entre los escombros: enanos y hombres rata colisionan en una lucha de desgaste por cada palmo de piedra.",
         objectives: [
-          "Misión Oficial: Asegurar el Terreno (Seize Ground - Pág. 22 / Pág. 51 AoFS v3.6.0): 4 Marcadores de Objetivo colocados en el centro de los 4 cuadrantes de 45x45 cm (+1 VP por cada objetivo bajo control al final de la Ronda 4).",
-          "Despliegue Asalto por el Flanco (Pág. 51): Despliegue en cuadrantes diagonales opuestos a 9 pulgadas del centro de entrada (David en Cuadrante Noroeste / Criptas de Morr; Sergio en Cuadrante Sureste / Colectores de la Falla).",
-          "Escenografía Oficial de Mesa: La 'Alcaldía' y el 'Septo_2plantas' bloquean el centro de mesa impidiendo líneas de visión directas rasantes; la 'Torre_cuadrada_3plantas' domina el flanco sureste como nido vertical de tiradores (163 mm); la 'Casa_señorial' y la 'Iglesia-ruinas' protegen el flanco noroeste (+1 Def Cobertura); el 'Septo_esquinas', el 'Arbol marchito' y los 5 elementos divisibles de 'Barriles_cajas' ofrecen parapetos bajos en los callejones.",
-          "Objetivo de Entrenamiento: Ambos comandantes deben probar el Validador de Army Forge en esta pantalla antes de desplegar y remitir su parte de guerra al terminar para asentar el flujo completo de campaña."
+          "Misión y Puntuación Progresiva (Págs. 22-23 AoFS): 3 Marcadores de Objetivo colocados a lo largo del eje central (Y: 24\"). Cada ronda (R2, R3, R4) otorga VP a quien controle cada marcador al finalizarla.",
+          "Objetivo Alfa (Callejón de Morr - X: 7\", Y: 24\"): Otorga +1 VP por ronda (R2, R3, R4) al bando que lo controle.",
+          "★ Objetivo Beta (Patio del Árbol Marchito - Centro X: 24\", Y: 24\"): Marcador clave que otorga +2 VP por ronda (R2, R3, R4). El Árbol Marchito actúa como Terreno Difícil (máx. 6\" de avance) y Cobertura (+1 Def).",
+          "Objetivo Gamma (Plaza de la Atalaya - X: 37\", Y: 24\"): Otorga +1 VP por ronda (R2, R3, R4) al bando que lo controle.",
+          "Despliegue Táctico Línea de Frente (Pág. 22): Despliegue a 12\" (30 cm) de los bordes Norte y Sur respectivamente, dejando una franja central de 24\" de Tierra de Nadie densa en escenografía vertical.",
+          "Baluartes de Piedra Negra (Cortafuegos de LoS Absoluto): La Alcaldía (X: 16.5\") y el Septo de 2 plantas (X: 31.5\") cortan al 100% las líneas de visión horizontales entre los 3 objetivos. Ninguna miniatura en un marcador puede disparar a otro a través de estas estructuras.",
+          "Bruma Sulfurosa de la Falla (Battlefield Effect): El humo y las cenizas en suspensión enturbian el aire: cualquier disparo efectuado a más de 18\" (45 cm) sufre un penalizador de -1 para impactar.",
+          "Determinación de la Forja (Regla Temática Enana): Una vez por ronda de juego, el jugador enano puede repetir un único chequeo de Moral fallado por una unidad que se encuentre a 3\" o menos de un marcador de objetivo o dentro de una ruina.",
+          "Escurridizos entre los Escombros (Regla Temática Ratmen): Cualquier unidad roedora que reciba disparos mientras esté en Cobertura obtiene +1 adicional a su tirada de Defensa (hasta máx 2+) si no realizó ninguna acción de Correr (Rush) en su última activación."
         ]
       }
     };
@@ -2986,6 +3023,7 @@
         let isMatch = false;
         if (this.loginSelectedUser === 'david' && val === '1348') isMatch = true;
         else if (this.loginSelectedUser === 'sergio' && val === '6995') isMatch = true;
+        else if (this.loginSelectedUser === 'javi' && val === '7788') isMatch = true;
 
         if (isMatch) {
           if (err) err.style.display = 'none';
@@ -3536,6 +3574,14 @@ Tu tarea marcial:
           <div style="text-align: left;">
             <div class="login-card-title" style="font-size: 1rem;">Sergio</div>
             <div class="login-card-desc">Señor del Clan Scutrix • Hombres Rata</div>
+          </div>
+        </div>
+        <!-- Javi -->
+        <div class="login-user-card" data-user="javi" onclick="app.selectLoginUser('javi', this)">
+          <span class="login-avatar" style="font-size: 2rem;">⚒️</span>
+          <div style="text-align: left;">
+            <div class="login-card-title" style="font-size: 1rem;">Javi</div>
+            <div class="login-card-desc">Patriarca de los Hijos del Yunque • Enanos</div>
           </div>
         </div>
       </div>
