@@ -2932,19 +2932,32 @@
       }
 
       async init() {
+        // 1. Bloqueo inmediato y sincrónico al inicio (antes de llamadas de red)
+        this.checkSavedSession();
         this.setupNavigation();
         this.initMapControls();
         this.showGazette();
         this.showMission();
         this.renderRoleplayGreeting();
+
+        // 2. Cargar estado de la nube de forma asíncrona en segundo plano
         await this.loadCloudState();
         this.syncDistrictDefinitions();
         this.loadPlayerRoster();
-        this.checkSavedSession();
+
+        // Si el usuario ya introdujo su PIN durante la carga de red, refrescar UI sin desloguear
+        if (this.currentUser) {
+          this.renderAll();
+        }
       }
 
       checkSavedSession() {
-        // NUNCA auto-loguear: Cada vez que se entra o recarga, se exige el PIN del jugador
+        // Si el usuario ya se ha autenticado en esta sesión, JAMÁS desloguearlo
+        if (this.currentUser) {
+          return;
+        }
+
+        // NUNCA auto-loguear al abrir o recargar: exigir siempre el PIN del jugador
         localStorage.removeItem("mordheim_warroom_user");
         sessionStorage.removeItem("mordheim_warroom_user");
         this.currentUser = null;
